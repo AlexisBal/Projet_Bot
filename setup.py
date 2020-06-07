@@ -4,13 +4,13 @@ from cx_Freeze import setup, Executable
 # fine tuning.
 buildOptions = dict(
     packages=["idna", "rpa", "tagui", "PasswordGenerator"],
-    include_files=["Generateur_Compte_Zalando/Comptes.json"],
+    include_files=["Comptes.json"],
 )
 
-base = "Win32GUI"
+base = "None"
 executables = [
     Executable(
-        "Generateur_Compte_Zalando/Generateur_Compte_Zalando.py",
+        "Generateur_Compte_Zalando.py",
         base=base,
     )
 ]

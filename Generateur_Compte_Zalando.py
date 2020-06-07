@@ -45,7 +45,7 @@ def SaisieInformations():
         liste_comptes.append(i)
 
     # Insertion des comptes dans la base de données "Comptes.json"
-    with open("Generateur_Compte_Zalando/Comptes.json", "w") as f:
+    with open("Comptes.json", "w") as f:
         json.dump(liste_comptes, f, indent=4)
     f.close()
 
@@ -55,7 +55,7 @@ def SaisieInformations():
 
 # Création des objets "Compte" et de la liste d'objet "compte_objet_list"
 def creation_objet_compte():
-    acces_fichier = open("Generateur_Compte_Zalando/Comptes.json", "r")
+    acces_fichier = open("Comptes.json", "r")
     compte_objet_list = []
     for compte_attributes in json.load(acces_fichier):
         compte_objet = Compte(**compte_attributes)
