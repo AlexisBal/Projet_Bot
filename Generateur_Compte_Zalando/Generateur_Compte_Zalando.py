@@ -18,17 +18,25 @@ def SaisieInformations():
     # Saisie des informations
     prenom = input("Entrer votre prenom :")
     nom = input("Entrer votre nom :")
+    cp = input("Entrer votre code postal :")
+    ville = str(input("Entrer votre ville (sans accents):"))
+    adresse = str(input("Entrer votre adresse (sans accents) :"))
     nombrecompte = int(
         input(
             "Entrer le nombre de comptes souhaité (1 adresse mail valide par compte) :"
         )
     )
     for i in range(0, nombrecompte):
+        email = input("Entrer une adresse mail valide :")
         i = {
             "prenom": prenom,
             "nom": nom,
-            "email": input("Entrer une adresse mail valide :"),
+            "email": email,
             "motdepasse": "",
+            "pays": "France",
+            "codepostal": cp,
+            "ville": ville,
+            "adresse": adresse,
         }
         # Génération d'un mot de passe aléatoire et sécurisé
         pwo = PasswordGenerator()
@@ -40,6 +48,9 @@ def SaisieInformations():
     with open("Generateur_Compte_Zalando/Comptes.json", "w") as f:
         json.dump(liste_comptes, f, indent=4)
     f.close()
+
+    # Message de confimation
+    print("Vos informations ont bien été sauvegardées !")
 
 
 # Création des objets "Compte" et de la liste d'objet "compte_objet_list"
