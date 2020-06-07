@@ -33,9 +33,10 @@ def SaisieInformations():
         # Génération d'un mot de passe aléatoire et sécurisé
         pwo = PasswordGenerator()
         i["motdepasse"] = pwo.generate()
+        # Insertion des comptes dans la liste "liste_compte"
         liste_comptes.append(i)
 
-    # Insertion des comptes dans la base de données
+    # Insertion des comptes dans la base de données "Comptes.json"
     with open("Generateur_Compte_Zalando/Comptes.json", "w") as f:
         json.dump(liste_comptes, f, indent=4)
     f.close()
@@ -82,5 +83,5 @@ def CreationComptes(compte_objet_list):
 
 
 SaisieInformations()
-compte = creation_objet_compte()
-CreationComptes(compte)
+comptes = creation_objet_compte()
+CreationComptes(comptes)
