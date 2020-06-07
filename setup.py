@@ -1,21 +1,24 @@
 from cx_Freeze import setup, Executable
 
-base = None
-executables = [Executable("Generateur_Compte_Zalando/Generateur_Compte_Zalando.py", base=base)]
-packages = ["idna", "rpa", "tagui", "PasswordGenerator"]
-includefiles = ["Generateur_Compte_Zalando/Comptes.json"]
+# Dependencies are automatically detected, but it might need
+# fine tuning.
+buildOptions = dict(
+    packages=["idna", "rpa", "tagui", "PasswordGenerator"],
+    include_files=["Generateur_Compte_Zalando/Comptes.json"],
+)
 
-options = {
-    'build_exe': {
-        'packages': packages,
-        'include_files': includefiles,
-    },
-}
+base = "Win32GUI"
+executables = [
+    Executable(
+        "/Users/alexisbalayre/Documents/GitHub/Projet_Bot/Projet_Bot/Generateur_Compte_Zalando/Generateur_Compte_Zalando.py",
+        base=base,
+    )
+]
 
 setup(
-    name="generateur_comptes_zalando",
-    options=options,
+    name="Generateur Compte Zalando",
     version="1.0",
-    description='Générateur de comptes sur Zalando',
-    executables=executables
+    description="Generateur de comptes sur zalando",
+    options=dict(build_exe=buildOptions),
+    executables=executables,
 )
