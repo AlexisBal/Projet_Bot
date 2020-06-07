@@ -10,7 +10,7 @@ buildOptions = dict(
 base = "Win32GUI"
 executables = [
     Executable(
-        "/Users/alexisbalayre/Documents/GitHub/Projet_Bot/Projet_Bot/Generateur_Compte_Zalando/Generateur_Compte_Zalando.py",
+        "Generateur_Compte_Zalando/Generateur_Compte_Zalando.py",
         base=base,
     )
 ]
