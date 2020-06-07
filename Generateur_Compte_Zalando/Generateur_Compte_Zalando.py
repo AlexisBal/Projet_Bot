@@ -19,8 +19,8 @@ def SaisieInformations():
     prenom = input("Entrer votre prenom :")
     nom = input("Entrer votre nom :")
     cp = input("Entrer votre code postal :")
-    ville = str(input("Entrer votre ville (sans accents):"))
-    adresse = str(input("Entrer votre adresse (sans accents) :"))
+    ville = input("Entrer votre ville (sans accents):")
+    adresse = input("Entrer votre adresse (sans accents) :")
     nombrecompte = int(
         input(
             "Entrer le nombre de comptes souhaité (1 adresse mail valide par compte) :"
