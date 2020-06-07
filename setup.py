@@ -7,7 +7,7 @@ buildOptions = dict(
     include_files=["Comptes.json"],
 )
 
-base = "None"
+base = None
 executables = [
     Executable(
         "Generateur_Compte_Zalando.py",
