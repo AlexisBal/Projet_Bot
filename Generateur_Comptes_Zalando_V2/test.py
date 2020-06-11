@@ -12,8 +12,7 @@ payload = {
     "fashion_preference": [],
     "subscribe_to_news_letter": "false",
     "accepts_terms_and_conditions": "true",
-    "date_of_birth": "", 
-    "wnaMode": "shop"
+    "date_of_birth": "",
 }
 
 try:
