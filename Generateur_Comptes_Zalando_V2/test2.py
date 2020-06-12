@@ -1,10 +1,12 @@
 import requests
+import json
+
 
 with requests.Session() as s:
     url_get = "https://www.zalando.fr/login/?view=register"
     cookies = dict(cookies_are="working")
     headers = {"user-agent": "my-app/0.0.1"}
-    a = s.get(url_get, headers=headers)
+    a = s.get(url_get, headers=headers, cookies=cookies)
     print(a.status_code)
 
     sensor_data = {
@@ -60,21 +62,28 @@ with requests.Session() as s:
                        "5499-1,2,-94,-116,27511667-1,2,-94,-118,233033-1,2,-94,-121,;4;7;0 "
     }
     url_post1 = "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
-    c = s.post(url_post1, data=sensor_data)
+    c = s.post(url_post1, data=sensor_data, cookies=cookies)
     print(c.status_code)
 
     url_get2 = "https://www.zalando.fr/api/reef/register/schema"
-    b = s.get(url_get2, headers=headers)
+    b = s.get(url_get2, headers=headers, cookies=cookies)
     print(b.status_code)
 
     true = True
+    false = False
     register = {
-        "accepts_terms_and_conditions": true,
-        "email": "alexis.balayre@isep.fr",
-        "firstname": "alexis",
-        "lastname": "balayre",
-        "password": "Dubai007",
+        "newCustomerData": {
+            "accepts_terms_and_conditions": true,
+            "date_of_birth": "",
+            "email": "alexis.balayre@isep.fr",
+            "fashion_preference": [],
+            "firstname": "alexis",
+            "lastname": "balayre",
+            "password": "Dubai007",
+            "subscribe_to_news_letter": false
+        },
+        "wnaMode": "shop"
     }
     url_post2 = "https://www.zalando.fr/api/reef/register"
-    d = s.post(url_post2, data=register)
+    d = s.post(url_post2, data=register, cookies=cookies)
     print(d.status_code)
