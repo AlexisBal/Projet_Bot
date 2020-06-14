@@ -43,7 +43,9 @@ with requests.Session() as session:
     url_get_4 = d.headers['location']
     signin = url_get_4.lstrip("https://my.asos.com/identity/login?signin=")
     url_get_5 = 'https://my.asos.com/identity/register?signin=%s&checkout=False&forceAuthentication=True' % signin
-
+    e = session.get(url_get_5, verify=False)
+    RequestVerificationToken = e.cookies['__RequestVerificationToken']
+    print(RequestVerificationToken)
     session.close()
 
 
