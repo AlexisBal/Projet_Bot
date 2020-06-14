@@ -1,23 +1,69 @@
 import urllib3
 import json
 
-http = urllib3.PoolManager()
+http = urllib3.PoolManager(maxsize=10, block=True)
 
 url_get = "https://www.zalando.fr/login/?view=register"
 a = http.request(
     'GET',
     url_get,
     headers={
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': 'https://www.zalando.fr/login/?view=register',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-        'Connection': 'keep-alive'
+        "Host": "www.zalando.fr",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Dest": "document",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Cookie": ""
     }
 )
 print(a.status)
+
+x_flow_id = a.getheader('X-Zalando-Child-Request-Id')
+Set_Cookie = a.getheader('Set-Cookie').rsplit('; ')
+x_xsrf_token = Set_Cookie[0].lstrip('frsx=')
+x_zalando_client_id = Set_Cookie[4].lstrip('Secure, Zalando-Client-Id=')
+
+
+e = http.request(
+    'GET',
+    'https://www.zalando.fr/resources/a6c5863f92201d42d0a3ba96882c7b',
+    headers={
+        'Host': 'www.zalando.fr',
+        'Connection': 'keep-alive',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'no-cors',
+        'Sec-Fetch-Dest': 'script',
+        'Referer': 'https://www.zalando.fr/login/?view=register',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cookie': 'Zalando-Client-Id=b1df7ae2-413a-47c3-8fef-f8eddd7810b4; _ga=GA1.2.664290401.1591967248; _ga=GA1.2.664290401.1591967248; _gid=GA1.2.1312755635.1591967250; frsx=AAAAAD-SjMUG4tP5bhKC-XQ0JqV83Sb5oFGDBp0QqF2FQ56WA4m_AJjN_fzumzi8UjG2H--LY6OSVtGYYKoaUvKKYbMd-uf6CwR0NQXA96D-E3OYK3KZLap8wTnCJhpkJ8cEGerNdkYXGqhSyCclys8=; bm_sz=F7C0BB69337BED4B888F4132708471B2~YAAQL+57XJuJLKdyAQAAGWm7qQghX01ytvpSiNUPFBXXlMx9zoj3qJZUtsRMb7ii7BYOeZMAHqxhvcrQCAG7w5cD8TD1D5QAaY7hpPGJhxcTB8hXi1pBvQoJq6zqxmBmgOzeYjw1peZBYhabqTTZmEDW554KbtiWHUcg2asphrU6vfyh1x+qiuu0UEc1z85G; ak_bmsc=4422E901871FDA669DA2446E478055515C7BEE2F9B3D00007BC5E35E8D031673~plf/SeYXVoJanwUYXSBvgy6wmvVBJt8TqIC4MhvfwStiwziusQNTIFtzHpLX+Qyzi0hBkVZc/fLvlfLSN/QDqumh0uOguPfliZnYiUpoCPcaEdLT3uLOXDzQGYnGCmz3mDu8+X0wAQb7y+0UG4LOkn62w+n23v55UsGPYkbDOsbhfbO6OKyanLK8/PG/vxiBXzgrKLsjpftHJmrkPhcVE/DQWHqjLspiB9W1AjFqsXxUVxLJKnuI8U9zrmA+oEnjKp; _abck=B94B13408752796D9FA179CAE9B326F7~-1~YAAQXO57XPdpSINyAQAAW07EqQTDYE//4sIeq6V7Sgh6PUCBojb/x0/UuKUbLfgzLxogK2Vio3+s4LXUz8GS5PIL1vFWSZf1gXFj5cLqt4Nn3hHsM2hkbaNe7d44Mfb3oFrPjIEFsuN1I2TY4qjjq/CV3qvmBRuzjW3DSq1rLV2qfb1RQjbiIGhfTVKG1sBZtRtnJk360X/GBzlc6RcUZLYMy59h/WJdVdjspZv/ZPnJim41NAfxk8qheBki3Xx6KJgqAxYlPAynCyh+uZZOXW6aKHBZV4zzHG9Zcb1ZMkoCXP32dWJR+/bfIhGJVVhEykcUcEwhRh7njn1ybmXywiLsEao=~-1~-1~-1'
+    }
+)
+print(e.status)
+
+f = http.request(
+    'GET',
+    'https://www.zalando.fr/api/rr/pr/sajax?flowId=ju36xvKEqGdtc9vr&try=1',
+    headers={
+        'Host': 'www.zalando.fr',
+        'Connection': 'keep-alive',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': 'https://www.zalando.fr/login/?view=register',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cookie': 'Zalando-Client-Id=b1df7ae2-413a-47c3-8fef-f8eddd7810b4; _ga=GA1.2.664290401.1591967248; _ga=GA1.2.664290401.1591967248; _gid=GA1.2.1312755635.1591967250; frsx=AAAAAD-SjMUG4tP5bhKC-XQ0JqV83Sb5oFGDBp0QqF2FQ56WA4m_AJjN_fzumzi8UjG2H--LY6OSVtGYYKoaUvKKYbMd-uf6CwR0NQXA96D-E3OYK3KZLap8wTnCJhpkJ8cEGerNdkYXGqhSyCclys8=; bm_sz=F7C0BB69337BED4B888F4132708471B2~YAAQL+57XJuJLKdyAQAAGWm7qQghX01ytvpSiNUPFBXXlMx9zoj3qJZUtsRMb7ii7BYOeZMAHqxhvcrQCAG7w5cD8TD1D5QAaY7hpPGJhxcTB8hXi1pBvQoJq6zqxmBmgOzeYjw1peZBYhabqTTZmEDW554KbtiWHUcg2asphrU6vfyh1x+qiuu0UEc1z85G; ak_bmsc=4422E901871FDA669DA2446E478055515C7BEE2F9B3D00007BC5E35E8D031673~plf/SeYXVoJanwUYXSBvgy6wmvVBJt8TqIC4MhvfwStiwziusQNTIFtzHpLX+Qyzi0hBkVZc/fLvlfLSN/QDqumh0uOguPfliZnYiUpoCPcaEdLT3uLOXDzQGYnGCmz3mDu8+X0wAQb7y+0UG4LOkn62w+n23v55UsGPYkbDOsbhfbO6OKyanLK8/PG/vxiBXzgrKLsjpftHJmrkPhcVE/DQWHqjLspiB9W1AjFqsXxUVxLJKnuI8U9zrmA+oEnjKp; _abck=B94B13408752796D9FA179CAE9B326F7~-1~YAAQXO57XPdpSINyAQAAW07EqQTDYE//4sIeq6V7Sgh6PUCBojb/x0/UuKUbLfgzLxogK2Vio3+s4LXUz8GS5PIL1vFWSZf1gXFj5cLqt4Nn3hHsM2hkbaNe7d44Mfb3oFrPjIEFsuN1I2TY4qjjq/CV3qvmBRuzjW3DSq1rLV2qfb1RQjbiIGhfTVKG1sBZtRtnJk360X/GBzlc6RcUZLYMy59h/WJdVdjspZv/ZPnJim41NAfxk8qheBki3Xx6KJgqAxYlPAynCyh+uZZOXW6aKHBZV4zzHG9Zcb1ZMkoCXP32dWJR+/bfIhGJVVhEykcUcEwhRh7njn1ybmXywiLsEao=~-1~-1~-1'
+    }
+)
+print(f.status)
 
 sensor_data = {
     "sensor_data": "7a74G7m23Vrp0o5c9173031.54-1,2,-94,-100,Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -72,19 +118,17 @@ sensor_data = {
                    "5499-1,2,-94,-116,27511667-1,2,-94,-118,233033-1,2,-94,-121,;4;7;0 "
 }
 url_post1 = "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
-encoded_data = json.dumps(sensor_data).encode('utf-8')
 b = http.request(
     'POST',
     url_post1,
-    body=encoded_data,
+    body=json.dumps(sensor_data).encode('utf-8'),
     headers={
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.5',
+        'Host': 'www.zalando.fr',
+        'Connection': 'keep-alive',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+        'Content-Type': 'text/plain;charset=UTF-8',
         'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': 'https://www.zalando.fr/login/?view=register',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-        'Connection': 'keep-alive'
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
     }
 )
 print(b.status)
@@ -94,20 +138,31 @@ c = http.request(
     'GET',
     url_get2,
     headers={
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.5',
         'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
+        'Cookie': 'Zalando-Client-Id=b1df7ae2-413a-47c3-8fef-f8eddd7810b4; _ga=GA1.2.664290401.1591967248; _ga=GA1.2.664290401.1591967248; _gid=GA1.2.1312755635.1591967250; frsx=AAAAAD-SjMUG4tP5bhKC-XQ0JqV83Sb5oFGDBp0QqF2FQ56WA4m_AJjN_fzumzi8UjG2H--LY6OSVtGYYKoaUvKKYbMd-uf6CwR0NQXA96D-E3OYK3KZLap8wTnCJhpkJ8cEGerNdkYXGqhSyCclys8=; bm_sz=F7C0BB69337BED4B888F4132708471B2~YAAQL+57XJuJLKdyAQAAGWm7qQghX01ytvpSiNUPFBXXlMx9zoj3qJZUtsRMb7ii7BYOeZMAHqxhvcrQCAG7w5cD8TD1D5QAaY7hpPGJhxcTB8hXi1pBvQoJq6zqxmBmgOzeYjw1peZBYhabqTTZmEDW554KbtiWHUcg2asphrU6vfyh1x+qiuu0UEc1z85G; ak_bmsc=4422E901871FDA669DA2446E478055515C7BEE2F9B3D00007BC5E35E8D031673~plf/SeYXVoJanwUYXSBvgy6wmvVBJt8TqIC4MhvfwStiwziusQNTIFtzHpLX+Qyzi0hBkVZc/fLvlfLSN/QDqumh0uOguPfliZnYiUpoCPcaEdLT3uLOXDzQGYnGCmz3mDu8+X0wAQb7y+0UG4LOkn62w+n23v55UsGPYkbDOsbhfbO6OKyanLK8/PG/vxiBXzgrKLsjpftHJmrkPhcVE/DQWHqjLspiB9W1AjFqsXxUVxLJKnuI8U9zrmA+oEnjKp; _abck=B94B13408752796D9FA179CAE9B326F7~-1~YAAQXO57XPdpSINyAQAAW07EqQTDYE//4sIeq6V7Sgh6PUCBojb/x0/UuKUbLfgzLxogK2Vio3+s4LXUz8GS5PIL1vFWSZf1gXFj5cLqt4Nn3hHsM2hkbaNe7d44Mfb3oFrPjIEFsuN1I2TY4qjjq/CV3qvmBRuzjW3DSq1rLV2qfb1RQjbiIGhfTVKG1sBZtRtnJk360X/GBzlc6RcUZLYMy59h/WJdVdjspZv/ZPnJim41NAfxk8qheBki3Xx6KJgqAxYlPAynCyh+uZZOXW6aKHBZV4zzHG9Zcb1ZMkoCXP32dWJR+/bfIhGJVVhEykcUcEwhRh7njn1ybmXywiLsEao=~-1~-1~-1',
+        'Host': 'www.zalando.fr',
+        'Origin': 'https://www.zalando.fr',
         'Referer': 'https://www.zalando.fr/login/?view=register',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-        'Connection': 'keep-alive'
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+        'x-flow-id': x_flow_id,
+        'x-xsrf-token': x_xsrf_token,
+        'x-zalando-client-id': x_zalando_client_id,
+        'x-zalando-render-page-uri': '/login/?view=register',
+        'x-zalando-request-uri': '/login/?view=register'
     }
 )
 print(c.status)
 
 register = {
     "newCustomerData": {
-        "accepts_terms_and_conditions": True,
+        "accepts_terms_and_conditions": "true",
         "date_of_birth": "",
         "email": "benjamain.balayre@isep.fr",
         "fashion_preference": [],
@@ -118,19 +173,32 @@ register = {
     },
     "wnaMode": "shop"
 }
+
 url_post2 = "https://www.zalando.fr/api/reef/register"
 d = http.request(
     'POST',
     url_post2,
     body=json.dumps(register).encode('utf-8'),
     headers={
-        'Content-Type': 'application/json',
+        'Host': 'www.zalando.fr',
+        'Connection': 'keep-alive',
+        'Content-Length': '241',
+        'x-xsrf-token': x_xsrf_token,
+        'x-zalando-render-page-uri': '/login/?view=register',
+        'x-zalando-client-id': x_zalando_client_id,
         'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Type': 'application/json',
+        'x-zalando-request-uri': '/login/?view=register',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+        'x-flow-id': x_flow_id,
+        'Origin': 'https://www.zalando.fr',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
         'Referer': 'https://www.zalando.fr/login/?view=register',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-        'Connection': 'keep-alive'
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cookie': 'Zalando-Client-Id=b1df7ae2-413a-47c3-8fef-f8eddd7810b4; _ga=GA1.2.664290401.1591967248; _ga=GA1.2.664290401.1591967248; _gid=GA1.2.1312755635.1591967250; frsx=AAAAAD-SjMUG4tP5bhKC-XQ0JqV83Sb5oFGDBp0QqF2FQ56WA4m_AJjN_fzumzi8UjG2H--LY6OSVtGYYKoaUvKKYbMd-uf6CwR0NQXA96D-E3OYK3KZLap8wTnCJhpkJ8cEGerNdkYXGqhSyCclys8=; bm_sz=F7C0BB69337BED4B888F4132708471B2~YAAQL+57XJuJLKdyAQAAGWm7qQghX01ytvpSiNUPFBXXlMx9zoj3qJZUtsRMb7ii7BYOeZMAHqxhvcrQCAG7w5cD8TD1D5QAaY7hpPGJhxcTB8hXi1pBvQoJq6zqxmBmgOzeYjw1peZBYhabqTTZmEDW554KbtiWHUcg2asphrU6vfyh1x+qiuu0UEc1z85G; ak_bmsc=4422E901871FDA669DA2446E478055515C7BEE2F9B3D00007BC5E35E8D031673~plf/SeYXVoJanwUYXSBvgy6wmvVBJt8TqIC4MhvfwStiwziusQNTIFtzHpLX+Qyzi0hBkVZc/fLvlfLSN/QDqumh0uOguPfliZnYiUpoCPcaEdLT3uLOXDzQGYnGCmz3mDu8+X0wAQb7y+0UG4LOkn62w+n23v55UsGPYkbDOsbhfbO6OKyanLK8/PG/vxiBXzgrKLsjpftHJmrkPhcVE/DQWHqjLspiB9W1AjFqsXxUVxLJKnuI8U9zrmA+oEnjKp; _abck=B94B13408752796D9FA179CAE9B326F7~-1~YAAQXO57XPdpSINyAQAAW07EqQTDYE//4sIeq6V7Sgh6PUCBojb/x0/UuKUbLfgzLxogK2Vio3+s4LXUz8GS5PIL1vFWSZf1gXFj5cLqt4Nn3hHsM2hkbaNe7d44Mfb3oFrPjIEFsuN1I2TY4qjjq/CV3qvmBRuzjW3DSq1rLV2qfb1RQjbiIGhfTVKG1sBZtRtnJk360X/GBzlc6RcUZLYMy59h/WJdVdjspZv/ZPnJim41NAfxk8qheBki3Xx6KJgqAxYlPAynCyh+uZZOXW6aKHBZV4zzHG9Zcb1ZMkoCXP32dWJR+/bfIhGJVVhEykcUcEwhRh7njn1ybmXywiLsEao=~-1~-1~-1'
     }
 )
 print(d.status)
