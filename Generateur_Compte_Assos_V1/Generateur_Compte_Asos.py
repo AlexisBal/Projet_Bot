@@ -45,7 +45,38 @@ with requests.Session() as session:
     url_get_5 = 'https://my.asos.com/identity/register?signin=%s&checkout=False&forceAuthentication=True' % signin
     e = session.get(url_get_5, verify=False)
     RequestVerificationToken = e.cookies['__RequestVerificationToken']
-    print(RequestVerificationToken)
+    RecaptchatSiteKey = '6LdP-5AUAAAAAPO8yIXcyhOoDwJjDlUvwrwfAp_V'
+    valeurs = {
+        '__RequestVerificationToken': RequestVerificationToken,
+        'Email': 'alexis.balayre@orange.fr',
+        'FirstName': 'Alexis',
+        'LastName': 'Balayre',
+        'Password': 'fozwic-kApqob-2mekge',
+        'BirthDay': '15',
+        'BirthMonth': '5',
+        'BirthYear': '2001',
+        'Gender': 'F',
+        'All': 'false',
+        'Clear': 'false',
+        'ServicePreferences[0].PreSelected': 'false',
+        'ServicePreferences[0].PreferenceId': 'promos',
+        'ServicePreferences[0].ActionText': 'Promos et soldes',
+        'ServicePreferences[1].PreSelected': 'false',
+        'ServicePreferences[1].PreferenceId': 'newness',
+        'ServicePreferences[1].ActionText': 'Nouveautés',
+        'ServicePreferences[2].PreSelected': 'false',
+        'ServicePreferences[2].PreferenceId': 'lifestyle',
+        'ServicePreferences[2].ActionText': 'Exclusivement pour vous',
+        'ServicePreferences[3].PreSelected': 'false',
+        'ServicePreferences[3].PreferenceId': 'partner',
+        'ServicePreferences[3].ActionText': 'Partenaires ASOS',
+        'TermsAndConditions': 'true'
+    }
+    url_post = 'https://my.asos.com/identity/register?signin=%s&isCheckout=False' % signin
+    f = session.post(url_post, data=valeurs)
+    print(f.status_code)
+    print(f.raise_for_status())
     session.close()
+
 
 
