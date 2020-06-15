@@ -52,30 +52,33 @@ with requests.Session() as session:
         'FirstName': 'Alexis',
         'LastName': 'Balayre',
         'Password': 'fozwic-kApqob-2mekge',
-        'BirthDay': '15',
-        'BirthMonth': '5',
-        'BirthYear': '2001',
+        'BirthDay': 15,
+        'BirthMonth': 5,
+        'BirthYear': 2001,
         'Gender': 'F',
-        'All': 'false',
-        'Clear': 'false',
-        'ServicePreferences[0].PreSelected': 'false',
+        'All': False,
+        'Clear': False,
+        'ServicePreferences[0].PreSelected': False,
         'ServicePreferences[0].PreferenceId': 'promos',
         'ServicePreferences[0].ActionText': 'Promos et soldes',
-        'ServicePreferences[1].PreSelected': 'false',
+        'ServicePreferences[1].PreSelected': False,
         'ServicePreferences[1].PreferenceId': 'newness',
         'ServicePreferences[1].ActionText': 'Nouveautés',
-        'ServicePreferences[2].PreSelected': 'false',
+        'ServicePreferences[2].PreSelected': False,
         'ServicePreferences[2].PreferenceId': 'lifestyle',
         'ServicePreferences[2].ActionText': 'Exclusivement pour vous',
-        'ServicePreferences[3].PreSelected': 'false',
+        'ServicePreferences[3].PreSelected': False,
         'ServicePreferences[3].PreferenceId': 'partner',
         'ServicePreferences[3].ActionText': 'Partenaires ASOS',
-        'TermsAndConditions': 'true'
+        'RecaptchatSiteKey': RecaptchatSiteKey,
+        'TermsAndConditions': True,
+        'TermsAndConditions': False,
+        'g-recaptcha-reponse': '',
+        'submitting': 'Soumission...'
     }
     url_post = 'https://my.asos.com/identity/register?signin=%s&isCheckout=False' % signin
     f = session.post(url_post, data=valeurs)
     print(f.status_code)
-    print(f.raise_for_status())
     session.close()
 
 
