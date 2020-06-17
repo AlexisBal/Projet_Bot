@@ -52,33 +52,45 @@ with requests.Session() as session:
         'FirstName': 'Alexis',
         'LastName': 'Balayre',
         'Password': 'fozwic-kApqob-2mekge',
-        'BirthDay': 15,
-        'BirthMonth': 5,
-        'BirthYear': 2001,
+        'BirthDay': '15',
+        'BirthMonth': '5',
+        'BirthYear': '2001',
         'Gender': 'F',
-        'All': False,
-        'Clear': False,
-        'ServicePreferences[0].PreSelected': False,
+        'All': 'false',
+        'Clear': 'false',
+        'ServicePreferences[0].PreSelected': 'false',
         'ServicePreferences[0].PreferenceId': 'promos',
         'ServicePreferences[0].ActionText': 'Promos et soldes',
-        'ServicePreferences[1].PreSelected': False,
+        'ServicePreferences[1].PreSelected': 'false',
         'ServicePreferences[1].PreferenceId': 'newness',
         'ServicePreferences[1].ActionText': 'Nouveautés',
-        'ServicePreferences[2].PreSelected': False,
+        'ServicePreferences[2].PreSelected': 'false',
         'ServicePreferences[2].PreferenceId': 'lifestyle',
         'ServicePreferences[2].ActionText': 'Exclusivement pour vous',
-        'ServicePreferences[3].PreSelected': False,
+        'ServicePreferences[3].PreSelected': 'false',
         'ServicePreferences[3].PreferenceId': 'partner',
         'ServicePreferences[3].ActionText': 'Partenaires ASOS',
         'RecaptchatSiteKey': RecaptchatSiteKey,
-        'TermsAndConditions': True,
-        'TermsAndConditions': False,
+        'TermsAndConditions': 'false',
         'g-recaptcha-reponse': '',
         'submitting': 'Soumission...'
     }
     url_post = 'https://my.asos.com/identity/register?signin=%s&isCheckout=False' % signin
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+        "Host": "my.asos.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://my.asos.com",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Referer": url_get_5,
+        "Content-Length": "1492",
+        "Accept-Language": "fr-fr"
+    })
     f = session.post(url_post, data=valeurs)
     print(f.status_code)
+    print(f.text)
     session.close()
 
 
