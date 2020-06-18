@@ -33,7 +33,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 # Réglage des "Retries"
 retries = Retry(total=10, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
 
-# Désactivation des mes messages d'avertissement
+# Désactivation des messages d'avertissement
 urllib3.disable_warnings()
 
 
