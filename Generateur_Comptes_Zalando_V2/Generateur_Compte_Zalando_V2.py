@@ -49,7 +49,7 @@ def SaisieInformations():
     ville = input("Entrer votre ville (sans accents):")
     adresse = input("Entrer votre adresse (sans accents) :")
     complement = input("Complément d'adresse (cliquer sur entrer pour passer) :")
-    telephone = input("Entrer un téléphone (de la forme +33683258043) :")
+    telephone = input("Entrer un numéro de téléphone mobile:")
     nombrecompte = int(
         input(
             "Entrer le nombre de comptes souhaité (1 adresse mail valide par compte) :"
@@ -448,7 +448,8 @@ def Configuration(compte_objet_list):
         print("Le compte de ", compte_objet_list[x].email, "a bien été configuré !")
 
 
-SaisieInformations()
+#SaisieInformations()
+
+#CreationComptes(comptes)
 comptes = creation_objet_compte()
-CreationComptes(comptes)
 Configuration(comptes)
