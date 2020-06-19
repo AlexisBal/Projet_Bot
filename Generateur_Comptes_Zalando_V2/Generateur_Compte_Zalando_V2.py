@@ -48,6 +48,8 @@ def SaisieInformations():
     cp = input("Entrer votre code postal :")
     ville = input("Entrer votre ville (sans accents):")
     adresse = input("Entrer votre adresse (sans accents) :")
+    complement = input("Complément d'adresse (cliquer sur entrer pour passer) :")
+    telephone = input("Entrer un téléphone (de la forme +33683258043) :")
     nombrecompte = int(
         input(
             "Entrer le nombre de comptes souhaité (1 adresse mail valide par compte) :"
@@ -60,10 +62,11 @@ def SaisieInformations():
             "nom": nom,
             "email": email,
             "motdepasse": "",
-            "pays": "France",
             "codepostal": cp,
             "ville": ville,
             "adresse": adresse,
+            "complement_adresse": complement,
+            "telephone": telephone
         }
         # Génération d'un mot de passe aléatoire et sécurisé
         pwo = PasswordGenerator()
@@ -430,7 +433,7 @@ def Configuration(compte_objet_list):
                 "lastname": compte_objet_list[x].nom,
                 "street": compte_objet_list[x].adresse,
                 "additional": compte_objet_list[x].complement_adresse,
-                "gender": compte_objet_list[x].civilite,
+                "gender": 'MALE',
                 "defaultBilling": True,
                 "defaultShipping": True,
                 "zip": compte_objet_list[x].codepostal
