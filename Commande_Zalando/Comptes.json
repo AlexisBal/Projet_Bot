@@ -1,22 +1,26 @@
 [
     {
+        "civilite": "MALE",
         "prenom": "Tom",
         "nom": "Challete ",
         "email": "tom.challete@gmail.com",
         "motdepasse": "w?CnM9Ww",
-        "pays": "France",
         "codepostal": "78490",
         "ville": "Garancieres",
-        "adresse": "8 rue du general leclerc"
+        "adresse": "8 rue du general leclerc",
+        "complement_adresse": "",
+        "telephone": "+33695831470"
     },
     {
+        "civilite": "MALE",
         "prenom": "Tom",
         "nom": "Challete ",
         "email": "tim.azertie@gmail.com",
         "motdepasse": "7pD#T9MdQcB",
-        "pays": "France",
         "codepostal": "78490",
         "ville": "Garancieres",
-        "adresse": "8 rue du general leclerc"
+        "adresse": "8 rue du general leclerc",
+        "complement_adresse": "",
+        "telephone": "+33695831470"
     }
 ]

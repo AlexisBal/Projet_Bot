@@ -64,6 +64,10 @@ def checkout():
         # Récupération des cookies de la session
         cookies = session.cookies.get_dict()
 
+        # Connexion à la page de connexion
+        url_get = "https://www.zalando.fr/login/?view=login"
+        session.get(url_get, verify=False)
+
         # Récupérations des paramètres requis par le serveur de Zalando
         session.headers["x-xsrf-token"] = cookies["frsx"]
         session.headers["x-zalando-client-id"] = cookies["Zalando-Client-Id"]
