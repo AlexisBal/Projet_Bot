@@ -16,24 +16,11 @@ print(requette)
 
 soup = BeautifulSoup(requette.text, 'lxml')'''
 
-sensor_data = {"sensor_data":"7a74G7m23Vrp0o5c9175931.59-1,2,-94,-100,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36,uaend,12147,20030107,fr-FR,Gecko,3,0,0,0,391854,8363491,1536,824,1536,864,1006,722,1536,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:1,bat:1,x11:0,x12:1,8315,0.18944723294,796299181745.5,loc:-1,2,-94,-101,do_en,dm_en,t_en-1,2,-94,-105,0,-1,0,0,1103,1103,0;1,-1,0,0,1466,1466,0;-1,2,-94,-102,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,1;-1,2,-94,-108,0,1,4499,17,0,4,-1;1,1,4685,undefined,0,0,-1;2,2,4688,undefined,0,0,-1;3,1,4689,69,0,4,-1;-1,2,-94,-110,0,1,142,-1,-1;1,1,142,-1,-1;2,1,149,70,3;3,1,157,75,7;4,1,165,80,11;5,1,173,84,15;6,1,181,90,21;7,1,190,96,26;8,1,197,104,31;9,1,205,110,36;10,1,213,117,42;11,1,221,123,46;12,1,229,128,50;13,1,237,134,54;14,1,246,140,57;15,1,253,145,59;16,1,261,152,63;17,1,269,160,66;18,1,277,168,70;19,1,285,179,74;20,1,293,191,78;21,1,301,207,84;22,1,309,221,90;23,1,317,236,98;24,1,325,248,106;25,1,333,262,114;26,1,341,271,122;27,1,349,280,130;28,1,357,288,138;29,1,365,296,146;30,1,373,303,154;31,1,381,310,164;32,1,390,316,173;33,1,398,321,181;34,1,434,340,210;35,1,437,344,218;36,1,445,349,226;37,1,453,355,234;38,1,461,361,242;39,1,469,367,248;40,1,477,372,254;41,1,486,376,260;42,1,493,380,266;43,1,523,390,278;44,1,525,393,282;45,1,533,396,286;46,1,542,400,289;47,1,549,402,292;48,1,557,405,294;49,1,565,408,297;50,1,573,411,300;51,1,581,415,303;52,1,590,420,306;53,1,598,425,310;54,1,606,432,313;55,1,613,440,316;56,1,621,450,321;57,1,629,459,324;58,1,638,468,328;59,1,645,476,331;60,1,653,484,334;61,1,661,491,337;62,1,669,494,338;63,1,677,496,338;64,1,685,499,340;65,1,694,500,340;66,1,701,501,341;67,1,710,502,342;68,1,717,504,342;69,1,729,506,343;70,1,733,508,344;71,1,741,512,345;72,1,749,516,346;73,1,757,520,347;74,1,765,523,349;75,1,773,525,350;76,1,781,528,351;77,1,790,532,353;78,1,798,536,354;79,1,806,542,356;80,1,813,547,357;81,1,821,551,358;82,1,829,556,358;83,1,837,559,359;84,1,845,562,360;85,1,853,564,360;86,1,870,565,360;87,1,910,567,360;88,1,918,569,360;89,1,925,573,360;90,1,933,582,360;91,1,941,591,358;92,1,949,598,358;93,1,957,607,358;94,1,965,614,358;95,1,973,620,358;96,1,981,626,358;97,1,990,631,358;98,1,997,636,358;99,1,1005,640,358;162,3,7263,764,359,-1;163,4,7325,764,359,-1;164,2,7326,764,359,-1;257,3,12454,703,342,-1;-1,2,-94,-117,-1,2,-94,-111,0,76,-1,-1,-1;-1,2,-94,-109,0,75,-1,-1,-1,-1,-1,-1,-1,-1,-1;-1,2,-94,-114,-1,2,-94,-103,2,4690;3,7261;2,8341;3,12453;-1,2,-94,-112,https://www.zalando.fr/login?target=/myaccount/-1,2,-94,-115,NaN,162803,32,76,75,0,NaN,12454,0,1592598363491,10,17037,4,258,2839,3,0,12455,109048,0,477A99D965D2622F881374ACD769C7B2~-1~YAAQfiMVAt87acFyAQAAIppCzgQGadKh8X78qtpKBik+w+93wmM/UF6eASy044H1fgLXULksXrmEuKiGQvMvZJKgaz1QptMcR7lsanpPhDcaLwkJvvwJ6B/J6Cute/5JZzn4tAVQ95MKURH3rKcmNjbZmkCtV1uU0jH8y+UFZA/h1hF/Fb+GH8I9FN079qwIzg9HVcgQkQaurwpX739i7ZpF07Px3bOmXZesRfZ6FlFz9D6NfPd1AV8DzbVECgPcaSudf2wHg+T4QkNkTvzvirC5zBgmueC9H7VNkcDJFWYdYPftL90oNd9GqDZR5/CmJQRM3h6D2crjYE0WQxuPi8RREac=~-1~-1~-1,32243,894,1404342648,30261693,NVVP,124,-1-1,2,-94,-106,1,3-1,2,-94,-119,5,7,7,6,14,15,10,6,8,4,4,1067,1182,205,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,11321144241322243122-1,2,-94,-70,1454252292;895908107;dis;,7,8;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5534-1,2,-94,-116,125452512-1,2,-94,-118,185329-1,2,-94,-121,;5;7;0"}
-
-securite = {
-    "event":"event_tracking",
-    "eventCategory":"checkout",
-    "eventAction":"click",
-    "eventLabel":"log in",
-    "flowId":"ZvkoDZVfYey652AM",
-    "host":"www.zalando.fr",
-    "pathname":"/login",
-    "referrer":"https://www.zalando.fr/cart/",
-    "accept_language":"fr-FR",
-    "timestamp":"2020-06-19T20:11:55.884Z"}
 
 login_data =    {
-    "username": "uzenetelenyelo@gmail.com", 
+    "username": "uzenetelnyelo@gmail.com", 
     "password": "Comptechaussures20", 
-    "wnaMode" : "shop"}
+    }
 
 with requests.session() as s:
 
@@ -41,10 +28,34 @@ with requests.session() as s:
     url = "https://www.zalando.fr/login?target=/myaccount/"
     r= s.get(url, headers=header)
     soup = BeautifulSoup(r.content, 'lxml')
+
     
-    r=s.post(url, data=sensor_data, headers=header)
-    time.sleep(1)
-    r= s.post(url, data=login_data, headers=header)
+    headers2 = {
+        'Host': 'www.zalando.fr',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+        'Accept': 'application/json',
+        'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://www.zalando.fr/login?target=/myaccount/',
+        'x-zalando-client-id': 'de04a38f-81e9-410b-b652-fc8c71c1c72f',
+        'x-zalando-render-page-uri': '/login?target=/myaccount/',
+        'x-zalando-request-uri': '/login?target=/myaccount/',
+        'x-zalando-redirect-target': 'http://www.zalando.fr/myaccount/',
+        'x-flow-id': 'nF2fYSzGJAfAP3qh',
+        'Content-Type': 'application/json',
+        'x-xsrf-token': 'AAAAAIJVngpguH27Vc7evBur5ScwR2kngRAolGq-pSxzgkh1jaBSN1PmV4O8i7B3nz6tYjetgsnAV4j2YdNDhZcalCImAUVSEugUbzBQTxNmkeyEGaPbeC_DWzcDhY6YOJwYi3NyBQspnD0jYCqmrhA=',
+        'Connection': 'keep-alive',
+        'Cookie': 'Zalando-Client-Id=de04a38f-81e9-410b-b652-fc8c71c1c72f; _abck=B5CDF9F2189AC166430F432BC127478E~-1~YAAQ1Nt6XEReZZZyAQAADMHHzgTJl9MKYAuap3JTyV+76ehqwduVUUttQxQ5pHRqgDeYuURQUmRM8UpLRRy44iFCbJkEA9dDlsywO6spw0+WFCKX8eJaSrc7xvilcN0tKo1cKe/pGzfWcd0J/wMFUaapKG3WtLM1/QTMevStNa9ULMuW/tqj8jb1XjXsSc8c2hioP6etOX6zsx7vKFc6dUWQ43LUsRV11SlcLaoszuwTebTsbFkJ6keehe3p2ElxK88t+mK5iXkljngo0w1Cbj23RfAJZCzKtkR/NUBhtEiFidKcPDAACc6+0D5WuYqKycUMRxRGkLyek6tAZkp1LzqZrC8=~-1~-1~-1; _gcl_au=1.1.164078372.1591700050; sqt_cap=1591860562334; PESSIONID=28wnevkkugca7-z1t73r2n02noqo-z55oc6h; CUSTOMER=GzMrtc9tEOfuO8UpMu8cP5WV5RQJdOzjSKvmnroXpYoYU7SDo2TSBJ88AU6mxeXLVWZNv25eD3ToeBEgDcVETyzlBrPsa37M3MAF527BJR4TW9xOT4GoOobJgIAbc4C7R8bEOvhOCwPYZmhoKLojxvgVMmhzBe/Y9vD5UTRbhS7VR3aVXTmCh8H5bycaDJC/QHZ83iumz+sYU7SDo2TSBPgVMmhzBe/YMOf/HxQWG2E=; ncx=m; _ga=GA1.2.694087826.1592574834; JSESSIONID=97DB3EC4BB69C5D4FE11A002C2F2CAD7.jvm_http40_p0121; BIGipServerzalando_http=673267722.20480.0000; filter-position=; bm_sz=6ABB778F7590B1A2F46093CF1D495D44~YAAQJVNzaB5rxqtyAQAAAnYczgigdQagQqlI4VcqGCHbN3s75LZO7gjL+OAOWVWzeftX22gYwxtfYchpE1W0wRSDegSKCHpFhpFMGK2OXBrbV/Nvs0kkJkWClFU1TH95I4mVhLbWjTiIr5jU5pkf7Y146pHhNHsyGvRjW3vZSQcfAHnMx96uuGkJG68a7Jv/; frsx=AAAAAIJVngpguH27Vc7evBur5ScwR2kngRAolGq-pSxzgkh1jaBSN1PmV4O8i7B3nz6tYjetgsnAV4j2YdNDhZcalCImAUVSEugUbzBQTxNmkeyEGaPbeC_DWzcDhY6YOJwYi3NyBQspnD0jYCqmrhA=; ak_bmsc=09B4EA3B0AB9A9EE571489B5ED6E500C5C7ADBC404360000FC36ED5E26219222~pl5JPPU+d+bhxr0yBroma6AraDils/a6wAiwnwLVix7wQUTYldL8I0TTu+DxgigJ8vJv4m1Znx3yhq/3n27y6bloCvAW3syp0Qs2FOp3v/gRt4uE190k12f3QaBa/blTGrkSt3HhAXqDdC8QlqYpRDyvX3doIf4ZWZV4MBCx39rYUr7bpxYFyt1uxNsncG1vImo3aU6uq9jpSsIKdVku3P+K1TDjQppAm2ns/xCmIdodeSfjc6phWFjkTLxz9mfTZ3; zac=AAAAAImOJ_4GUSaF5x_BYw6LoOrVgFAiGCStyPjhb85sz47j-vrJYlnoz-nYOlu5djo7Wbelm2ALwANtj278aoWU4UJGN7M6OxywGPIziFnBSuU5FZr6uaoZGErLsUSrWY8DPhWHCz-HiwkspC09LaluLxlgPUkKeztM5d40p_sqrNeMdktLZVfAwJw-FrFcIYn_jpayi2kSJTJJIyhgvwzdYiSKIWniyXWBUGT3GLUlysjeuhxWeRW9aK7HnU0iHhPjTjVF7Bt9KE4-RS5FrPt9BSq5TwPuEvGNooSgws9NFfFcQOgBILkgZbYNvhvK9iGxXNwBqGG0qATbBVAVT8oBdTUfUk6Ht5Va_4BYhmJAXWgybl97QPae4EAhUZB5HAhWX8kt5zp1ycJjPMUQDM6oy1UXtFnj2Yo5vQQdbHHVV52HKAmTnNFK4YZLGJTy6iACFTSk1cFzUlAcAaAlz52Os-Y51gQCRV_sswYEPPD8ojGmuOhtyDt-JyWjFhYdWYIxAmeoBHi7zpk0w84dpdU5cpgGY8rgZy5W2qR9RInK4XLIQ-L6BJ8JEvpqVF8MEKxp8jznxjqYncTqCBsR2jkENISpfVB48nU9yyrpY3nElko-rStw47th8xueEvHhBXbE1IdRq_WDgnboZOl4lYM9ZSsVL3wwsAec9d0CI1rrX-rRVWgDV8Tud4KDUwXC4lkzCCUz1l1tFCMbOmN7lfELJy0BC3y88fREv72oll-5rkJ5No4pxn7GpRKoYKDds55Ok826JbJJ7ysA9SQdvTkALDyhnbi59zJz6mW1ifalQOemC0zp02OEOjnMved5eoT6jGyyHSY5qp3UBslWwyVzIv4DfJ90EaA-hMKKhzd2I3tQgWIhkW4nGYMtAsCEd1wcYx4_uA3t4Gpm-vzsonfUaI7h-VVBBof0X0OPx-5PHurgfUethziggJDcSYYfEsrgTHVbX8joTgSCiGs48YWqx7XO7Nzojo_AqVp5ItLNITqOHjRmOlG6QZV2F1-pFJ3wwJRxa-L9vIDxNptKlDFtCOoQ842anG8yaBnjNKEHKQpkEMAXiR3HuFxjsLBqu-h9WoE4hzevWFz_uu68Xsdm3v8JblWkLgECR4HF2Pw0Q64jmVo_F1MG5GYoJ41o5PPyGndt38MWng_U-72I94m76yRuuqzNWyWn9cAsek1uMmQ_s_gJV1-cwPqWzhPgcTADYCmznEWsxlp6w97w22OVRW4=; bm_mi=5DA5F49685210AADC7D28AD0E428D0A8~Y2fIOUI7tBLr7EnsqJpJXMl3/RfI/9Zee/6rsWN4Fjo0NBRalok6ok/7PVSJRMaI7qrG0btHOOsHaIKXdwK3NILG01+anB/9mMSPtZyIKyUp18q9V/sT4XeN5SJP+aXDnh9iKrWXMRcjVlVMGzvfzZO5vvP+bvPCDaQ14XRkZcKHlvNsItB4/fkcrq6GTp+tCF1XkCH/F5807lFjxztwP/wfKHTLm/wdhaTHBRZl6CWo/BRLjA0t0wWCmR69qS8pgSQxXYsYdD+KYSuluHIbz7WxnCpwKHYne+WcjgcHDPU=',
+        'If-None-Match': 'W/"18d-nJvMn2d3brYtlyEJaBvaJarW5YA"',
+        'TE': 'Trailers'
+    }
+    
+        
+    s.headers.update(headers2)
+    s.get(url, verify=False)
+    
+    s.post(url, json=login_data, verify=False)
+    
     print(r.content)
 
 
