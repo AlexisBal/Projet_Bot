@@ -99,17 +99,31 @@ def checkout():
 
         # Connexion au compte Zalando
         url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
-        url_connexion_post = "https://www.zalando.fr/api/reef/login"
+        url_connextion_post1 = 'https://www.zalando.fr/api/rr/e'
+        url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
         login = {
             'username': 'tom.challete@gmail.com',
             'password': 'w?CnM9Ww',
             'wnaMode': 'checkout'
         }
+        data = {
+            'event': 'event_tracking',
+            'eventCategory': 'checkout',
+            'eventAction': 'click',
+            'eventLabel': 'log in',
+            'flowId': home.headers["X-Flow-Id"],
+            'host': 'www.zalando.fr',
+            'pathname': '/welcomenoaccount/true',
+            'referrer': 'https://www.zalando.fr/cart/',
+            'accept_language': 'fr-FR'
+        }
         a = session.get(url_connexion_get, verify=False)
         session.headers["Origin"] = "https://www.zalando.fr"
-        b = session.post(url_connexion_post, json=login, verify=False)
+        b = session.post(url_connextion_post1, json=data, verify=False)
+        c = session.post(url_connexion_post2, json=login, verify=False)
         print(a.status_code)
         print(b.status_code)
+        print(c.status_code)
 
 
 checkout()
