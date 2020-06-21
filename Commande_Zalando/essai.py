@@ -1,20 +1,6 @@
 import requests
-import timeit
 from bs4 import BeautifulSoup
-#from conf import *
-from Generateurbien import *
-import time
 
-start = timeit.default_timer()
-#url = URLGen()
-url = "https://www.zalando.fr/nike-sportswear-air-force-1-07-an20-baskets-basses-whiteblack-ni112o0cl-a11.html"
-print(url)
-header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-
-'''requette = requests.get(url, headers= header)
-print(requette)
-
-soup = BeautifulSoup(requette.text, 'lxml')'''
 
 
 login_data =    {
@@ -22,6 +8,7 @@ login_data =    {
     "password": "Comptechaussures20", 
     }
 
+    
 with requests.session() as s:
 
     header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -59,16 +46,9 @@ with requests.session() as s:
     
     url_checkout_2 = 'https://www.zalando.fr/checkout/address'
     a = s.get(url_checkout_2, verify=False)
-    soup = BeautifulSoup(a.text, 'html.parser')
+    soup = BeautifulSoup(a.text, 'lxml')
+    
+    
     print(soup)
     #print(soup.find('div').getText("data-props"))
     
-    #print(r.content)
-
-
-
-
-
-
-stop = timeit.default_timer()
-print (stop - start)
