@@ -96,7 +96,7 @@ def creation_objet_compte():
 
 # Création des comptes à partir des attributs de chaque objet "Compte"
 def CreationComptes(compte_objet_list):
-    # Comptage du nombre de compte présents dans la base de données
+    # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
     # Création d'un compte pour chaque objet "Compte" présent dans la base de données
@@ -122,7 +122,7 @@ def CreationComptes(compte_objet_list):
             url_get = "https://www.zalando.fr/login/?view=register"
             session.get(url_get, verify=False)
 
-            # Récupérations des paramètres requis par le serveur de Zalando
+            # Mise à jour du headers
             session.headers["x-xsrf-token"] = cookies["frsx"]
             session.headers["x-zalando-client-id"] = cookies["Zalando-Client-Id"]
             session.headers["x-zalando-render-page-uri"] = "/"
