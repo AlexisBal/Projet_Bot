@@ -176,6 +176,12 @@ def checkout(compte_objet_list):
             session.post(url_connexion_post2, json=identifiants, verify=False)
             session.get(url_checkout_1, verify=False)
 
+        # Fermeture de la session
+        session.close()
+
+        # Message de confimation pour chaque compte configuré
+        print("Le produit a bien été mis dans le panier du compte ", compte_objet_list[x].email)
+
 
 comptes = creation_objet_compte()
 checkout(comptes)

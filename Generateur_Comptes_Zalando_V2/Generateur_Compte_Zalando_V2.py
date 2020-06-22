@@ -31,7 +31,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=10, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -46,10 +46,10 @@ def SaisieInformations():
     prenom = input("Entrer votre prenom :")
     nom = input("Entrer votre nom :")
     cp = input("Entrer votre code postal :")
-    ville = input("Entrer votre ville (sans accents):")
+    ville = input("Entrer votre ville (sans accents) :")
     adresse = input("Entrer votre adresse (sans accents) :")
     complement = input("Complément d'adresse (cliquer sur entrer pour passer) :")
-    telephone = input("Entrer un numéro de téléphone mobile:")
+    telephone = input("Entrer un numéro de téléphone mobile :")
     nombrecompte = int(
         input(
             "Entrer le nombre de comptes souhaité (1 adresse mail valide par compte) :"
