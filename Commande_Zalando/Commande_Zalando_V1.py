@@ -47,6 +47,69 @@ def creation_objet_compte():
     return compte_objet_list
 
 
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------#
+
+def URLGen():
+    
+    base_url = 'https://www.zalando.fr/'
+
+    #------------------------------------------------------------------Code produit-------------------------------------------------------------#
+    
+    code_produit= input("Entrer le code du produit :")
+    #code_produit= 'Selected Homme'
+    code_produit = code_produit.lower().replace(" ", "-")
+
+
+    #--------------------------------------------------------------------Model--------------------------------------------------------------------#
+
+
+    model= str(input("Entrer le model du produit :"))
+    #model='SLHMELROSE - T-shirt imprimé'
+    model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
+
+    #----------------------------------------------------------------Couleur-----------------------------------------------------------------#
+    
+    couleur= input("Entrer la couleur du produit :")
+    #couleur= 'sky captain'
+    couleur = couleur.lower().replace(" ", "-").replace("/", "")
+
+    #-------------------------------------------------------------------Reference--------------------------------------------------------#
+
+    reference= input("Entrer le code du produit :")
+    #reference= 'NI112O0CL-A11'
+    reference = reference.lower().replace(" ", "")
+
+    #-------------------------------------------------------------------------------------------------------------------------------#
+    
+    
+    vrai_url_1 = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
+    vrai_url_2 = base_url + code_produit + '-' + model + "-" + reference + '.html'
+
+    URLs = [vrai_url_1, vrai_url_2]
+
+    return URLs
+
+
+
+def scanner(lien):
+    
+    while True :
+        header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        requette_1 = requests.get(lien[0], headers= header)
+        requette_2 = requests.get(lien[1], headers= header)
+
+        if requette_1.status_code == 200 or  requette_2.status_code == 200 :
+            break
+
+    return True
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
+
+
+
 def checkout(compte_objet_list):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
