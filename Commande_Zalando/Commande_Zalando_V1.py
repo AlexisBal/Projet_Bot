@@ -51,7 +51,7 @@ def checkout(compte_objet_list):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
-    # Mise dans le panier du produit pour chaque compte présent dans la base de données
+    # Mise dans le panier du produit pour chaque objet "Compte" présent dans la base de données
     for x in range(0, nombrecompte):
         # Ouverture de la Session
         with requests.Session() as session:

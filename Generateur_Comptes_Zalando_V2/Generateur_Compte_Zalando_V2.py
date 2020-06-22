@@ -68,7 +68,7 @@ def SaisieInformations():
             "complement_adresse": complement,
             "telephone": telephone
         }
-        # Génération d'un mot de passe aléatoire et sécurisé
+        # Création d'un mot de passe aléatoire et sécurisé
         pwo = PasswordGenerator()
         i["motdepasse"] = pwo.generate()
         # Insertion des comptes dans la liste "liste_compte"
@@ -134,13 +134,15 @@ def CreationComptes(compte_objet_list):
             url_get_2 = (
                 "https://www.zalando.fr/resources/a6c5863f92201d42d0a3ba96882c7b"
             )
-            session.get(url_get_2, verify=False)
-
             url_get_3 = (
-                'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1' % home.headers["X-Flow-Id"]
+                    'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1' % home.headers["X-Flow-Id"]
             )
-            session.get(url_get_3, verify=False)
-
+            url_post1 = (
+                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
+            )
+            url_post1_bis = (
+                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
+            )
             sensor_data = {
                 "sensor_data": "7a74G7m23Vrp0o5c9173031.54-1,2,-94,-100,Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362,"
@@ -193,11 +195,6 @@ def CreationComptes(compte_objet_list):
                 "-359992563;-1439556030;dis;,23;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,"
                 "5499-1,2,-94,-116,27511667-1,2,-94,-118,233033-1,2,-94,-121,;4;7;0 "
             }
-            url_post1 = (
-                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
-            )
-            session.post(url_post1, json=sensor_data, verify=False)
-
             sensor_data_bis = {
                 "sensor_data": "7a74G7m23Vrp0o5c9174241.54-1,2,-94,-100,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36,uaend,12147,"
@@ -284,9 +281,9 @@ def CreationComptes(compte_objet_list):
                 "-94,-70,-36060876;-1849314799;dis;,7,8;true;true;true;-120;true;30;30;true;false;-1-1,2,-94,"
                 "-80,5578-1,2,-94,-116,8399281-1,2,-94,-118,386880-1,2,-94,-121,;10;31;0 "
             }
-            url_post1_bis = (
-                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
-            )
+            session.get(url_get_2, verify=False)
+            session.get(url_get_3, verify=False)
+            session.post(url_post1, json=sensor_data, verify=False)
             session.post(url_post1_bis, json=sensor_data_bis, verify=False)
 
             # Préparation et envoie de la requete POST d'inscription
