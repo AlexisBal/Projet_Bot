@@ -9,37 +9,39 @@ def URLGen():
 
     #------------------------------------------------------------------Code produit-------------------------------------------------------------#
     
-    #code_produit= input("Entrer le code du produit :")
-    code_produit= 'Nike Sportswear'
+    code_produit= input("Entrer le code du produit :")
+    #code_produit= 'Nike Sportswear'
     code_produit = code_produit.lower().replace(" ", "-")
 
 
     #--------------------------------------------------------------------Model--------------------------------------------------------------------#
 
 
-    #model= str(input("entrer le model de la chaussure :"))
-    model='AIR FORCE 1 ’07 AN20  - Baskets basses'
+    model= str(input("entrer le model de la chaussure :"))
+    #model='AIR FORCE 1 ’07 AN20  - Baskets basses'
     model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-")
 
     #----------------------------------------------------------------Couleur-----------------------------------------------------------------#
     
-    #couleur= input("Entrer la couleur du produit")
-    couleur= 'white/black'
+    couleur= input("Entrer la couleur du produit")
+    #couleur= 'white/black'
     couleur = couleur.lower().replace("/", "").replace(" ", "")
 
     #-------------------------------------------------------------------Reference--------------------------------------------------------#
 
-    #reference= input("Entrer le code du produit :")
-    reference= 'NI112O0CL-A11'
+    reference= input("Entrer le code du produit :")
+    #reference= 'NI112O0CL-A11'
     reference = reference.lower().replace(" ", "")
 
     #---------------------------------------------------------------------------------------------------------------------------------#
     
     
-    vrai_url = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
+    #vrai_url = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
+    vrai_url = base_url + code_produit + '-' + model + "-" + reference + '.html'
     return vrai_url
 
 lien_produit=(URLGen())
+print(lien_produit)
 
 
 
@@ -53,6 +55,6 @@ def scanner(lien):
 
     return True 
 
-resultat = scanner(lien_produit)
+#resultat = scanner(lien_produit)
 
-print(resultat)
+#print(resultat)
