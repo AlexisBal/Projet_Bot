@@ -13,10 +13,10 @@ def URLGen(model, ref, coul, type_):
 	
 	
 	URL1 = 'https://www.zalando.fr/' + str(type_)+ "-" + str(model) + "-" + str(coul) + "-" + str(ref) + ".html"
-	URL2='https://www.zalando.fr/' + str(type_)+ "-" + str(model) + "-" + str(ref) + ".html"
+	#URL2='https://www.zalando.fr/' + str(type_)+ "-" + str(model) + "-" + str(ref) + ".html"
 
-	URLs= [URL1, URL2]
-	return URLs
+	#URLs= [URL1, URL2]
+	return URL1
 
 
 #type_ = input ("Entrer le type de produit :")
@@ -63,9 +63,7 @@ def Verifie_stock(url):
 	Sizes = str(listedestailles)
 	#print(Sizes)
 
-	for button in liste_tailles:
-		if "38" or "39" or "40" or "41" or "42" or "43" or "44" or "45" or "46" in button.text:
-			print(button)
+	
 
 
 	'''Sizes = str(listedestailles[0].getText()).replace('\t', '')
@@ -78,25 +76,8 @@ def Verifie_stock(url):
 		print(' Tailles: ' + str(size) + ' Disponible')'''
 
 
-URL = URLGen(Model, reference, couleur, type_)
-Verifie_stock(URL[0])
+#URL = URLGen(Model, reference, couleur, type_)
 
 
 
-'''def SneakerBot(model, size=None):
-	while True:
-		try:
-			url = 'http://www.adidas.com/us/{}.html?'.format(model)
-			Sizes = CheckStock(url)
-			if size != None:
-				#If you didn't input size
-				if str(size) in Sizes:
-					DoSomething()
-			else:
-				for a in Sizes:
-					DoSomething()
-		except:
-			pass
 
-threads = [threading.Thread(name='ThreadNumber{}'.format(n), target=SneakerBot, args(ModelNumber, size,)) for size in SizeList for n in range(ThreadCount)]
-for t in threads: t.start()'''

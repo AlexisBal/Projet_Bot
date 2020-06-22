@@ -1,4 +1,6 @@
-
+import time
+import requests
+from bs4 import BeautifulSoup
 
 
 def URLGen():
@@ -36,3 +38,21 @@ def URLGen():
     
     vrai_url = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
     return vrai_url
+
+lien_produit=(URLGen())
+
+
+
+def scanner(lien):
+    
+    while True :
+        header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        requette = requests.get(lien, headers= header)
+        if requette.status_code == 200 :
+            break
+
+    return True 
+
+resultat = scanner(lien_produit)
+
+print(resultat)
