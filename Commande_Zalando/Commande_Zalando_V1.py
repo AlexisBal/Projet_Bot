@@ -1,4 +1,5 @@
 import json
+import time
 
 import requests
 import urllib3
@@ -56,39 +57,43 @@ def URLGen():
 
     #------------------------------------------------------------------Code produit-------------------------------------------------------------#
     
-    code_produit= input("Entrer le code du produit :")
-    #code_produit= 'Selected Homme'
+    code_produit = input("Entrer la marque du produit (Nike Sportwear):")
+    #code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-")
-
 
     #--------------------------------------------------------------------Model--------------------------------------------------------------------#
 
-
-    model= str(input("Entrer le model du produit :"))
-    #model='SLHMELROSE - T-shirt imprimé'
+    model = str(input("Entrer le modèle du produit (SLHMELROSE - T-shirt imprimé) :"))
+    #model = 'SLHMELROSE - T-shirt imprimé'
     model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
 
-    #----------------------------------------------------------------Couleur-----------------------------------------------------------------#
+    #----------------------------------------------------------------Couleur-------------------------------------------------------------#
     
-    couleur= input("Entrer la couleur du produit :")
-    #couleur= 'sky captain'
+    couleur = input("Entrer la couleur du produit (sky captain) :")
+    #couleur = 'sky captain'
     couleur = couleur.lower().replace(" ", "-").replace("/", "")
 
     #-------------------------------------------------------------------Reference--------------------------------------------------------#
 
-    reference= input("Entrer le code du produit :")
-    #reference= 'NI112O0CL-A11'
+    reference = input("Entrer la référence du produit (NI112O0CL-A11) :")
+    #reference = 'NI112O0CL-A11'
+    article = reference
     reference = reference.lower().replace(" ", "")
 
-    #-------------------------------------------------------------------------------------------------------------------------------#
-    
+    #------------------------------------------------------------------Taille-----------------------------------------------------------#
+
+    taille = str(input("Entrer la taille du produit :"))
+    taille = str(article) + str(0) + str(0) + taille + str(0) + str(0) + str(0)
+
+    #-----------------------------------------------------------------------------------------------------------------------------------#
     
     vrai_url_1 = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
     vrai_url_2 = base_url + code_produit + '-' + model + "-" + reference + '.html'
+    time.sleep(0.2)
 
-    URLs = [vrai_url_1, vrai_url_2]
+    URLs_taille = [vrai_url_1, vrai_url_2, taille]
 
-    return URLs
+    return URLs_taille
 
 
 
@@ -96,21 +101,26 @@ def scanner(lien):
     
     while True :
         header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        requette_1 = requests.get(lien[0], headers= header)
-        requette_2 = requests.get(lien[1], headers= header)
+        requette_1 = requests.get(lien[0], headers=header, verify=False)
+        requette_2 = requests.get(lien[1], headers=header, verify=False)
+        time.sleep(0.2)
 
-        if requette_1.status_code == 200 or  requette_2.status_code == 200 :
+        if requette_2.status_code == 200 :
+            url_produit = lien[0]
             break
 
-    return True
+        if requette_1.status_code == 200  :
+            url_produit = lien[0]
+            break
+
+    
+    return  url_produit
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
 
-
-
-def checkout(compte_objet_list):
+def checkout(compte_objet_list, url_produit, article):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
@@ -140,9 +150,6 @@ def checkout(compte_objet_list):
             cookies = session.cookies.get_dict()
 
             # Connexion à la page du produit
-            url_produit = (
-                "https://www.zalando.fr/levisr-t-shirt-imprime-white-le226g005-a11.html"
-            )
             del session.headers["Upgrade-Insecure-Requests"]
             session.get(url_produit, verify=False)
 
@@ -157,7 +164,6 @@ def checkout(compte_objet_list):
 
             # Mise dans le panier
             url_panier = "https://www.zalando.fr/api/pdp/cart"
-            article = "LE226G005-A11004A000"
             panier = {"simpleSku": article, "anonymous": False}
             session.headers["Accept"] = "application/json"
             session.headers["Content-Type"] = "application/json"
@@ -240,7 +246,7 @@ def checkout(compte_objet_list):
             identifiants = {
                 "username": compte_objet_list[x].email,
                 "password": compte_objet_list[x].motdepasse,
-                "wnaMode": "checkout",
+                "wnaMode": "checkout", 
             }
             session.headers.update(headers_2)
             session.get(url_connexion_get, verify=False)
@@ -259,4 +265,7 @@ def checkout(compte_objet_list):
 
 
 comptes = creation_objet_compte()
-checkout(comptes)
+generateur_url = URLGen() 
+url = scanner(generateur_url)
+article = generateur_url[2]
+checkout(comptes, url, article)
