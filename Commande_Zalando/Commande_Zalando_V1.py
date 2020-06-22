@@ -1,4 +1,5 @@
 import json
+import re
 
 import requests
 import urllib3
@@ -187,8 +188,8 @@ def checkout():
         session.get(url_checkout_1, verify=False)
         a = session.get(url_checkout_2, verify=False)
         soup = bs(a.text, 'html.parser')
-        print(a.text)
-        print(soup.find('div').getText("data-props"))
+        print(soup.find(re.compile('name&quot')))
+
         # session.post(url_checkout_3, json=adresse, verify=False)
 
 
