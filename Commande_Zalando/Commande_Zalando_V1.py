@@ -1,11 +1,9 @@
 import json
-import re
 
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-from bs4 import BeautifulSoup as bs
 
 
 # Définition de la classe "Compte"
@@ -145,8 +143,6 @@ def checkout():
         url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
         url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
         url_checkout_1 = 'https://www.zalando.fr/checkout/confirm'
-        url_checkout_2 = 'https://www.zalando.fr/checkout/address'
-        url_checkout_3 = 'https://www.zalando.fr/api/checkout/search-pickup-points-by-address'
         headers_2 = {
             'Host': 'www.zalando.fr',
             'Accept': 'application/json',
@@ -168,29 +164,11 @@ def checkout():
             'password': 'w?CnM9Ww',
             'wnaMode': 'checkout'
         }
-        adresse = {
-            'address': {
-                'id': '',
-                'salutation': 'Mr',
-                'first_name': 'Tom',
-                'last_name': 'Challete',
-                'zip': '78490',
-                'city': 'Garancieres',
-                'country_code': 'FR',
-                'street': '8 rue du general leclerc',
-                'additional': ''
-            }
-        }
         session.headers.update(headers_2)
         session.get(url_connexion_get, verify=False)
         session.headers["Origin"] = "https://www.zalando.fr"
         session.post(url_connexion_post2, json=identifiants, verify=False)
         session.get(url_checkout_1, verify=False)
-        a = session.get(url_checkout_2, verify=False)
-        soup = bs(a.text, 'html.parser')
-        print(soup.find(re.compile('name&quot')))
-
-        # session.post(url_checkout_3, json=adresse, verify=False)
 
 
 checkout()
