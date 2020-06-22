@@ -321,7 +321,7 @@ def Configuration(compte_objet_list):
     nombrecompte = len(compte_objet_list)
 
     # Création d'un compte pour chaque objet "Compte" présent dans la base de données
-    for x in range(0, nombrecompte):
+    for y in range(0, nombrecompte):
         with requests.Session() as session:
             # Réglage des paramètres de la session
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
@@ -380,8 +380,8 @@ def Configuration(compte_objet_list):
             url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
             url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
             identifiants = {
-                'username': compte_objet_list[x].email,
-                'password': compte_objet_list[x].motdepasse,
+                'username': compte_objet_list[y].email,
+                'password': compte_objet_list[y].motdepasse,
                 'wnaMode': 'shop'
             }
             session.headers["Accept"] = "application/json"
@@ -403,11 +403,11 @@ def Configuration(compte_objet_list):
             url_informations_get = 'https://www.zalando.fr/myaccount/details'
             url_informations_post = 'https://www.zalando.fr/api/user-account-details/details'
             informations = {
-                'first_name': compte_objet_list[x].prenom,
-                'last_name': compte_objet_list[x].nom,
+                'first_name': compte_objet_list[y].prenom,
+                'last_name': compte_objet_list[y].nom,
                 'fashion_category': [],
                 'birth_date': None,
-                'phone': compte_objet_list[x].telephone
+                'phone': compte_objet_list[y].telephone
             }
             session.get(url_informations_get, verify=False)
             session.post(url_informations_post, json=informations, verify=False)
@@ -417,16 +417,16 @@ def Configuration(compte_objet_list):
             url_profil_post = 'https://www.zalando.fr/api/user-account-address/addresses'
             adresse = {
                 "type": "HomeAddress",
-                "city": compte_objet_list[x].ville,
+                "city": compte_objet_list[y].ville,
                 "countryCode": "FR",
-                "firstname": compte_objet_list[x].prenom,
-                "lastname": compte_objet_list[x].nom,
-                "street": compte_objet_list[x].adresse,
-                "additional": compte_objet_list[x].complement_adresse,
+                "firstname": compte_objet_list[y].prenom,
+                "lastname": compte_objet_list[y].nom,
+                "street": compte_objet_list[y].adresse,
+                "additional": compte_objet_list[y].complement_adresse,
                 "gender": 'MALE',
                 "defaultBilling": True,
                 "defaultShipping": True,
-                "zip": compte_objet_list[x].codepostal
+                "zip": compte_objet_list[y].codepostal
             }
             session.get(url_profil_get, verify=False)
             session.post(url_profil_post, json=adresse, verify=False)
@@ -435,7 +435,7 @@ def Configuration(compte_objet_list):
         session.close()
 
         # Message de confimation pour chaque compte configuré
-        print("Le compte de ", compte_objet_list[x].email, "a bien été configuré !")
+        print("Le compte de ", compte_objet_list[y].email, "a bien été configuré !")
 
 
 SaisieInformations()
