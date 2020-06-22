@@ -10,22 +10,22 @@ def URLGen():
     #------------------------------------------------------------------Code produit-------------------------------------------------------------#
     
     code_produit= input("Entrer le code du produit :")
-    #code_produit= 'Nike Sportswear'
+    #code_produit= 'Selected Homme'
     code_produit = code_produit.lower().replace(" ", "-")
 
 
     #--------------------------------------------------------------------Model--------------------------------------------------------------------#
 
 
-    model= str(input("entrer le model de la chaussure :"))
-    #model='AIR FORCE 1 ’07 AN20  - Baskets basses'
-    model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-")
+    model= str(input("Entrer le model du produit :"))
+    #model='SLHMELROSE - T-shirt imprimé'
+    model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
 
     #----------------------------------------------------------------Couleur-----------------------------------------------------------------#
     
-    couleur= input("Entrer la couleur du produit")
-    #couleur= 'white/black'
-    couleur = couleur.lower().replace("/", "").replace(" ", "")
+    couleur= input("Entrer la couleur du produit :")
+    #couleur= 'sky captain'
+    couleur = couleur.lower().replace(" ", "-").replace("/", "")
 
     #-------------------------------------------------------------------Reference--------------------------------------------------------#
 
@@ -36,13 +36,15 @@ def URLGen():
     #---------------------------------------------------------------------------------------------------------------------------------#
     
     
-    #vrai_url = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
-    vrai_url = base_url + code_produit + '-' + model + "-" + reference + '.html'
-    return vrai_url
+    vrai_url_1 = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
+    vrai_url_2 = base_url + code_produit + '-' + model + "-" + reference + '.html'
+
+    URLs = [vrai_url_1, vrai_url_2]
+
+    return URLs
 
 lien_produit=(URLGen())
-print(lien_produit)
-
+print(lien_produit[0], lien_produit[1])
 
 
 def scanner(lien):
