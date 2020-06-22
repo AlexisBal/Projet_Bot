@@ -66,9 +66,9 @@ def SaisieInformations():
             "ville": ville,
             "adresse": adresse,
             "complement_adresse": complement,
-            "telephone": telephone
+            "telephone": telephone,
         }
-        # Génération d'un mot de passe aléatoire et sécurisé
+        # Création d'un mot de passe aléatoire et sécurisé
         pwo = PasswordGenerator()
         i["motdepasse"] = pwo.generate()
         # Insertion des comptes dans la liste "liste_compte"
@@ -134,13 +134,16 @@ def CreationComptes(compte_objet_list):
             url_get_2 = (
                 "https://www.zalando.fr/resources/a6c5863f92201d42d0a3ba96882c7b"
             )
-            session.get(url_get_2, verify=False)
-
             url_get_3 = (
-                'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1' % home.headers["X-Flow-Id"]
+                "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1"
+                % home.headers["X-Flow-Id"]
             )
-            session.get(url_get_3, verify=False)
-
+            url_post1 = (
+                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
+            )
+            url_post1_bis = (
+                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
+            )
             sensor_data = {
                 "sensor_data": "7a74G7m23Vrp0o5c9173031.54-1,2,-94,-100,Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362,"
@@ -193,11 +196,6 @@ def CreationComptes(compte_objet_list):
                 "-359992563;-1439556030;dis;,23;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,"
                 "5499-1,2,-94,-116,27511667-1,2,-94,-118,233033-1,2,-94,-121,;4;7;0 "
             }
-            url_post1 = (
-                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
-            )
-            session.post(url_post1, json=sensor_data, verify=False)
-
             sensor_data_bis = {
                 "sensor_data": "7a74G7m23Vrp0o5c9174241.54-1,2,-94,-100,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36,uaend,12147,"
@@ -284,9 +282,9 @@ def CreationComptes(compte_objet_list):
                 "-94,-70,-36060876;-1849314799;dis;,7,8;true;true;true;-120;true;30;30;true;false;-1-1,2,-94,"
                 "-80,5578-1,2,-94,-116,8399281-1,2,-94,-118,386880-1,2,-94,-121,;10;31;0 "
             }
-            url_post1_bis = (
-                "https://www.zalando.fr/resources/a6c5863f921840dbe8f36578d86f32"
-            )
+            session.get(url_get_2, verify=False)
+            session.get(url_get_3, verify=False)
+            session.post(url_post1, json=sensor_data, verify=False)
             session.post(url_post1_bis, json=sensor_data_bis, verify=False)
 
             # Préparation et envoie de la requete POST d'inscription
@@ -326,14 +324,14 @@ def Configuration(compte_objet_list):
             # Réglage des paramètres de la session
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
             headers = {
-                'Host': 'www.zalando.fr',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) '
-                              'Chrome/83.0.4103.97 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'fr-fr',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1'
+                "Host": "www.zalando.fr",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/83.0.4103.97 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                "Accept-Language": "fr-fr",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive",
+                "Upgrade-Insecure-Requests": "1",
             }
             session.headers.update(headers)
 
@@ -346,24 +344,28 @@ def Configuration(compte_objet_list):
 
             # Connexion à la page de connexion
             url_get = "https://www.zalando.fr/login/?view=login"
-            del session.headers['Upgrade-Insecure-Requests']
+            del session.headers["Upgrade-Insecure-Requests"]
             session.get(url_get, verify=False)
 
             # Envoie de requetes pour éviter les sécurités anti-bot
             url_get_1 = (
-                    'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1' % home.headers["X-Flow-Id"]
+                "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1"
+                % home.headers["X-Flow-Id"]
             )
             session.get(url_get_1, verify=False)
 
             # Envoie de requetes pour éviter les sécurités anti-bot
             url_get_2 = (
-                    'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=3' % home.headers["X-Flow-Id"]
+                "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=3"
+                % home.headers["X-Flow-Id"]
             )
             session.headers["x-xsrf-token"] = cookies["frsx"]
             session.get(url_get_2, verify=False)
 
             # Envoie de requetes pour éviter les sécurités anti-bot
-            url_post1 = "https://www.zalando.fr/resources/1f2f569be9201d42d0a3ba96882c7b"
+            url_post1 = (
+                "https://www.zalando.fr/resources/1f2f569be9201d42d0a3ba96882c7b"
+            )
             sensor_data = {
                 "sensor_data": "7a74G7m23Vrp0o5c9175981.59-1,2,-94,-100,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.2 Safari/605.1.15,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,391850,1658105,1440,814,1440,900,1440,862,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.294628793147,796290829052.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1103,1103,0;1,-1,0,0,1466,1466,0;-1,2,-94,-102,0,-1,0,0,1103,1103,0;1,-1,0,0,1466,1466,0;-1,2,-94,-108,-1,2,-94,-110,0,1,617,939,3;1,1,622,939,3;2,1,624,946,6;3,1,633,955,10;4,1,635,955,10;5,1,639,965,15;6,1,639,965,15;7,1,647,976,19;8,1,648,976,19;9,1,657,991,24;10,1,657,991,24;11,1,663,1008,28;12,1,665,1008,28;13,1,672,1025,33;14,1,674,1025,33;15,1,679,1056,40;16,1,680,1056,40;17,1,688,1076,44;18,1,689,1076,44;19,1,696,1087,46;20,1,697,1087,46;21,1,703,1109,51;22,1,703,1109,51;23,1,712,1129,55;24,1,713,1129,55;25,1,720,1148,59;26,1,722,1148,59;27,1,727,1166,66;28,1,728,1166,66;29,1,736,1180,71;30,1,736,1180,71;31,1,744,1196,77;32,1,744,1196,77;33,1,753,1212,85;34,1,754,1212,85;35,1,760,1226,94;36,1,760,1226,94;37,1,769,1236,102;38,1,770,1236,102;39,1,775,1249,112;40,1,776,1249,112;41,1,787,1258,121;42,1,787,1258,121;43,1,791,1265,130;44,1,792,1265,130;45,1,802,1273,138;46,1,802,1273,138;47,1,808,1279,147;48,1,809,1279,147;49,1,818,1283,154;50,1,819,1283,154;51,1,825,1284,157;52,1,826,1284,157;53,1,832,1290,168;54,1,835,1290,168;55,1,840,1291,176;56,1,841,1291,176;57,1,850,1292,183;58,1,861,1293,190;59,1,864,1293,198;60,1,865,1293,198;61,1,873,1293,206;62,1,873,1293,206;63,1,882,1293,213;64,1,883,1293,213;65,1,889,1290,220;66,1,892,1290,220;67,1,897,1284,227;68,1,898,1284,227;69,1,908,1270,241;70,1,915,1255,250;71,1,918,1255,250;72,1,921,1239,258;73,1,922,1239,258;74,1,929,1216,267;75,1,929,1216,267;76,1,937,1190,274;77,1,938,1190,274;78,1,946,1162,282;79,1,947,1162,282;80,1,953,1130,287;81,1,954,1130,287;82,1,962,1096,293;83,1,962,1096,293;84,1,970,1061,296;85,1,970,1061,296;86,1,978,1022,298;87,1,979,1022,298;88,1,986,987,300;89,1,986,987,300;90,1,994,948,302;91,1,994,948,302;92,1,1005,917,304;93,1,1012,904,304;94,1,1013,904,304;95,1,1019,876,304;96,1,1020,876,304;97,1,1026,853,304;98,1,1026,853,304;99,1,1034,847,304;217,3,2758,739,188,1103;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,329;-1,2,-94,-112,https://www.zalando.fr/login/?view=login-1,2,-94,-115,1,220704,32,0,0,0,220672,2758,0,1592581658105,16,17036,0,218,2839,1,0,2759,84978,0,544D198E0F1B1CB2C191909E5A431D4A~-1~YAAQI5HdWON0Wa1yAQAAIJhDzQSs2DaHi3VWlNasxDo6Ll1h+oPs9Arg4f8DmMXtm7anSErvR5n9n2pO+UMTG/IVcwHpfi9Wi/ZDhjSRktF/01XyTRMeCqjaeI0/prETWeQeJkJTEUT7q7Lp9d7aH30hB2IihOsBdiBvSwqh9UbB/o6n5EgkZgrD6PRQwpDic6VG2QZ9k5czxOMXhm2LdiLG+/uKxYYkLkarftjuMKCgYsG+w4No1YL0WTXRpGFiEoZrP1PWYltbpu2Q2NBlWPFovn4VW0knih51voTZCUXpt52d7hsTVn2TdnQglcPVYqHyg6Goubm3of/HY6EI/ryzWoo=~-1~-1~-1,32678,285,1682362911,26018161,NVVN,124,-1-1,2,-94,-106,1,2-1,2,-94,-119,200,2200,0,0,0,0,0,0,0,200,0,3000,2600,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,44769069-1,2,-94,-118,176741-1,2,-94,-121,;1;4;0"
             }
@@ -380,9 +382,9 @@ def Configuration(compte_objet_list):
             url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
             url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
             identifiants = {
-                'username': compte_objet_list[y].email,
-                'password': compte_objet_list[y].motdepasse,
-                'wnaMode': 'shop'
+                "username": compte_objet_list[y].email,
+                "password": compte_objet_list[y].motdepasse,
+                "wnaMode": "shop",
             }
             session.headers["Accept"] = "application/json"
             session.headers["x-zalando-request-uri"] = "/login/?view=login"
@@ -396,25 +398,29 @@ def Configuration(compte_objet_list):
             session.post(url_connexion_post2, json=identifiants, verify=False)
 
             # Affichage du profil
-            url_profil = 'https://www.zalando.fr/myaccount'
+            url_profil = "https://www.zalando.fr/myaccount"
             session.get(url_profil, verify=False)
 
             # Configuration du profil : Ajout d'un numéro de téléphone
-            url_informations_get = 'https://www.zalando.fr/myaccount/details'
-            url_informations_post = 'https://www.zalando.fr/api/user-account-details/details'
+            url_informations_get = "https://www.zalando.fr/myaccount/details"
+            url_informations_post = (
+                "https://www.zalando.fr/api/user-account-details/details"
+            )
             informations = {
-                'first_name': compte_objet_list[y].prenom,
-                'last_name': compte_objet_list[y].nom,
-                'fashion_category': [],
-                'birth_date': None,
-                'phone': compte_objet_list[y].telephone
+                "first_name": compte_objet_list[y].prenom,
+                "last_name": compte_objet_list[y].nom,
+                "fashion_category": [],
+                "birth_date": None,
+                "phone": compte_objet_list[y].telephone,
             }
             session.get(url_informations_get, verify=False)
             session.post(url_informations_post, json=informations, verify=False)
 
             # Configuration du profil : Ajout d'une adresse
-            url_profil_get = 'https://www.zalando.fr/myaccount/addresses'
-            url_profil_post = 'https://www.zalando.fr/api/user-account-address/addresses'
+            url_profil_get = "https://www.zalando.fr/myaccount/addresses"
+            url_profil_post = (
+                "https://www.zalando.fr/api/user-account-address/addresses"
+            )
             adresse = {
                 "type": "HomeAddress",
                 "city": compte_objet_list[y].ville,
@@ -423,10 +429,10 @@ def Configuration(compte_objet_list):
                 "lastname": compte_objet_list[y].nom,
                 "street": compte_objet_list[y].adresse,
                 "additional": compte_objet_list[y].complement_adresse,
-                "gender": 'MALE',
+                "gender": "MALE",
                 "defaultBilling": True,
                 "defaultShipping": True,
-                "zip": compte_objet_list[y].codepostal
+                "zip": compte_objet_list[y].codepostal,
             }
             session.get(url_profil_get, verify=False)
             session.post(url_profil_post, json=adresse, verify=False)
