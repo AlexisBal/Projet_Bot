@@ -166,8 +166,8 @@ def checkout(compte_objet_list):
                 'Content-Type': 'application/json'
             }
             identifiants = {
-                'username': 'tom.challete@gmail.com',
-                'password': 'w?CnM9Ww',
+                'username': compte_objet_list[x].email,
+                'password': compte_objet_list[x].motdepasse,
                 'wnaMode': 'checkout'
             }
             session.headers.update(headers_2)
