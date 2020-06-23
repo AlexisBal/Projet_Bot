@@ -10,15 +10,15 @@ buildOptions = dict(
 base = None
 executables = [
     Executable(
-        "Generateur_Compte_Zalando_V2.py",
+        "Commande_Zalando_V1.py",
         base=base,
     )
 ]
 
 setup(
-    name="Generateur Compte Zalando V2",
+    name="Recherche-produit_mise-le-panier",
     version="1.0",
-    description="Generateur de comptes sur zalando",
+    description="Recherche du produit et mise dans le panier",
     options=dict(build_exe=buildOptions),
     executables=executables,
 )
