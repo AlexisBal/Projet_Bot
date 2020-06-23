@@ -82,8 +82,9 @@ def URLGen():
 
     #------------------------------------------------------------------Taille-----------------------------------------------------------#
 
-    taille = str(input("Entrer la taille du produit :"))
-    taille = str(article) + str(0) + str(0) + taille + str(0) + str(0) + str(0)
+    taille = int(input("Entrer la taille 'Marque' du produit :"))
+    taille = taille*10
+    taille = str(article) + str(0) + str(0) + str(taille)  + str(0) + str(0)
 
     #-----------------------------------------------------------------------------------------------------------------------------------#
     
