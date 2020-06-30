@@ -5,6 +5,7 @@ import urllib3
 from password_generator import PasswordGenerator
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from user_agent import generate_user_agent
 
 
 # Définition de la classe "Compte"
@@ -107,7 +108,7 @@ def CreationComptes(compte_objet_list):
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
             session.headers.update(
                 {
-                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"
+                    'User-Agent': generate_user_agent(os=('mac', 'linux'))
                 }
             )
 
@@ -325,8 +326,7 @@ def Configuration(compte_objet_list):
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
             headers = {
                 "Host": "www.zalando.fr",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/83.0.4103.97 Safari/537.36",
+                "User-Agent": generate_user_agent(os=('mac', 'linux')),
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                 "Accept-Language": "fr-fr",
                 "Accept-Encoding": "gzip, deflate, br",

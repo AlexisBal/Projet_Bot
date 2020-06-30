@@ -37,7 +37,7 @@ urllib3.disable_warnings()
 
 
 def DisponibiliteProduit():
-    x = 1
+    x = 0
     while True:
         try:
             # Ouverture de la Session
@@ -106,20 +106,39 @@ def DisponibiliteProduit():
                 )
                 a = session.get(url_get_2, verify=False)
 
-                # Affichage des produits disponibles
+                # Récupération de la liste du stock
                 objet = json.loads(a.text)
-                print(objet['gtm']['productSizeAvailability'])
+                stock = objet['gtm']['productSizeAvailability']
 
             session.close()
+
+            # Séparation des valeurs
+            liste_stock = stock.split('|')
+            liste_stock_bis = []
+
+            # Séparation des pointures et du stock
+            for valeur in liste_stock:
+                y = valeur.split('_')
+                liste_stock_bis.extend(y)
+
+            # Détermination de la position de la pointure et du stock
+            position_pointure = liste_stock_bis.index('38')
+            position_stock = position_pointure + 1
+
+            # Affichage du stock de la pointure concernée
+            if liste_stock_bis[position_stock] == '1':
+                return True
+            else:
+                time.sleep(1800)
 
         except:
             pass
 
         finally:
-            time.sleep(600)
             x = x + 1
             if x == 5:
                 x = 0
 
 
-DisponibiliteProduit()
+Dispo = DisponibiliteProduit()
+print(Dispo)
