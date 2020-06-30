@@ -111,6 +111,7 @@ def DisponibiliteProduit():
                 stock = objet['gtm']['productSizeAvailability']
 
             session.close()
+
             # Séparation des valeurs
             liste_stock = stock.split('|')
             liste_stock_bis = []
