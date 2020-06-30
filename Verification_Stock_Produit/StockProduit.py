@@ -54,12 +54,12 @@ def DisponibiliteProduit():
 
                 # Réglage du Proxy
                 liste_proxy = [
+                    'pt32.nordvpn.com',
                     'uk1525.nordvpn.com',
                     'ie69.nordvpn.com',
                     'hk139.nordvpn.com',
                     'jp491.nordvpn.com',
-                    'au443.nordvpn.com',
-                    'pt32.nordvpn.com'
+                    'au443.nordvpn.com'
                 ]
                 print(liste_proxy[x])
                 session.proxies = {
@@ -113,12 +113,9 @@ def DisponibiliteProduit():
                 print(objet['gtm']['productSizeAvailability'])
 
             session.close()
-            time.sleep(600)
-            x = x + 1
-            if x == 6:
-                x = 0
 
-        except KeyError:
+        finally:
+            time.sleep(600)
             x = x + 1
             if x == 6:
                 x = 0
