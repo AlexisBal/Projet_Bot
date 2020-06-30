@@ -48,46 +48,44 @@ def creation_objet_compte():
     return compte_objet_list
 
 
-
-#-----------------------------------------------------------------------------------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 def URLGen():
-    
     base_url = 'https://www.zalando.fr/'
 
-    #------------------------------------------------------------------Code produit-------------------------------------------------------------#
-    
+    # ------------------------------------------------------------------Code produit-------------------------------------------------------------#
+
     code_produit = input("Entrer la marque du produit (Nike Sportwear):")
-    #code_produit = 'Nike Sportwear'
+    # code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-")
 
-    #--------------------------------------------------------------------Model--------------------------------------------------------------------#
+    # --------------------------------------------------------------------Model--------------------------------------------------------------------#
 
     model = str(input("Entrer le modèle du produit (SLHMELROSE - T-shirt imprimé) :"))
-    #model = 'SLHMELROSE - T-shirt imprimé'
+    # model = 'SLHMELROSE - T-shirt imprimé'
     model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
 
-    #----------------------------------------------------------------Couleur-------------------------------------------------------------#
-    
+    # ----------------------------------------------------------------Couleur-------------------------------------------------------------#
+
     couleur = input("Entrer la couleur du produit (sky captain) :")
-    #couleur = 'sky captain'
+    # couleur = 'sky captain'
     couleur = couleur.lower().replace(" ", "-").replace("/", "")
 
-    #-------------------------------------------------------------------Reference--------------------------------------------------------#
+    # -------------------------------------------------------------------Reference--------------------------------------------------------#
 
     reference = input("Entrer la référence du produit (NI112O0CL-A11) :")
-    #reference = 'NI112O0CL-A11'
+    # reference = 'NI112O0CL-A11'
     article = reference
     reference = reference.lower().replace(" ", "")
 
-    #------------------------------------------------------------------Taille-----------------------------------------------------------#
+    # ------------------------------------------------------------------Taille-----------------------------------------------------------#
 
     taille = int(input("Entrer la taille 'Marque' du produit :"))
-    taille = taille*10
-    taille = str(article) + str(0) + str(0) + str(taille)  + str(0) + str(0)
+    taille = taille * 10
+    taille = str(article) + str(0) + str(0) + str(taille) + str(0) + str(0)
 
-    #-----------------------------------------------------------------------------------------------------------------------------------#
-    
+    # -----------------------------------------------------------------------------------------------------------------------------------#
+
     vrai_url_1 = base_url + code_produit + '-' + model + "-" + couleur + "-" + reference + '.html'
     vrai_url_2 = base_url + code_produit + '-' + model + "-" + reference + '.html'
     time.sleep(0.2)
@@ -97,28 +95,26 @@ def URLGen():
     return URLs_taille
 
 
-
 def scanner(lien):
-    
-    while True :
-        header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    while True:
+        header = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         requette_1 = requests.get(lien[0], headers=header, verify=False)
         requette_2 = requests.get(lien[1], headers=header, verify=False)
         time.sleep(0.2)
 
-        if requette_2.status_code == 200 :
+        if requette_2.status_code == 200:
             url_produit = lien[0]
             break
 
-        if requette_1.status_code == 200  :
+        if requette_1.status_code == 200:
             url_produit = lien[0]
             break
 
-    
-    return  url_produit
+    return url_produit
 
-#---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
 def checkout(compte_objet_list, url_produit, article):
@@ -134,7 +130,7 @@ def checkout(compte_objet_list, url_produit, article):
             headers = {
                 "Host": "www.zalando.fr",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/83.0.4103.97 Safari/537.36",
+                              "Chrome/83.0.4103.97 Safari/537.36",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                 "Accept-Language": "fr-fr",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -156,8 +152,8 @@ def checkout(compte_objet_list, url_produit, article):
 
             # Envoie de requetes pour éviter les sécurités anti-bot
             url_get_1 = (
-                "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1"
-                % home.headers["X-Flow-Id"]
+                    "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1"
+                    % home.headers["X-Flow-Id"]
             )
             session.headers["Accept"] = "*/*"
             session.headers["x-xsrf-token"] = cookies["frsx"]
@@ -205,8 +201,8 @@ def checkout(compte_objet_list, url_produit, article):
 
             # Sécurité anti-bot
             url_get_2 = (
-                "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=2"
-                % home.headers["X-Flow-Id"]
+                    "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=2"
+                    % home.headers["X-Flow-Id"]
             )
             url_post1 = (
                 "https://www.zalando.fr/resources/1f2f569be9201d42d0a3ba96882c7b"
@@ -237,7 +233,7 @@ def checkout(compte_objet_list, url_produit, article):
                 "x-xsrf-token": cookies["frsx"],
                 "Accept-Language": "fr-fr",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/83.0.4103.97 Safari/537.36",
+                              "Chrome/83.0.4103.97 Safari/537.36",
                 "Referer": "https://www.zalando.fr/welcomenoaccount/true",
                 "x-flow-id": home.headers["X-Flow-Id"],
                 "x-zalando-client-id": cookies["Zalando-Client-Id"],
@@ -247,7 +243,7 @@ def checkout(compte_objet_list, url_produit, article):
             identifiants = {
                 "username": compte_objet_list[x].email,
                 "password": compte_objet_list[x].motdepasse,
-                "wnaMode": "checkout", 
+                "wnaMode": "checkout",
             }
             session.headers.update(headers_2)
             session.get(url_connexion_get, verify=False)
@@ -266,7 +262,7 @@ def checkout(compte_objet_list, url_produit, article):
 
 
 comptes = creation_objet_compte()
-generateur_url = URLGen() 
+generateur_url = URLGen()
 url = scanner(generateur_url)
 article = generateur_url[2]
 checkout(comptes, url, article)
