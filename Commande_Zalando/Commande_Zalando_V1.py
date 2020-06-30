@@ -3,6 +3,8 @@ import time
 
 import requests
 import urllib3
+import urllib
+from urllib.parse import quote
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
@@ -131,8 +133,8 @@ def scanner(lien):
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-def DisponibiliteProduit():
-    x = 1
+def DisponibiliteProduit(liste_proxys):
+    x = 0
     while True:
         try:
             # Ouverture de la Session
@@ -146,16 +148,9 @@ def DisponibiliteProduit():
                     }
                 )
 
-                # Réglage du Proxy
-                liste_proxy = [
-                    'pt32.nordvpn.com',
-                    'ie69.nordvpn.com',
-                    'hk139.nordvpn.com',
-                    'jp491.nordvpn.com',
-                    'au443.nordvpn.com'
-                ]
+                # Réglage du proxy
                 session.proxies = {
-                    'https': 'https://alexis.balayre@gmail.com:worwaj-8kemXi-gogqes@%s:80/' % liste_proxy[x]
+                    'https': 'https://%s' % liste_proxys[x]
                 }
 
                 # Connexion à la page d'accueil de Zalando
@@ -231,7 +226,7 @@ def DisponibiliteProduit():
 
         finally:
             x = x + 1
-            if x == 5:
+            if x == (len(liste_proxys) + 1):
                 x = 0
 
 
@@ -355,12 +350,12 @@ def checkout(compte_objet_list, url_produit, article, liste_proxy):
                 "x-flow-id": home.headers["X-Flow-Id"],
                 "x-zalando-client-id": cookies["Zalando-Client-Id"],
                 "Connection": "keep-alive",
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             }
             identifiants = {
                 "username": compte_objet_list[x].email,
                 "password": compte_objet_list[x].motdepasse,
-                "wnaMode": "checkout",
+                "wnaMode": "checkout"
             }
             session.headers.update(headers_2)
             session.get(url_connexion_get, verify=False)
@@ -374,7 +369,7 @@ def checkout(compte_objet_list, url_produit, article, liste_proxy):
         # Message de confimation pour chaque compte configuré
         print(
             "Le produit a bien été mis dans le panier du compte ",
-            compte_objet_list[x].email,
+            compte_objet_list[x].email
         )
 
 
@@ -383,4 +378,5 @@ generateur_url = URLGen()
 liste_proxy = proxy()
 url = scanner(generateur_url)
 article = generateur_url[2]
+DisponibiliteProduit(liste_proxy)
 checkout(comptes, url, article, liste_proxy)
