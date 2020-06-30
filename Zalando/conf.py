@@ -1,4 +1,11 @@
-couleur= input("Entrer la couleur du produit :")
-#couleur= 'white/black'
-couleur = couleur.lower().replace(" ", "").replace("/", "")
-print(couleur)
+dictionnaire = {
+
+}
+
+for i in range (0, 3):
+    i = str(i)
+    nom = "nom" + i
+    print(nom)
+    dictionnaire[nom] = 3
+
+print(dictionnaire.keys())
