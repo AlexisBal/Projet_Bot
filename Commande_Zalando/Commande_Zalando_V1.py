@@ -48,6 +48,30 @@ def creation_objet_compte():
     return compte_objet_list
 
 
+#----------------------------------------------------------------------Proxy---------------------------------------------------------------------------#
+
+#Création des proxy
+def proxy():
+
+    voulez_vous = input("Voulez vous utiliser un proxy ? (o/n)")
+
+    if voulez_vous == "o":
+        proxies = {
+    
+        }
+        nombre_proxy = int(input("Combien de proxy souhaitez vous entrer ?:"))
+        for i in range(0, nombre_proxy):
+            proxie= input("Entrer le proxy souhaité (ex: 35.203.34.108:8080 ):")
+            i = str(i)
+            proxie = "proxy_" + i
+            proxies[proxie] = proxie
+        
+        return proxies
+    
+    else : 
+        break
+
+
 # -----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 def URLGen():
@@ -117,7 +141,7 @@ def scanner(lien):
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-def checkout(compte_objet_list, url_produit, article):
+def checkout(compte_objet_list, url_produit, article, liste_proxy):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
@@ -125,6 +149,8 @@ def checkout(compte_objet_list, url_produit, article):
     for x in range(0, nombrecompte):
         # Ouverture de la Session
         with requests.Session() as session:
+
+            session.proxies = { liste_proxy }
             # Réglage des paramètres de la session
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
             headers = {
@@ -263,6 +289,7 @@ def checkout(compte_objet_list, url_produit, article):
 
 comptes = creation_objet_compte()
 generateur_url = URLGen()
+liste_proxy = proxy()
 url = scanner(generateur_url)
 article = generateur_url[2]
-checkout(comptes, url, article)
+checkout(comptes, url, article, liste_proxy)
