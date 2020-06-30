@@ -37,7 +37,7 @@ urllib3.disable_warnings()
 
 
 def DisponibiliteProduit():
-    x = 0
+    x = 1
     while True:
         try:
             # Ouverture de la Session
@@ -59,7 +59,6 @@ def DisponibiliteProduit():
                     'jp491.nordvpn.com',
                     'au443.nordvpn.com'
                 ]
-                print(liste_proxy[x])
                 session.proxies = {
                     'https': 'https://alexis.balayre@gmail.com:worwaj-8kemXi-gogqes@%s:80/' % liste_proxy[x]
                 }
@@ -110,6 +109,7 @@ def DisponibiliteProduit():
                 objet = json.loads(a.text)
                 stock = objet['gtm']['productSizeAvailability']
 
+            # Fermeture de la Session
             session.close()
 
             # Séparation des valeurs
