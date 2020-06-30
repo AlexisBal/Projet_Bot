@@ -52,7 +52,7 @@ def DisponibiliteProduit():
             )
 
             # Réglage du Proxy
-            liste_proxy = ['au443.nordvpn.com', 'pt32.nordvpn.com']
+            liste_proxy = ['jp491.nordvpn.com', 'au443.nordvpn.com', 'pt32.nordvpn.com']
             print(liste_proxy[x])
             session.proxies = {
                 'https': 'https://alexis.balayre@gmail.com:worwaj-8kemXi-gogqes@%s:80/' % liste_proxy[x]
@@ -107,7 +107,7 @@ def DisponibiliteProduit():
         session.close()
         time.sleep(600)
         x = x + 1
-        if x == 2:
+        if x == 3:
             x = 0
 
 
