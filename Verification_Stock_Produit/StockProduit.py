@@ -8,7 +8,6 @@ import urllib.parse
 from user_agent import generate_user_agent
 
 
-
 class Compte:
     def __init__(self, **compte_attributes):
         for attr_name, attr_value in compte_attributes.items():
@@ -31,14 +30,14 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=6, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
 
 
 def DisponibiliteProduit():
-    x = 0
+    x = 1
     while True:
         try:
             # Ouverture de la Session
@@ -55,7 +54,6 @@ def DisponibiliteProduit():
                 # Réglage du Proxy
                 liste_proxy = [
                     'pt32.nordvpn.com',
-                    'uk1525.nordvpn.com',
                     'ie69.nordvpn.com',
                     'hk139.nordvpn.com',
                     'jp491.nordvpn.com',
@@ -114,13 +112,14 @@ def DisponibiliteProduit():
 
             session.close()
 
+        except:
+            pass
+
         finally:
             time.sleep(600)
             x = x + 1
-            if x == 6:
+            if x == 5:
                 x = 0
 
 
 DisponibiliteProduit()
-
-
