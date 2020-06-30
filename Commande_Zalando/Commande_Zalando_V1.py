@@ -54,7 +54,7 @@ def creation_objet_compte():
 #Création des proxy
 def proxy():
 
-    voulez_vous = input("Voulez vous utiliser un proxy ? (o/n)")
+    voulez_vous = input("Voulez-vous utiliser un proxy ? (o/n)")
 
     if voulez_vous == "o":
         proxies = {
@@ -62,15 +62,15 @@ def proxy():
         }
         nombre_proxy = int(input("Combien de proxy souhaitez vous entrer ?:"))
         for i in range(0, nombre_proxy):
-            proxie= input("Entrer le proxy souhaité (ex: 35.203.34.108:8080 ):")
+            proxie = input("Entrer le proxy souhaité (ex: 35.203.34.108:8080 ):")
             i = str(i)
             proxie = "proxy_" + i
             proxies[proxie] = proxie
         
         return proxies
     
-    else : 
-        break
+    else:
+        pass
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------#
