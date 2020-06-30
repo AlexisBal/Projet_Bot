@@ -63,6 +63,7 @@ def proxy():
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------#
 
+
 def URLGen():
     base_url = 'https://www.zalando.fr/'
 
@@ -127,8 +128,9 @@ def scanner(lien):
 
     return url_produit
 
-
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
 def DisponibiliteProduit():
     x = 1
     while True:
@@ -382,4 +384,3 @@ liste_proxy = proxy()
 url = scanner(generateur_url)
 article = generateur_url[2]
 checkout(comptes, url, article, liste_proxy)
-
