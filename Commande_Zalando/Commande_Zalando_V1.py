@@ -5,6 +5,7 @@ import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from user_agent import generate_user_agent
 
 
 # Définition de la classe "Compte"
@@ -98,7 +99,8 @@ def URLGen():
 def scanner(lien):
     while True:
         header = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            'User-Agent': generate_user_agent(os=('mac', 'linux'))
+        }
         requette_1 = requests.get(lien[0], headers=header, verify=False)
         requette_2 = requests.get(lien[1], headers=header, verify=False)
         time.sleep(0.2)
@@ -129,8 +131,7 @@ def checkout(compte_objet_list, url_produit, article):
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
             headers = {
                 "Host": "www.zalando.fr",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
-                              "Chrome/83.0.4103.97 Safari/537.36",
+                "User-Agent": generate_user_agent(os=('mac', 'linux')),
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                 "Accept-Language": "fr-fr",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -232,8 +233,7 @@ def checkout(compte_objet_list, url_produit, article):
                 "x-zalando-render-page-uri": "/welcomenoaccount/true",
                 "x-xsrf-token": cookies["frsx"],
                 "Accept-Language": "fr-fr",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
-                              "Chrome/83.0.4103.97 Safari/537.36",
+                "User-Agent": generate_user_agent(os=('mac', 'linux')),
                 "Referer": "https://www.zalando.fr/welcomenoaccount/true",
                 "x-flow-id": home.headers["X-Flow-Id"],
                 "x-zalando-client-id": cookies["Zalando-Client-Id"],

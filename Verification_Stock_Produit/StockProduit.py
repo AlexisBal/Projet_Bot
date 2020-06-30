@@ -37,7 +37,7 @@ urllib3.disable_warnings()
 
 
 def DisponibiliteProduit():
-    x = 1
+    x = 0
     while True:
         try:
             # Ouverture de la Session
@@ -111,12 +111,12 @@ def DisponibiliteProduit():
                 print(objet['gtm']['productSizeAvailability'])
 
             session.close()
+            time.sleep(1800)
 
         except:
             pass
 
         finally:
-            time.sleep(600)
             x = x + 1
             if x == 5:
                 x = 0
