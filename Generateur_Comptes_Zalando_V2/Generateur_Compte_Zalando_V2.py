@@ -67,7 +67,8 @@ def SaisieInformations():
             "ville": ville,
             "adresse": adresse,
             "complement_adresse": complement,
-            "telephone": telephone,
+            "id_adresse": '',
+            "telephone": telephone
         }
         # Création d'un mot de passe aléatoire et sécurisé
         pwo = PasswordGenerator()
@@ -436,8 +437,11 @@ def Configuration(compte_objet_list):
             }
             session.get(url_profil_get, verify=False)
             reponse = session.post(url_profil_post, json=adresse, verify=False)
+
+            # Récupération de l'id de d'adresse
             objet = json.loads(reponse.text)
             id_adresse = objet[0]['id']
+            compte_objet_list[y].id_adresse = id_adresse
 
         # Fermeture de la session
         session.close()
