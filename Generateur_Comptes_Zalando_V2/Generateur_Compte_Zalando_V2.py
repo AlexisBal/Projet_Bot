@@ -449,6 +449,14 @@ def Configuration(compte_objet_list):
         # Message de confimation pour chaque compte configuré
         print("Le compte de ", compte_objet_list[y].email, "a bien été configuré !")
 
+        # Insertion des comptes actualisés dans la base de données "Comptes.json"
+        liste_compte = []
+        for b in range(0, len(compte_objet_list)):
+            liste_compte.append(compte_objet_list[b].__dict__)
+        with open("Data/Comptes.json", "w") as f:
+            json.dump(liste_compte, f, indent=4)
+        f.close()
+
 
 SaisieInformations()
 comptes = creation_objet_compte()
