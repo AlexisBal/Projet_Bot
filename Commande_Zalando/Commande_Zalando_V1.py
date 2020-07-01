@@ -53,13 +53,13 @@ def creation_objet_compte():
 
 # ----------------------------------------------------------------------Proxy---------------------------------------------------------------------------#
 
-# Reglages des proxys
+# Entrée des proxys
 def proxy():
-    nombre_proxy = int(input("Combien de proxys souhaitez-vous entrer ?:"))
+    nombre_proxy = int(input("Combien de proxys souhaitez-vous saisir ? :"))
     liste_proxys = []
     for i in range(0, nombre_proxy):
         liste_proxys.append(
-            input("Entrer un proxy valide (ex: 35.203.34.108:8080 ):")
+            input("Entrer un proxy valide (ex: 35.203.34.108:8080 ) :")
         )
     return liste_proxys
 
@@ -71,7 +71,7 @@ def URLGen():
 
     # ------------------------------------------------------------------Code produit-------------------------------------------------------------#
 
-    code_produit = input("Entrer la marque du produit (Nike Sportwear):")
+    code_produit = input("Entrer la marque du produit (Nike Sportwear) :")
     # code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-")
 
@@ -218,10 +218,11 @@ def DisponibiliteProduit(liste_proxys, taille_produit, url_produit):
 
             # Affichage du stock de la pointure concernée
             if liste_stock_bis[position_stock] == '1':
-                return True
+                break
             else:
                 time.sleep(1800)
 
+        # Gestion des exceptions
         except:
             pass
 
@@ -381,9 +382,14 @@ def checkout(compte_objet_list, url_produit, sku_produit, liste_proxys):
                     compte_objet_list[compte].email
                 )
 
+                # Fin de la boucle
+                break
+
+            # Gestion des exceptions
             except:
                 pass
 
+            # Changement de proxy en cas de problème
             finally:
                 x = x + 1
                 if x == (len(liste_proxys) + 1):
