@@ -137,6 +137,11 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                     session.headers["Referer"] = "https://www.zalando.fr/login/?view=login"
                     session.get(url_connexion_4, verify=False)
 
+                    # Validation du panier
+                    url_panier_1 = 'https://www.zalando.fr/cart'
+                    url_panier_2 = 'https://www.zalando.fr/checkout/confirm'
+                    url_panier_3 = 'https://www.zalando.fr/checkout/address'
+
                 # Fermeture de la Session
                 session.close()
 
@@ -150,10 +155,7 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                     x = 0
 
 
-url_1 = 'https://www.zalando.fr/cart'
-url_2 = 'https://www.zalando.fr/checkout/address'
 url_2_bis = 'https://www.zalando.fr/api/checkout/search-pickup-points-by-address'
-url_3 = 'https://www.zalando.fr/checkout/confirm'
 
 
 comptes = creation_objet_compte()

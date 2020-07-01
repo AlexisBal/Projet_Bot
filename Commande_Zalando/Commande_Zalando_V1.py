@@ -220,7 +220,7 @@ def DisponibiliteProduit(liste_proxys, taille_produit, url_produit):
             if liste_stock_bis[position_stock] == '1':
                 break
             else:
-                time.sleep(1800)
+                time.sleep(600)
 
         # Gestion des exceptions
         except:
