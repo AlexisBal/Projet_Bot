@@ -183,8 +183,12 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                     del session.headers["Referer"]
                     del session.headers["Content-Length"]
 
-                    # Suite Checkout
+                    # Adresse de livraison
                     url_checkout_1 = 'https://www.zalando.fr/api/checkout/address/%s/default' % compte_objet_list[compte].id_adresse
+                    url_checkout_2 = 'https://www.zalando.fr/api/checkout/next-step'
+                    data_checkout = {
+                        'isDefaultShipping': True
+                    }
                     session.headers["Accept"] = "application/json"
                     session.headers['Content-Type'] = 'application/json'
                     session.headers['Origin'] = 'https://www.zalando.fr'
@@ -193,6 +197,28 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                     session.headers['x-zalando-checkout-app'] = 'web'
                     session.headers['x-xsrf-token'] = cookies["frsx"]
                     session.headers['x-zalando-header-mode'] = 'desktop'
+                    session.post(url_checkout_1, json=data_checkout, verify=False)
+                    session.get(url_checkout_2, verify=False)
+                    del session.headers['x-zalando-footer-mode']
+                    del session.headers['x-zalando-checkout-app']
+                    del session.headers['x-xsrf-token']
+                    del session.headers['x-zalando-header-mode']
+
+                    # Mode de Paiement
+                    url_pay = 'https://checkout.payment.zalando.com/selection?show=true'
+                    url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
+                    cb = {
+                        "card_holder": "alexis balayre",
+                        "pan": "4974 0182 7975 2162 ",
+                        "cvv": "492",
+                        "expiry_month": "8",
+                        "expiry_year": "2022",
+                        "options": {
+                            "selected": ["store_for_reuse"],
+                            "not_selected": []
+                        }
+                    }
+                    session.headers['Host'] = 'card-entry-service.zalando-payments.com'
 
                 # Fermeture de la Session
                 session.close()
