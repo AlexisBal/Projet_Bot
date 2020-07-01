@@ -137,10 +137,62 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                     session.headers["Referer"] = "https://www.zalando.fr/login/?view=login"
                     session.get(url_connexion_4, verify=False)
 
-                    # Validation du panier
+                    # Validation du panier et checkout
                     url_panier_1 = 'https://www.zalando.fr/cart'
                     url_panier_2 = 'https://www.zalando.fr/checkout/confirm'
                     url_panier_3 = 'https://www.zalando.fr/checkout/address'
+                    url_panier_4 = 'https://www.zalando.fr/api/checkout/search-pickup-points-by-address'
+                    checkout = {
+                        'address': {
+                            'id': compte_objet_list[compte].id_adresse,
+                            'salutation': 'Mr',
+                            'first_name': compte_objet_list[compte].prenom,
+                            'last_name': compte_objet_list[compte].nom,
+                            'zip': compte_objet_list[compte].codepostal,
+                            'city': compte_objet_list[compte].ville,
+                            'country_code': 'FR',
+                            'street': compte_objet_list[compte].adresse,
+                            'additional': compte_objet_list[compte].complement_adresse
+                        }
+                    }
+                    session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                    session.get(url_panier_1, verify=False)
+                    session.headers["Referer"] = "https://www.zalando.fr/cart"
+                    session.get(url_panier_2, verify=False)
+                    session.get(url_panier_3, verify=False)
+                    session.post(url_panier_4, json=checkout, verify=False)
+
+                    # Requetes anti-bot
+                    url_botbis = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
+                    data1bis = {
+                        'sensor_data': '7a74G7m23Vrp0o5c9178851.6-1,2,-94,-100,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392105,5498227,1440,900,1440,900,1440,525,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.273584619136,796807749113.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1,32,32,0,0,0,0,745,0,1593615498227,29,17048,0,0,2841,0,0,746,0,0,EBC16C32565FCC85852E046D0E13B03E~-1~YAAQLux7XBkXm/JyAQAASr3iCgSs+3joFRndDLyPCe5cbv0A8AknzYLWTBk244SQmgBCzZN6cq21YGyWvCsv4nKgaED8Go0IiEuEhdhY4sKY2R5HRrNnxyaD5skYqQwq0ffv2FqM+HpL++ZzD9+NS5B+ymWwkdDuo4kCbgKB8tN4E0deTM8Z7AABSlVxPSxnOga/rvkVc/GRBThbODhSxoDEXldjaulI3knTbe+2m4XYaLkTOljAzBUWnCC+a/B5T6zDjwUwQcKWlYaFc2qUFmt5WSHgX6pFTF7FkKGdN4ErI87HLQtAPdYgVgrrzYZ0BA9FMCYQzxGJgDbflRH+W+mjMu0=~-1~-1~-1,32365,97,-378114461,26018161,PiZtE,92130,68-1,2,-94,-106,9,1-1,2,-94,-119,200,0,200,0,0,200,0,0,0,200,200,2200,800,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,148451781-1,2,-94,-118,82368-1,2,-94,-121,;1;7;0'
+                    }
+                    data2bis = {
+                        'sensor_data': '7a74G7m23Vrp0o5c9178851.6-1,2,-94,-100,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392105,5498227,1440,900,1440,900,1440,525,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.273584619136,796807749113.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1,32,32,0,0,0,0,745,0,1593615498227,29,17048,0,0,2841,0,0,746,0,0,EBC16C32565FCC85852E046D0E13B03E~-1~YAAQLux7XBkXm/JyAQAASr3iCgSs+3joFRndDLyPCe5cbv0A8AknzYLWTBk244SQmgBCzZN6cq21YGyWvCsv4nKgaED8Go0IiEuEhdhY4sKY2R5HRrNnxyaD5skYqQwq0ffv2FqM+HpL++ZzD9+NS5B+ymWwkdDuo4kCbgKB8tN4E0deTM8Z7AABSlVxPSxnOga/rvkVc/GRBThbODhSxoDEXldjaulI3knTbe+2m4XYaLkTOljAzBUWnCC+a/B5T6zDjwUwQcKWlYaFc2qUFmt5WSHgX6pFTF7FkKGdN4ErI87HLQtAPdYgVgrrzYZ0BA9FMCYQzxGJgDbflRH+W+mjMu0=~-1~-1~-1,32365,97,-378114461,26018161,PiZtE,92130,68-1,2,-94,-106,9,1-1,2,-94,-119,200,0,200,0,0,200,0,0,0,200,200,2200,800,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,148451781-1,2,-94,-118,82368-1,2,-94,-121,;1;7;0'
+                    }
+                    session.headers["Accept"] = "*/*"
+                    session.headers["Content-Type"] = 'text/plain;charset=UTF-8'
+                    session.headers["Origin"] = 'https://www.zalando.fr'
+                    session.headers["Referer"] = 'https://www.zalando.fr/login/?view=login'
+                    session.headers["Content-Length"] = '3298'
+                    session.post(url_botbis, json=data1bis, verify=False)
+                    session.headers["Content-Length"] = '3547'
+                    session.post(url_botbis, json=data2bis, verify=False)
+                    del session.headers["Content-Type"]
+                    del session.headers["Origin"]
+                    del session.headers["Referer"]
+                    del session.headers["Content-Length"]
+
+                    # Suite Checkout
+                    url_checkout_1 = 'https://www.zalando.fr/api/checkout/address/%s/default' % compte_objet_list[compte].id_adresse
+                    session.headers["Accept"] = "application/json"
+                    session.headers['Content-Type'] = 'application/json'
+                    session.headers['Origin'] = 'https://www.zalando.fr'
+                    session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
+                    session.headers['x-zalando-footer-mode'] = 'desktop'
+                    session.headers['x-zalando-checkout-app'] = 'web'
+                    session.headers['x-xsrf-token'] = cookies["frsx"]
+                    session.headers['x-zalando-header-mode'] = 'desktop'
 
                 # Fermeture de la Session
                 session.close()
