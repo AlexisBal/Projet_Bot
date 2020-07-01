@@ -435,7 +435,9 @@ def Configuration(compte_objet_list):
                 "zip": compte_objet_list[y].codepostal,
             }
             session.get(url_profil_get, verify=False)
-            session.post(url_profil_post, json=adresse, verify=False)
+            reponse = session.post(url_profil_post, json=adresse, verify=False)
+            objet = json.loads(reponse.text)
+            id_adresse = objet[0]['id']
 
         # Fermeture de la session
         session.close()

@@ -42,7 +42,7 @@ urllib3.disable_warnings()
 
 # Création des objets "Compte" et de la liste d'objet "compte_objet_list"
 def creation_objet_compte():
-    acces_fichier = open("Comptes.json", "r")
+    acces_fichier = open("../Data/Comptes.json", "r")
     compte_objet_list = []
     for compte_attributes in json.load(acces_fichier):
         compte_objet = Compte(**compte_attributes)
