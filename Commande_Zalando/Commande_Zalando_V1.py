@@ -51,18 +51,6 @@ def creation_objet_compte():
     return compte_objet_list
 
 
-# ----------------------------------------------------------------------Proxy---------------------------------------------------------------------------#
-
-# Entrée des proxys
-def proxy():
-    nombre_proxy = int(input("Combien de proxys souhaitez-vous saisir ? :"))
-    liste_proxys = []
-    for i in range(0, nombre_proxy):
-        liste_proxys.append(
-            input("Entrer un proxy valide (ex: 35.203.34.108:8080 ) :")
-        )
-    return liste_proxys
-
 # -----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
