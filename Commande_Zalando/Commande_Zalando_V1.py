@@ -75,30 +75,32 @@ def URLGen():
     # code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-")
 
-    # --------------------------------------------------------------------Model--------------------------------------------------------------------#
+    # -----------------------------------------------------------------Model--------------------------------------------------------------------#
 
     model = str(input("Entrer le modèle du produit (SLHMELROSE - T-shirt imprimé) :"))
     # model = 'SLHMELROSE - T-shirt imprimé'
     model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
 
-    # ----------------------------------------------------------------Couleur-------------------------------------------------------------#
+    # ---------------------------------------------------------------Couleur-------------------------------------------------------------#
 
     couleur = input("Entrer la couleur du produit (sky captain) :")
     # couleur = 'sky captain'
     couleur = couleur.lower().replace(" ", "-").replace("/", "")
 
-    # -------------------------------------------------------------------Reference--------------------------------------------------------#
+    # ---------------------------------------------------------------Reference--------------------------------------------------------#
 
     reference = input("Entrer la référence du produit (NI112O0CL-A11) :")
     # reference = 'NI112O0CL-A11'
-    article = reference
     reference = reference.lower().replace(" ", "")
 
-    # ------------------------------------------------------------------Taille-----------------------------------------------------------#
+    # ------------------------------------------------------------------Sku--------------------------------------------------------#
 
-    taille = input("Entrer la taille 'Marque' du produit :")
-    taille = taille * 10
-    taille = str(article) + str(0) + str(0) + str(taille) + str(0) + str(0)
+    sku_produit = input("Entrer le sku du produit (NI112O0CL-A110060000) :")
+    # sku = 'NI112O0CL-A110060000'
+
+    # -----------------------------------------------------------------Taille-----------------------------------------------------------#
+
+    taille_produit = input("Entrer la taille 'francaise' du produit :")
 
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
@@ -106,7 +108,7 @@ def URLGen():
     vrai_url_2 = base_url + code_produit + '-' + model + "-" + reference + '.html'
     time.sleep(0.2)
 
-    URLs_taille = [vrai_url_1, vrai_url_2, taille]
+    URLs_taille = [vrai_url_1, vrai_url_2, taille_produit, sku_produit]
 
     return URLs_taille
 
@@ -133,7 +135,7 @@ def scanner(lien):
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
-def DisponibiliteProduit(liste_proxys):
+def DisponibiliteProduit(liste_proxys, taille_produit, url_produit):
     x = 0
     while True:
         try:
@@ -168,7 +170,6 @@ def DisponibiliteProduit(liste_proxys):
                 session.cookies['mpulseinject'] = 'false'
 
                 # Connexion à la page du produit
-                url_produit = 'https://www.zalando.fr/pier-one-baskets-basses-white-pi915o00k-a11.html'
                 session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                 produit_session = session.get(url_produit, verify=False)
 
@@ -212,7 +213,7 @@ def DisponibiliteProduit(liste_proxys):
                 liste_stock_bis.extend(y)
 
             # Détermination de la position de la pointure et du stock
-            position_pointure = liste_stock_bis.index('38')
+            position_pointure = liste_stock_bis.index(taille_produit)
             position_stock = position_pointure + 1
 
             # Affichage du stock de la pointure concernée
@@ -230,7 +231,7 @@ def DisponibiliteProduit(liste_proxys):
                 x = 0
 
 
-def checkout(compte_objet_list, url_produit, article, liste_proxy):
+def checkout(compte_objet_list, url_produit, sku_produit, liste_proxys):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
@@ -274,7 +275,7 @@ def checkout(compte_objet_list, url_produit, article, liste_proxy):
 
             # Mise dans le panier
             url_panier = "https://www.zalando.fr/api/pdp/cart"
-            panier = {"simpleSku": article, "anonymous": False}
+            panier = {"simpleSku": sku_produit, "anonymous": False}
             session.headers["Accept"] = "application/json"
             session.headers["Content-Type"] = "application/json"
             session.post(url_panier, json=panier, verify=False)
@@ -377,6 +378,7 @@ comptes = creation_objet_compte()
 generateur_url = URLGen()
 liste_proxy = proxy()
 url = scanner(generateur_url)
-article = generateur_url[2]
-DisponibiliteProduit(liste_proxy)
-checkout(comptes, url, article, liste_proxy)
+taille = generateur_url[2]
+sku = generateur_url[3]
+DisponibiliteProduit(liste_proxy, taille, url)
+checkout(comptes, url, sku, liste_proxy)
