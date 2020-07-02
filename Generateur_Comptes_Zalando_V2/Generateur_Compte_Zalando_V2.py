@@ -24,7 +24,6 @@ def proxy():
         return liste_proxys
 
 
-
 # Définition de la classe "Compte"
 class Compte:
     def __init__(self, **compte_attributes):
