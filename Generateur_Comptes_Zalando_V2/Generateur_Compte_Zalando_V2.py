@@ -8,16 +8,16 @@ from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
 
 
-#Fonction proxy 
+# Fonction proxy
 def proxy():
     with open('Generateur_Comptes_Zalando_V2/Data/proxy.txt', 'w') as f:
         liste_proxys = []
         for ligne in f:
-            data= f.read()
+            data = f.read()
             print(data)
             liste_proxys = liste_proxys.append(data)
 
-        if liste_proxys == []:
+        if not liste_proxys:
             print("Vous n'avez spécifié aucun proxy.")
             print("Entrer l'adresse des serveurs proxy dans le fichier proxy.txt")
 
