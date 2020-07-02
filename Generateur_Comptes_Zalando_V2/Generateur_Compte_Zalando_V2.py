@@ -8,6 +8,23 @@ from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
 
 
+#Fonction proxy 
+def proxy():
+    with open('Generateur_Comptes_Zalando_V2/Data/proxy.txt', 'w') as f:
+        liste_proxys = []
+        for ligne in f:
+            data= f.read()
+            print(data)
+            liste_proxys = liste_proxys.append(data)
+
+        if liste_proxys == []:
+            print("Vous n'avez spécifié aucun proxy.")
+            print("Entrer l'adresse des serveurs proxy dans le fichier proxy.txt")
+
+        return liste_proxys
+
+
+
 # Définition de la classe "Compte"
 class Compte:
     def __init__(self, **compte_attributes):
@@ -36,22 +53,6 @@ retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
-
-
-#Fonction proxy
-def proxy():
-    with open('Data/proxy.txt', 'r') as f:
-        liste_proxys = []
-        for ligne in f:
-            data = f.read()
-            print(data)
-            liste_proxys = liste_proxys.append(data)
-
-        if liste_proxys == []:
-            print("Vous n'avez spécifié aucun proxy.")
-            print("Pour entrer un proxy, collez l'adresse du server proxy sur une ligne du fichier proxy.txt")
-
-        return liste_proxys
 
 
 # Saisie des informations personnelles et du nombre de comptes souhaité
@@ -475,7 +476,6 @@ def Configuration(compte_objet_list):
 
 
 SaisieInformations()
-liste_proxys = proxy()
 comptes = creation_objet_compte()
 CreationComptes(comptes)
 Configuration(comptes)
