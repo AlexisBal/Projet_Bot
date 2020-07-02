@@ -38,6 +38,22 @@ retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 urllib3.disable_warnings()
 
 
+#Fonction proxy
+def proxy():
+    with open('Data/proxy.txt', 'r') as f:
+        liste_proxys = []
+        for ligne in f:
+            data= f.read()
+            print(data)
+            liste_proxys = liste_proxys.append(data)
+
+        if liste_proxys == []:
+            print("Vous n'avez spécifié aucun proxy.")
+            print("Pour entrer un proxy, collez l'adresse du server proxy sur une ligne du fichier proxy.txt")
+
+        return liste_proxys
+
+
 # Saisie des informations personnelles et du nombre de comptes souhaité
 def SaisieInformations():
     # Création d'une liste "liste_compte" vide
@@ -459,6 +475,7 @@ def Configuration(compte_objet_list):
 
 
 SaisieInformations()
+liste_proxys = proxy()
 comptes = creation_objet_compte()
 CreationComptes(comptes)
 Configuration(comptes)
