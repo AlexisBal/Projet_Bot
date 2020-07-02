@@ -43,7 +43,7 @@ def proxy():
     with open('Data/proxy.txt', 'r') as f:
         liste_proxys = []
         for ligne in f:
-            data= f.read()
+            data = f.read()
             print(data)
             liste_proxys = liste_proxys.append(data)
 
