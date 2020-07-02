@@ -48,7 +48,16 @@ def creation_objet_compte():
     return compte_objet_list
 
 
-def Paiement_Zalando(liste_proxys, compte_objet_list):
+def Paiement_Zalando(compte_objet_list):
+
+    liste_proxys = [
+        '51.91.212.159'
+        '151.106.8.135'
+        '51.15.240.87'
+        '51.68.197.53'
+        '54.37.103.99'
+    ]
+
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
@@ -218,10 +227,13 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                             "not_selected": []
                         }
                     }
-                    session.headers['Host'] = 'card-entry-service.zalando-payments.com'
+                    session.headers['Host'] = 'checkout.payment.zalando.com'
+                    a = session.get(url_pay, verify=False)
+                    print(a.status_code)
 
                 # Fermeture de la Session
                 session.close()
+                break
 
             # Gestion des exceptions
             except:
@@ -231,9 +243,6 @@ def Paiement_Zalando(liste_proxys, compte_objet_list):
                 x = x + 1
                 if x == (len(liste_proxys) + 1):
                     x = 0
-
-
-url_2_bis = 'https://www.zalando.fr/api/checkout/search-pickup-points-by-address'
 
 
 comptes = creation_objet_compte()
