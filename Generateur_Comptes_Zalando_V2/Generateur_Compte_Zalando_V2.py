@@ -40,11 +40,16 @@ urllib3.disable_warnings()
 
 #Fonction proxy
 def proxy():
-    with open('proxy.txt', 'r') as f:
-        liste_proxys=[]
-        for i in f.readlines():
+    with open('Data/proxy.txt', 'r') as f:
+        liste_proxys = []
+        for ligne in f:
             data= f.read()
+            print(data)
             liste_proxys = liste_proxys.append(data)
+
+        if liste_proxys == []:
+            print("Vous n'avez spécifié aucun proxy.")
+            print("Pour entrer un proxy, collez l'adresse du server proxy sur une ligne du fichier proxy.txt")
 
         return liste_proxys
 
