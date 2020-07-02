@@ -161,7 +161,7 @@ def Paiement_Zalando(compte_objet_list):
                         'additional': compte_objet_list[compte].complement_adresse
                     }
                 }
-                session.headers["Referer"] = "https://www.zalando.fr/myaccount/"
+                session.headers["Referer"] = "https://www.zalando.fr/myaccount"
                 session.get(url_panier_1, verify=False)
                 session.headers["Referer"] = "https://www.zalando.fr/cart"
                 session.get(url_panier_2, verify=False)
@@ -213,10 +213,10 @@ def Paiement_Zalando(compte_objet_list):
                 url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
                 cb = {
                     "card_holder": "alexis balayre",
-                    "pan": "4974 0182 7975 2162 ",
-                    "cvv": "492",
+                    "pan": "4974 43Z 7975 3243 ",
+                    "cvv": "123",
                     "expiry_month": "8",
-                    "expiry_year": "2022",
+                    "expiry_year": "2023",
                     "options": {
                         "selected": ["store_for_reuse"],
                         "not_selected": []
