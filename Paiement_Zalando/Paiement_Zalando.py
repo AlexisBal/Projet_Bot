@@ -213,7 +213,7 @@ def Paiement_Zalando(compte_objet_list):
                 url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
                 cb = {
                     "card_holder": "alexis balayre",
-                    "pan": "4974 43Z 7975 3243 ",
+                    "pan": "4974 432Z 7975 3243",
                     "cvv": "123",
                     "expiry_month": "8",
                     "expiry_year": "2023",
