@@ -53,7 +53,7 @@ def creation_objet_compte():
 def Paiement_Zalando(compte_objet_list):
 
     liste_proxys = [
-        '157.245.29.19'
+        '195.154.42.163'
     ]
 
     # Comptage du nombre de comptes présents dans la base de données
@@ -269,6 +269,8 @@ def Paiement_Zalando(compte_objet_list):
                 url_pay_ini = pay_ini["url"]
                 url_pay = 'https://checkout.payment.zalando.com/selection?show=true'
                 url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
+                url_pay_3 = 'https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?show' \
+                            '=true' % session.cookies['Session-ID']
                 cb = {
                     "card_holder": "alexis balayre",
                     "pan": "4974 432Z 7975 3243",
@@ -280,13 +282,20 @@ def Paiement_Zalando(compte_objet_list):
                         "not_selected": []
                     }
                 }
+                data_pay_3 = 'payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_pay_later_store_option=opt-in&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=ffdeafee-6845-4f69-bd11-f6b31f30ac76'
                 session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                 session.headers['Host'] = 'checkout.payment.zalando.com'
                 session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
                 session.get(url_pay_ini, verify=False)
                 a = session.get(url_pay, verify=False)
-                soup = BeautifulSoup(a.text, 'html.parser')
+                soup = BeautifulSoup(a.content, 'html.parser')
                 test = soup.find(string=re.compile("config.accessToken"))
+                print(test.prettify())
+                session.headers['Accept'] = '*/*'
+                session.headers['Origin'] = 'https://card-entry-service.zalando-payments.com'
+                session.headers['Content-Type'] = 'application/json'
+                session.headers['Host'] = 'card-entry-service.zalando-payments.com'
+                session.headers['Authorization'] = 'Bearer %s'
 
             # Fermeture de la Session
             session.close()

@@ -38,5 +38,5 @@ with requests.Session() as session:
     a = requests.get(url, verify=False)
     soup = BeautifulSoup(a.content, 'html.parser')
     test = soup.find(string=re.compile("var et_pb_custom"))
-    print(test[0][''])
+    print(test.find({'name': 'config.accessToken'})['value'])
     session.close()
