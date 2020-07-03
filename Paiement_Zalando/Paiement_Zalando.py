@@ -148,7 +148,6 @@ def Paiement_Zalando(compte_objet_list):
                 accueil = session.get(url_compte, verify=False)
 
                 # Validation du panier et checkout
-                bot_1 = 'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1' % accueil.headers['X-Zalando-Child-Request-Id']
                 bot_2 = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
                 bot_3 = 'https://www.zalando.fr/api/cart/details'
                 bot_4 = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
@@ -205,10 +204,7 @@ def Paiement_Zalando(compte_objet_list):
                     }
                 }
                 session.headers["Accept"] = "*/*"
-                session.headers["x-xsrf-token"] = cookies["frsx"]
                 session.headers['Referer'] = 'https://www.zalando.fr/myaccount'
-                session.get(bot_1, verify=False)
-                del session.headers["x-xsrf-token"]
                 session.headers['Content-Type'] = 'text/plain;charset=UTF-8'
                 session.post(bot_2, json=data_bot2, verify=False)
                 del session.headers['Content-Type']
@@ -267,10 +263,9 @@ def Paiement_Zalando(compte_objet_list):
 
                 # Mode de Paiement
                 url_pay_ini = pay_ini["url"]
+                print(url_pay_ini)
                 url_pay = 'https://checkout.payment.zalando.com/selection?show=true'
                 url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
-                url_pay_3 = 'https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?show' \
-                            '=true' % session.cookies['Session-ID']
                 cb = {
                     "card_holder": "alexis balayre",
                     "pan": "4974 432Z 7975 3243",
@@ -288,14 +283,16 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
                 session.get(url_pay_ini, verify=False)
                 a = session.get(url_pay, verify=False)
-                soup = BeautifulSoup(a.content, 'html.parser')
-                test = soup.find(string=re.compile("config.accessToken"))
-                print(test.prettify())
+                soup = BeautifulSoup(a.text, 'html.parser')
+                objet_token_ini = soup.find(string=re.compile("config.accessToken"))
+                token_ini = objet_token_ini.split("'")
+                token = token_ini[1]
                 session.headers['Accept'] = '*/*'
                 session.headers['Origin'] = 'https://card-entry-service.zalando-payments.com'
                 session.headers['Content-Type'] = 'application/json'
                 session.headers['Host'] = 'card-entry-service.zalando-payments.com'
-                session.headers['Authorization'] = 'Bearer %s'
+                session.headers['Authorization'] = 'Bearer %s' % token
+                
 
             # Fermeture de la Session
             session.close()
