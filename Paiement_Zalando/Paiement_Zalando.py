@@ -1,10 +1,12 @@
 import json
+import re
 
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
+from bs4 import BeautifulSoup
 
 
 # Définition de la classe "Compte"
@@ -154,6 +156,7 @@ def Paiement_Zalando(compte_objet_list):
                 url_panier_1 = 'https://www.zalando.fr/cart/'
                 url_panier_2 = 'https://www.zalando.fr/checkout/confirm'
                 url_panier_3 = 'https://www.zalando.fr/checkout/address'
+                bot_6 = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
                 url_panier_4 = 'https://www.zalando.fr/api/checkout/search-pickup-points-by-address'
                 data_bot2 = {
                     'sensor_data': '7a74G7m23Vrp0o5c9179211.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392145,8120368,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.253321588126,796889060184,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/myaccount-1,2,-94,-115,1,32,32,0,0,0,0,1,0,1593778120368,-999999,17049,0,0,2841,0,0,2,0,0,83B56B14F8791DE4459B2C8598D943FC~-1~YAAQDex7XFuSJxBzAQAAhxmUFARw88kisNpiFVwyQs7ReWEop16qPFMe+VyLWUTZrCy7SZ1/IeDafSHu/HwSxhuIH5iGZEC59iHXo+lhFihkHwcQUHKIe+IFNX9AqswJqkpjhRIqOqzEp8rzefrlVv/QZ8+TlE3agC6k7axpxToHECu4Uu+HS6sgG9SVQu/j6SkLmiQYHbLDoWkeWc//d6ukSGArsYcNEJTOilWs6UEd+JwOCeA2H1k+Ag+qYpTKXxlXW3fKPAwyTeCDng32+lX2lUbGLoZnWtK9Pj2lADYgVfMEVRSqJ23Qdb47qz8u+U4lRRJcY3kxsCio55JsKXjPn/0=~-1~-1~-1,32638,-1,-1,26018161,PiZtE,38925,90-1,2,-94,-106,0,0-1,2,-94,-119,-1-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,-1-1,2,-94,-80,94-1,2,-94,-116,219249894-1,2,-94,-118,82726-1,2,-94,-121,;3;-1;0' % session.headers["User-Agent"]
@@ -184,6 +187,9 @@ def Paiement_Zalando(compte_objet_list):
                     "referrer": "https://www.zalando.fr/login/?view=login",
                     "accept_language": "fr-FR",
                     "timestamp": ""
+                }
+                data_bot6 = {
+                    'sensor_data': '7a74G7m23Vrp0o5c9179231.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392147,6416884,1440,900,1440,900,1440,338,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.772422311386,796893208442,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1,32,32,0,0,0,0,818,0,1593786416884,25,17049,0,0,2841,0,0,819,0,0,6E7A8BB6ED1A8AB786D6512DC1ED4DB1~-1~YAAQNOx7XOEjEQ1zAQAA7L4SFQTDTAWYNVhRFWiIO+dsppVcEdLR8OJRi7qC9jIKE/1/yVQ8wwFceE79rVsV16vQTlhCjf6m3sJxsVFse1aLT8Yv483jeNiR/2r4xL9+9tp6dlT/UkgJ6G3LfubwSQFH5GdebR0fyceZWp6OQgmhi04d2gKJQSlBsjppZM5wME1IGtdl3qKsjsjZ2ldmGdUX4ElaslapCGdZy06b5toxd1dcPEVCdsbyhBXgjixLYPWH8h0790FxzL57Q5zQgWjavp8z48Y8xzcc8tH5gaRZNTzWZn6RRHh+tOdfwtmx23p/FogeywZifk8efVVAcZ11UMw=~-1~-1~-1,32721,333,-388728882,26018161,PiZtE,50292,83-1,2,-94,-106,9,1-1,2,-94,-119,0,200,0,0,200,0,0,200,800,2600,200,2400,2200,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,7796514045-1,2,-94,-118,82939-1,2,-94,-121,;2;4;0' % session.headers["User-Agent"]
                 }
                 checkout = {
                     'address': {
@@ -224,26 +230,18 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers["Referer"] = "https://www.zalando.fr/cart"
                 session.get(url_panier_2, verify=False)
                 session.get(url_panier_3, verify=False)
-                session.post(url_panier_4, json=checkout, verify=False)
-
-                # Requetes anti-bot
-                url_botbis = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
-                data1bis = {
-                    'sensor_data': '7a74G7m23Vrp0o5c9178851.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392105,5498227,1440,900,1440,900,1440,525,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.273584619136,796807749113.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1,32,32,0,0,0,0,745,0,1593615498227,29,17048,0,0,2841,0,0,746,0,0,EBC16C32565FCC85852E046D0E13B03E~-1~YAAQLux7XBkXm/JyAQAASr3iCgSs+3joFRndDLyPCe5cbv0A8AknzYLWTBk244SQmgBCzZN6cq21YGyWvCsv4nKgaED8Go0IiEuEhdhY4sKY2R5HRrNnxyaD5skYqQwq0ffv2FqM+HpL++ZzD9+NS5B+ymWwkdDuo4kCbgKB8tN4E0deTM8Z7AABSlVxPSxnOga/rvkVc/GRBThbODhSxoDEXldjaulI3knTbe+2m4XYaLkTOljAzBUWnCC+a/B5T6zDjwUwQcKWlYaFc2qUFmt5WSHgX6pFTF7FkKGdN4ErI87HLQtAPdYgVgrrzYZ0BA9FMCYQzxGJgDbflRH+W+mjMu0=~-1~-1~-1,32365,97,-378114461,26018161,PiZtE,92130,68-1,2,-94,-106,9,1-1,2,-94,-119,200,0,200,0,0,200,0,0,0,200,200,2200,800,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,148451781-1,2,-94,-118,82368-1,2,-94,-121,;1;7;0' % session.headers["User-Agent"]
-                }
-                data2bis = {
-                    'sensor_data': '7a74G7m23Vrp0o5c9178851.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392105,5498227,1440,900,1440,900,1440,525,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.273584619136,796807749113.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1,32,32,0,0,0,0,745,0,1593615498227,29,17048,0,0,2841,0,0,746,0,0,EBC16C32565FCC85852E046D0E13B03E~-1~YAAQLux7XBkXm/JyAQAASr3iCgSs+3joFRndDLyPCe5cbv0A8AknzYLWTBk244SQmgBCzZN6cq21YGyWvCsv4nKgaED8Go0IiEuEhdhY4sKY2R5HRrNnxyaD5skYqQwq0ffv2FqM+HpL++ZzD9+NS5B+ymWwkdDuo4kCbgKB8tN4E0deTM8Z7AABSlVxPSxnOga/rvkVc/GRBThbODhSxoDEXldjaulI3knTbe+2m4XYaLkTOljAzBUWnCC+a/B5T6zDjwUwQcKWlYaFc2qUFmt5WSHgX6pFTF7FkKGdN4ErI87HLQtAPdYgVgrrzYZ0BA9FMCYQzxGJgDbflRH+W+mjMu0=~-1~-1~-1,32365,97,-378114461,26018161,PiZtE,92130,68-1,2,-94,-106,9,1-1,2,-94,-119,200,0,200,0,0,200,0,0,0,200,200,2200,800,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,148451781-1,2,-94,-118,82368-1,2,-94,-121,;1;7;0' % session.headers["User-Agent"]
-                }
                 session.headers["Accept"] = "*/*"
-                session.headers["Content-Type"] = 'text/plain;charset=UTF-8'
-                session.headers["Origin"] = 'https://www.zalando.fr'
-                session.headers["Referer"] = 'https://www.zalando.fr/login/?view=login'
-                session.post(url_botbis, json=data1bis, verify=False)
-                session.post(url_botbis, json=data2bis, verify=False)
-                del session.headers["Content-Type"]
-                del session.headers["Origin"]
-                del session.headers["Referer"]
-                del session.headers["Content-Length"]
+                session.headers['Content-Type'] = 'text/plain;charset=UTF-8'
+                session.headers['Origin'] = 'https://www.zalando.fr'
+                session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
+                session.post(bot_6, json=data_bot6, verify=False)
+                del session.headers['Content-Type']
+                session.headers['Accept'] = 'application/json'
+                session.headers['x-zalando-footer-mode'] = 'desktop'
+                session.headers['x-zalando-checkout-app'] = 'web'
+                session.headers["x-xsrf-token"] = cookies["frsx"]
+                session.headers['x-zalando-header-mode'] = 'desktop'
+                session.post(url_panier_4, json=checkout, verify=False)
 
                 # Adresse de livraison
                 url_checkout_1 = 'https://www.zalando.fr/api/checkout/address/%s/default' % compte_objet_list[compte].id_adresse
@@ -260,13 +258,15 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['x-xsrf-token'] = cookies["frsx"]
                 session.headers['x-zalando-header-mode'] = 'desktop'
                 session.post(url_checkout_1, json=data_checkout, verify=False)
-                session.get(url_checkout_2, verify=False)
+                reponse_livraison = session.get(url_checkout_2, verify=False)
+                pay_ini = json.loads(reponse_livraison.text)
                 del session.headers['x-zalando-footer-mode']
                 del session.headers['x-zalando-checkout-app']
                 del session.headers['x-xsrf-token']
                 del session.headers['x-zalando-header-mode']
 
                 # Mode de Paiement
+                url_pay_ini = pay_ini["url"]
                 url_pay = 'https://checkout.payment.zalando.com/selection?show=true'
                 url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
                 cb = {
@@ -280,9 +280,14 @@ def Paiement_Zalando(compte_objet_list):
                         "not_selected": []
                     }
                 }
+                session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                 session.headers['Host'] = 'checkout.payment.zalando.com'
+                session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
+                session.get(url_pay_ini, verify=False)
                 a = session.get(url_pay, verify=False)
-                print(a.status_code)
+                soup = BeautifulSoup(a.text, 'html.parser')
+                test = soup.find(string=re.compile("config.accessToken"))
+                print(test)
 
             # Fermeture de la Session
             session.close()
