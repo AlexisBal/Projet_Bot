@@ -281,7 +281,7 @@ def Paiement_Zalando(compte_objet_list):
                 del session.headers['x-xsrf-token']
                 del session.headers['x-zalando-header-mode']
                 del session.headers['Content-Type']
-                del session.headers['Cookie']
+                session.cookies.clear()
                 session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                 session.headers['Host'] = 'checkout.payment.zalando.com'
                 session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
@@ -289,8 +289,8 @@ def Paiement_Zalando(compte_objet_list):
 
                 # Mode de Paiement
                 url_pay = 'https://checkout.payment.zalando.com/selection'
-                #url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
-                '''cb = {
+                url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
+                cb = {
                     "card_holder": "alexis balayre",
                     "pan": "4974 432Z 7975 3243",
                     "cvv": "123",
@@ -300,8 +300,8 @@ def Paiement_Zalando(compte_objet_list):
                         "selected": ["store_for_reuse"],
                         "not_selected": []
                     }
-                }'''
-                a = session.get(url_pay, verify=False)
+                }
+                a = session.get(url_pay, verify=False, allow_redirects=False)
                 soup = BeautifulSoup(a.text, 'html.parser')
                 objet_token_ini = soup.find(string=re.compile("config.accessToken"))
                 token_ini = objet_token_ini.split("'")
@@ -311,27 +311,27 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['Content-Type'] = 'application/json'
                 session.headers['Host'] = 'card-entry-service.zalando-payments.com'
                 session.headers['Authorization'] = 'Bearer %s' % token
-                #reponsepay = session.post(url_pay_2, json=cb, verify=False)
-                #reponsepaybis = json.loads(reponsepay.text)
-                #id_pay = reponsepaybis["id"]
+                reponsepay = session.post(url_pay_2, json=cb, verify=False)
+                reponsepaybis = json.loads(reponsepay.text)
+                id_pay = reponsepaybis["id"]
 
                 # Paiement Suite
-                #url_pay_3 = 'https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?show=true' % session.cookies['Session-ID']
-                #url_pay_4 = 'https://checkout.payment.zalando.com/selection'
-                #url_pay_5 = 'https://www.zalando.fr/checkout/payment-complete'
-                #url_pay_6 = 'https://www.zalando.fr/checkout/confirm'
-                #data_pay_3 = 'payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_pay_later_store_option=opt-in&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s' % id_pay
-                #del session.headers['Authorization']
-                #session.headers['Referer'] = 'https://checkout.payment.zalando.com/selection?show=true'
-                #session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-                #session.headers['Origin'] = 'https://checkout.payment.zalando.com'
-                #session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-                #session.post(url_pay_3, data=data_pay_3, verify=False)
-                #session.post(url_pay_4, data=data_pay_3, verify=False)
-                #del session.headers['Origin']
-                #del session.headers['Content-Type']
-                #session.get(url_pay_5, verify=False)
-                #session.get(url_pay_6, verify=False)
+                url_pay_3 = 'https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?show=true' % session.cookies['Session-ID']
+                url_pay_4 = 'https://checkout.payment.zalando.com/selection'
+                url_pay_5 = 'https://www.zalando.fr/checkout/payment-complete'
+                url_pay_6 = 'https://www.zalando.fr/checkout/confirm'
+                data_pay_3 = 'payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_pay_later_store_option=opt-in&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s' % id_pay
+                del session.headers['Authorization']
+                session.headers['Referer'] = 'https://checkout.payment.zalando.com/selection?show=true'
+                session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                session.headers['Origin'] = 'https://checkout.payment.zalando.com'
+                session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+                session.post(url_pay_3, data=data_pay_3, verify=False)
+                session.post(url_pay_4, data=data_pay_3, verify=False)
+                del session.headers['Origin']
+                del session.headers['Content-Type']
+                session.get(url_pay_5, verify=False)
+                session.get(url_pay_6, verify=False)
 
             # Fermeture de la Session
             session.close()
