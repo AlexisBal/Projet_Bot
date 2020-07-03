@@ -8,22 +8,6 @@ from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
 
 
-# Fonction proxy
-def proxy():
-    with open('Generateur_Comptes_Zalando_V2/Data/proxy.txt', 'w') as f:
-        liste_proxys = []
-        for ligne in f:
-            data = f.read()
-            print(data)
-            liste_proxys = liste_proxys.append(data)
-
-        if not liste_proxys:
-            print("Vous n'avez spécifié aucun proxy.")
-            print("Entrer l'adresse des serveurs proxy dans le fichier proxy.txt")
-
-        return liste_proxys
-
-
 # Définition de la classe "Compte"
 class Compte:
     def __init__(self, **compte_attributes):
@@ -52,6 +36,21 @@ retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
+
+# Fonction proxy
+def proxy():
+    with open('Generateur_Comptes_Zalando_V2/Data/proxy.txt', 'w') as f:
+        liste_proxys = []
+        for ligne in f:
+            data = f.read()
+            print(data)
+            liste_proxys = liste_proxys.append(data)
+
+        if not liste_proxys:
+            print("Vous n'avez spécifié aucun proxy.")
+            print("Entrer l'adresse des serveurs proxy dans le fichier proxy.txt")
+
+        return liste_proxys
 
 
 # Saisie des informations personnelles et du nombre de comptes souhaité
@@ -113,12 +112,12 @@ def creation_objet_compte():
 
 
 # Création des comptes à partir des attributs de chaque objet "Compte"
-def CreationComptes(compte_objet_list):
+def CreationComptes(compte_objet_list, liste_proxys):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
     # Création d'un compte pour chaque objet "Compte" présent dans la base de données
-    for x in range(0, nombrecompte):
+    for compte in range(0, nombrecompte):
         # Ouverture de la session
         with requests.Session() as session:
             # Réglage des paramètres de la session
@@ -310,10 +309,10 @@ def CreationComptes(compte_objet_list):
             url_post2 = "https://www.zalando.fr/api/reef/register"
             register = {
                 "newCustomerData": {
-                    "firstname": compte_objet_list[x].prenom,
-                    "lastname": compte_objet_list[x].nom,
-                    "email": compte_objet_list[x].email,
-                    "password": compte_objet_list[x].motdepasse,
+                    "firstname": compte_objet_list[compte].prenom,
+                    "lastname": compte_objet_list[compte].nom,
+                    "email": compte_objet_list[compte].email,
+                    "password": compte_objet_list[compte].motdepasse,
                     "fashion_preference": [],
                     "subscribe_to_news_letter": False,
                     "accepts_terms_and_conditions": True,
@@ -329,10 +328,10 @@ def CreationComptes(compte_objet_list):
         session.close()
 
         # Message de confimation pour chaque compte créé
-        print("Le compte de ", compte_objet_list[x].email, "a bien été créé !")
+        print("Le compte de ", compte_objet_list[compte].email, "a bien été créé !")
 
 
-def Configuration(compte_objet_list):
+def Configuration(compte_objet_list, liste_proxys):
     # Comptage du nombre de compte présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
@@ -476,5 +475,6 @@ def Configuration(compte_objet_list):
 
 SaisieInformations()
 comptes = creation_objet_compte()
-CreationComptes(comptes)
-Configuration(comptes)
+proxies = proxy()
+CreationComptes(comptes, proxies)
+Configuration(comptes, proxies)

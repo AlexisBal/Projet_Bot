@@ -287,7 +287,6 @@ def Paiement_Zalando(compte_objet_list):
                 a = session.get(url_pay, verify=False)
                 soup = BeautifulSoup(a.text, 'html.parser')
                 test = soup.find(string=re.compile("config.accessToken"))
-                print(test)
 
             # Fermeture de la Session
             session.close()
