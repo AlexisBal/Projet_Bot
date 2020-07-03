@@ -53,7 +53,7 @@ def creation_objet_compte():
 def Paiement_Zalando(compte_objet_list):
 
     liste_proxys = [
-        '157.245.29.19'
+        '195.154.42.163'
     ]
 
     # Comptage du nombre de comptes présents dans la base de données
@@ -285,8 +285,13 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
                 session.get(url_pay_ini, verify=False)
                 a = session.get(url_pay, verify=False)
-                soup = BeautifulSoup(a.text, 'html.parser')
+                soup = BeautifulSoup(a.content, 'html.parser')
                 test = soup.find(string=re.compile("config.accessToken"))
+                print(test.string)
+                session.headers['Accept'] = '*/*'
+                session.headers['Origin'] = 'https://card-entry-service.zalando-payments.com'
+                session.headers['Content-Type'] = 'application/json'
+                session.headers['Host'] = 'card-entry-service.zalando-payments.com'
 
             # Fermeture de la Session
             session.close()
