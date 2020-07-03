@@ -275,14 +275,19 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['x-zalando-header-mode'] = 'desktop'
                 reponse_livraison = session.get(url_checkout_2, verify=False)
                 pay_ini = json.loads(reponse_livraison.text)
+                url_pay_ini = str(pay_ini["url"])
                 del session.headers['x-zalando-footer-mode']
                 del session.headers['x-zalando-checkout-app']
                 del session.headers['x-xsrf-token']
                 del session.headers['x-zalando-header-mode']
                 del session.headers['Content-Type']
+                del session.headers['Cookie']
+                session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                session.headers['Host'] = 'checkout.payment.zalando.com'
+                session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
+                session.get(url_pay_ini, verify=False)
 
                 # Mode de Paiement
-                url_pay_ini = pay_ini["url"]
                 url_pay = 'https://checkout.payment.zalando.com/selection'
                 #url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
                 '''cb = {
@@ -296,11 +301,6 @@ def Paiement_Zalando(compte_objet_list):
                         "not_selected": []
                     }
                 }'''
-                session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-                session.headers['Host'] = 'checkout.payment.zalando.com'
-                session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
-                del session.headers['Cookie']
-                session.get(url_pay_ini, verify=False)
                 a = session.get(url_pay, verify=False)
                 soup = BeautifulSoup(a.text, 'html.parser')
                 objet_token_ini = soup.find(string=re.compile("config.accessToken"))
