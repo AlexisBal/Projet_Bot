@@ -51,7 +51,7 @@ def creation_objet_compte():
 def Paiement_Zalando(compte_objet_list):
 
     liste_proxys = [
-        '195.154.42.163'
+        '157.245.29.19'
     ]
 
     # Comptage du nombre de comptes présents dans la base de données
@@ -116,7 +116,7 @@ def Paiement_Zalando(compte_objet_list):
                 # Connexion au compte
                 url_connexion_2 = 'https://www.zalando.fr/api/reef/login/schema'
                 url_connexion_3 = 'https://www.zalando.fr/api/reef/login'
-                url_compte = 'https://www.zalando.fr/myaccount/'
+                url_compte = 'https://www.zalando.fr/myaccount'
                 identifiants = {
                     "username": compte_objet_list[compte].email,
                     "password": compte_objet_list[compte].motdepasse,
@@ -140,14 +140,51 @@ def Paiement_Zalando(compte_objet_list):
                 del session.headers["x-zalando-request-uri"]
                 del session.headers["x-flow-id"]
                 del session.headers['Content-Length']
+                del session.headers["Content-Type"]
+                del session.headers["Origin"]
                 session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                session.get(url_compte, verify=False)
+                accueil = session.get(url_compte, verify=False)
 
                 # Validation du panier et checkout
+                bot_1 = 'https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1' % accueil.headers['X-Zalando-Child-Request-Id']
+                bot_2 = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
+                bot_3 = 'https://www.zalando.fr/api/cart/details'
+                bot_4 = 'https://www.zalando.fr/resources/35692132da2028b315fc23b805e921'
+                bot_5 = 'https://www.zalando.fr/api/rr/e'
                 url_panier_1 = 'https://www.zalando.fr/cart/'
                 url_panier_2 = 'https://www.zalando.fr/checkout/confirm'
                 url_panier_3 = 'https://www.zalando.fr/checkout/address'
                 url_panier_4 = 'https://www.zalando.fr/api/checkout/search-pickup-points-by-address'
+                data_bot2 = {
+                    'sensor_data': '7a74G7m23Vrp0o5c9179211.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392145,8120368,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.253321588126,796889060184,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/myaccount-1,2,-94,-115,1,32,32,0,0,0,0,1,0,1593778120368,-999999,17049,0,0,2841,0,0,2,0,0,83B56B14F8791DE4459B2C8598D943FC~-1~YAAQDex7XFuSJxBzAQAAhxmUFARw88kisNpiFVwyQs7ReWEop16qPFMe+VyLWUTZrCy7SZ1/IeDafSHu/HwSxhuIH5iGZEC59iHXo+lhFihkHwcQUHKIe+IFNX9AqswJqkpjhRIqOqzEp8rzefrlVv/QZ8+TlE3agC6k7axpxToHECu4Uu+HS6sgG9SVQu/j6SkLmiQYHbLDoWkeWc//d6ukSGArsYcNEJTOilWs6UEd+JwOCeA2H1k+Ag+qYpTKXxlXW3fKPAwyTeCDng32+lX2lUbGLoZnWtK9Pj2lADYgVfMEVRSqJ23Qdb47qz8u+U4lRRJcY3kxsCio55JsKXjPn/0=~-1~-1~-1,32638,-1,-1,26018161,PiZtE,38925,90-1,2,-94,-106,0,0-1,2,-94,-119,-1-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,-1-1,2,-94,-80,94-1,2,-94,-116,219249894-1,2,-94,-118,82726-1,2,-94,-121,;3;-1;0' % session.headers["User-Agent"]
+                }
+                data_bot4 = {
+                    'sensor_data': '7a74G7m23Vrp0o5c9179211.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392145,8120368,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.987229521493,796889060184,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-108,-1,2,-94,-110,0,1,5356,662,355;1,1,5357,662,355;2,1,5363,666,354;3,1,5364,666,354;4,1,5369,671,353;5,1,5370,671,353;6,1,5378,677,349;7,1,5379,677,349;8,1,5385,687,343;9,1,5386,687,343;10,1,5395,704,332;11,1,5395,704,332;12,1,5401,718,321;13,1,5402,718,321;14,1,5423,735,310;15,1,5427,762,290;16,1,5436,795,269;17,1,5442,817,256;18,1,5450,839,243;19,1,5451,839,243;20,1,5457,848,239;21,1,5458,848,239;22,1,5464,869,230;23,1,5465,869,230;24,1,5472,889,222;25,1,5472,889,222;26,1,5480,907,215;27,1,5481,907,215;28,1,5489,926,208;29,1,5489,926,208;30,1,5495,943,203;31,1,5496,943,203;32,1,5503,961,196;33,1,5504,961,196;34,1,5511,977,189;35,1,5522,992,183;36,1,5527,1008,176;37,1,5536,1022,169;38,1,5543,1033,162;39,1,5544,1033,162;40,1,5552,1045,155;41,1,5553,1045,155;42,1,5559,1056,148;43,1,5560,1056,148;44,1,5566,1066,142;45,1,5567,1066,142;46,1,5574,1074,135;47,1,5575,1074,135;48,1,5582,1083,129;49,1,5583,1083,129;50,1,5591,1090,123;51,1,5592,1090,123;52,1,5598,1098,117;53,1,5598,1098,117;54,1,5606,1104,112;55,1,5606,1104,112;56,1,5624,1111,106;57,1,5625,1117,102;58,1,5630,1123,98;59,1,5631,1123,98;60,1,5637,1126,96;61,1,5638,1126,96;62,1,5648,1130,92;63,1,5649,1130,92;64,1,5655,1135,89;65,1,5655,1135,89;66,1,5662,1140,87;67,1,5662,1140,87;68,1,5669,1143,85;69,1,5670,1143,85;70,1,5679,1146,83;71,1,5680,1146,83;72,1,5686,1149,81;73,1,5687,1149,81;74,1,5694,1151,80;75,1,5694,1151,80;76,1,5700,1154,78;77,1,5701,1154,78;78,1,5709,1157,77;79,1,5710,1157,77;80,1,5718,1159,75;81,1,5718,1159,75;82,1,5724,1162,74;83,1,5725,1162,74;84,1,5732,1164,72;85,1,5733,1164,72;86,1,5740,1167,70;87,1,5741,1167,70;88,1,5750,1169,69;89,1,5750,1169,69;90,1,5757,1171,67;91,1,5757,1171,67;92,1,5764,1174,66;93,1,5764,1174,66;94,1,5772,1176,64;95,1,5773,1176,64;96,1,5779,1179,63;97,1,5780,1179,63;98,1,5789,1181,61;99,1,5790,1181,61;205,3,6324,1256,56,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/myaccount-1,2,-94,-115,1,688232,32,0,0,0,688200,6324,0,1593778120368,110,17049,0,206,2841,1,0,6326,564474,0,83B56B14F8791DE4459B2C8598D943FC~-1~YAAQDex7XNWSJxBzAQAALCuUFARpiI+esYkf8lYdpjdLCeXpGHJ9+vnM6kEHHFvxY7T3yfNiygvtsQijxoB0yNuYl9wZotLwIwuoC9bI17FAhvUdRcyXL+l0Ge888pkyWFzJAH3M+C2Kp6Gd707Y65BbzbnblYpOVxKrIuiYQ77TdYjt9j85/zP5/tbklZ300b0M5/G4heKt5UOVncp1KtlqCNj9THUFEgo4ANkwaLOE1/K9PohfRbC90hyz7hzdxY3JGKGZuQ7uKN9p/ETblQXE3kwGtZDiPLgQ4nGGYzOT0iwZkVYPZOzRXBFruRu2U32RmNm4eOHksmzrFcYnCk212yM=~-1~-1~-1,32589,130,-829678606,26018161,PiZtE,72737,94-1,2,-94,-106,1,2-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,400,600,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,219249894-1,2,-94,-118,178607-1,2,-94,-121,;3;4;0' % session.headers["User-Agent"]
+                }
+                data_bot5 = {
+                    "event": "event_tracking",
+                    "eventCategory": "cart",
+                    "eventAction": "view",
+                    "eventLabel": "overlay.opened by hover",
+                    "flowId": accueil.headers['X-Zalando-Child-Request-Id'],
+                    "host": "www.zalando.fr",
+                    "pathname": "/myaccount",
+                    "referrer": "https://www.zalando.fr/login/?view=login",
+                    "accept_language": "fr-FR",
+                    "timestamp": ""
+                }
+                data_bot5bis = {
+                    "event": "event_tracking",
+                    "eventCategory": "header",
+                    "eventAction": "click",
+                    "eventLabel": "cart",
+                    "flowId": accueil.headers['X-Zalando-Child-Request-Id'],
+                    "host": "www.zalando.fr",
+                    "pathname": "/myaccount",
+                    "referrer": "https://www.zalando.fr/login/?view=login",
+                    "accept_language": "fr-FR",
+                    "timestamp": ""
+                }
                 checkout = {
                     'address': {
                         'id': compte_objet_list[compte].id_adresse,
@@ -161,7 +198,28 @@ def Paiement_Zalando(compte_objet_list):
                         'additional': compte_objet_list[compte].complement_adresse
                     }
                 }
-                session.headers["Referer"] = "https://www.zalando.fr/myaccount"
+                session.headers["Accept"] = "*/*"
+                session.headers["x-xsrf-token"] = cookies["frsx"]
+                session.headers['Referer'] = 'https://www.zalando.fr/myaccount'
+                session.get(bot_1, verify=False)
+                del session.headers["x-xsrf-token"]
+                session.headers['Content-Type'] = 'text/plain;charset=UTF-8'
+                session.post(bot_2, json=data_bot2, verify=False)
+                del session.headers['Content-Type']
+                session.headers["Accept"] = "*/*"
+                session.headers["x-xsrf-token"] = cookies["frsx"]
+                session.get(bot_3, verify=False)
+                del session.headers["x-xsrf-token"]
+                session.headers["Accept"] = "*/*"
+                session.headers['Content-Type'] = 'text/plain;charset=UTF-8'
+                session.headers['Referer'] = 'https://www.zalando.fr/myaccount'
+                session.headers['Origin'] = 'https://www.zalando.fr'
+                session.post(bot_4, json=data_bot4, verify=False)
+                session.post(bot_5, json=data_bot5, verify=False)
+                session.post(bot_5, json=data_bot5bis, verify=False)
+                del session.headers['Origin']
+                del session.headers['Content-Type']
+                session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                 session.get(url_panier_1, verify=False)
                 session.headers["Referer"] = "https://www.zalando.fr/cart"
                 session.get(url_panier_2, verify=False)
