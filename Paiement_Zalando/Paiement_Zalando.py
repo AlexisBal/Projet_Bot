@@ -311,7 +311,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
                     session.get(url_pay_ini, verify=False, allow_redirects=False)
 
-                    # Mode de Paiement
+                    # Paiement Partie 1
                     url_pay = 'https://checkout.payment.zalando.com/selection'
                     url_pay_2 = 'https://card-entry-service.zalando-payments.com/contexts/checkout/cards'
                     cb = {
@@ -339,7 +339,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     reponsepay = session.post(url_pay_2, json=cb, verify=False, allow_redirects=False)
                     reponsepaybis = json.loads(reponsepay.text)
 
-                    # Paiement Suite
+                    # Paiement Partie 2
                     url_pay_3 = 'https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?' % session_id
                     data_pay_3 = 'CREDIT_CARD&payz_credit_card_former_payment_method_id=-1&payz_credit_card_store_option=opt-in&iframe_funding_source_id=%s' % \
                                  reponsepaybis["id"]
@@ -351,7 +351,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.headers['Host'] = 'checkout.payment.zalando.com'
                     session.post(url_pay_3, data=data_pay_3, verify=False, allow_redirects=False)
 
-                    # Fin Paiement
+                    # Paiement Partie 3
                     url_pay_4 = 'https://www.zalando.fr/checkout/payment-complete'
                     url_pay_5 = 'https://www.zalando.fr/checkout/confirm'
                     del session.headers['Content-Type']
@@ -361,7 +361,8 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.get(url_pay_4, verify=False, allow_redirects=False)
                     b = session.get(url_pay_5, verify=False, allow_redirects=False)
                     soupbis = BeautifulSoup(b.text, 'html.parser')
-                    print(soupbis.find('div', re.compile('data-props')))
+                    dict_rep = soupbis.find('div', re.compile('data-props'))
+                    print(dict_rep['data-props'])
 
                 # Fermeture de la Session
                 session.close()

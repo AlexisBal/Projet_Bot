@@ -15,8 +15,8 @@ executables = [
 ]
 
 setup(
-    name="Generateur Compte Zalando V2",
-    version="1.0",
+    name="Generateur Compte Zalando",
+    version="2.0",
     description="Generateur de comptes sur zalando",
     options=dict(build_exe=buildOptions),
     executables=executables,
