@@ -39,7 +39,7 @@ urllib3.disable_warnings()
 
 # Fonction proxy
 def proxy():
-    with open('Generateur_Comptes_Zalando_V2/Data/proxy.txt', 'w') as f:
+    with open('../Data/proxy.txt', 'r') as f:
         liste_proxys = []
         for ligne in f:
             data = f.read()
