@@ -514,9 +514,9 @@ def Configuration(compte_objet_list, liste_proxys):
                     x = 0
 
 
-titre()
-SaisieInformations()
+#titre()
+#SaisieInformations()
 comptes = creation_objet_compte()
 proxies = proxy()
-CreationComptes(comptes, proxies)
+#CreationComptes(comptes, proxies)
 Configuration(comptes, proxies)
