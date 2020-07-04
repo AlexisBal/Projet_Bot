@@ -3,8 +3,7 @@ from cx_Freeze import setup, Executable
 # Dependencies are automatically detected, but it might need
 # fine tuning.
 buildOptions = dict(
-    packages=["idna", "json", "requests", "password_generator", "urllib3", "requests.adapters", "requests.packages.urllib3.util.retry"],
-    include_files=["Comptes.json"],
+    packages=["idna", "re", "urllib", "urllib.parse", "bs4", "user_agent", "time", "json", "requests", "password_generator", "urllib3", "requests.adapters", "requests.packages.urllib3.util.retry"]
 )
 
 base = None
@@ -16,9 +15,9 @@ executables = [
 ]
 
 setup(
-    name="Recherche-produit_mise-le-panier",
-    version="1.0",
-    description="Recherche du produit et mise dans le panier",
+    name="Recherche_Checkout_Produit",
+    version="2.0",
+    description="Recherche et commande du produit",
     options=dict(build_exe=buildOptions),
     executables=executables,
 )

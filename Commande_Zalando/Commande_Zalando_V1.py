@@ -78,6 +78,7 @@ def proxy():
 
 
 def ModePaiementAutomatique():
+    print("Bienvenu dans la recherche et commande de produit !")
     while True:
         print('Souhaitez-vous activer le checkout automatique ?')
         reponse = input('o / n :')
@@ -102,7 +103,6 @@ def URLGen():
     base_url = 'https://www.zalando.fr/'
 
     # ------------------------------------------------------------------Code produit-------------------------------------------------------------#
-    print("Bienvenu dans le bot de recherche et commande de produit !")
     code_produit = input("Entrer la marque du produit (Nike Sportwear) :")
     # code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-")
