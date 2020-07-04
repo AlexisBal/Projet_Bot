@@ -51,6 +51,20 @@ def creation_objet_compte():
     return compte_objet_list
 
 
+# Fonction proxy
+def proxy():
+    with open('../Data/proxy.txt', 'r') as f:
+        liste_proxys = []
+        for ligne in f:
+            if ligne.strip('\n') != '':
+                liste_proxys.append(ligne.strip('\n'))
+
+        if not liste_proxys:
+            print("Vous n'avez spécifié aucun proxy.")
+            print("Entrer l'adresse des serveurs proxy dans le fichier proxy.txt")
+
+        return liste_proxys
+
 # -----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
@@ -231,7 +245,7 @@ def checkout(compte_objet_list, url_produit, sku_produit, liste_proxys):
             try:
                 # Ouverture de la Session
                 with requests.Session() as session:
-                    session.proxies = {liste_proxy}
+
                     # Réglage des paramètres de la session
                     session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
 
@@ -386,9 +400,9 @@ def checkout(compte_objet_list, url_produit, sku_produit, liste_proxys):
 
 comptes = creation_objet_compte()
 generateur_url = URLGen()
-liste_proxy = proxy()
+proxies = proxy()
 url = scanner(generateur_url)
 taille = generateur_url[2]
 sku = generateur_url[3]
-DisponibiliteProduit(liste_proxy, taille, url)
-checkout(comptes, url, sku, liste_proxy)
+DisponibiliteProduit(proxies, taille, url)
+checkout(comptes, url, sku, proxies)
