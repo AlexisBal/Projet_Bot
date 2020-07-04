@@ -99,6 +99,8 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
 
                     # Récupération et modification des cookies de la session
                     cookies = session.cookies.get_dict()
+                    del session.cookies['mpulseinject']
+                    session.cookies['mpulseinject'] = 'false'
                     session.headers["Accept"] = "*/*"
                     session.headers["x-xsrf-token"] = cookies["frsx"]
                     url_div = "https://www.zalando.fr/api/navigation/banners?gender=unisex&membership=non-eligible&url=https%3A%2F%2Fwww.zalando.fr%2F"
@@ -352,6 +354,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.headers["Origin"] = "https://card-entry-service.zalando-payments.com"
                     session.headers["Content-Type"] = "application/json"
                     session.headers["Host"] = "card-entry-service.zalando-payments.com"
+                    del session.cookies['mpulseinject']
                     session.headers["Authorization"] = "Bearer %s" % token
                     reponsepay = session.post(
                         url_pay_2, json=cb, verify=False, allow_redirects=False
@@ -388,7 +391,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     b = session.get(url_pay_4, verify=False)
                     soupbis = BeautifulSoup(b.text, "html.parser")
                     dict_rep = soupbis.find("div", re.compile("data-props"))
-                    print(dict_rep["data-props"])
+                    print(dict_rep)
 
                 # Fermeture de la Session
                 session.close()
