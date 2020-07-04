@@ -336,7 +336,7 @@ def CreationComptes(compte_objet_list, liste_proxys):
                 session.close()
 
                 # Message de confimation pour chaque compte créé
-                print("Le compte de ", compte_objet_list[compte].email, "a bien été créé !")
+                print("Le compte de", compte_objet_list[compte].email, "a bien été créé !")
                 break
 
             # Gestion des exceptions
@@ -488,13 +488,13 @@ def Configuration(compte_objet_list, liste_proxys):
                 session.close()
 
                 # Message de confimation pour chaque compte configuré
-                print("Le compte de ", compte_objet_list[y].email, "a bien été configuré !")
+                print("Le compte de", compte_objet_list[y].email, "a bien été configuré !")
 
                 # Insertion des comptes actualisés dans la base de données "Comptes.json"
                 liste_compte = []
                 for b in range(0, len(compte_objet_list)):
                     liste_compte.append(compte_objet_list[b].__dict__)
-                with open("Data/Comptes.json", "w") as f:
+                with open("../Data/Comptes.json", "w") as f:
                     json.dump(liste_compte, f, indent=4)
                 f.close()
 
@@ -510,9 +510,8 @@ def Configuration(compte_objet_list, liste_proxys):
                     x = 0
 
 
-#SaisieInformations()
-#comptes = creation_objet_compte()
+SaisieInformations()
+comptes = creation_objet_compte()
 proxies = proxy()
-print(proxies)
-#CreationComptes(comptes, proxies)
-#Configuration(comptes, proxies)
+CreationComptes(comptes, proxies)
+Configuration(comptes, proxies)
