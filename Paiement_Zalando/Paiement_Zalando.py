@@ -53,7 +53,7 @@ def creation_objet_compte():
 def Paiement_Zalando(compte_objet_list):
 
     liste_proxys = [
-        '195.154.42.163'
+        '54.37.103.99'
     ]
 
     # Comptage du nombre de comptes présents dans la base de données
@@ -86,12 +86,20 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                 session.headers["Accept-Language"] = "fr-fr"
                 session.headers["Accept-Encoding"] = "gzip, deflate, br"
-                session.get(url_home, verify=False)
+                home = session.get(url_home, verify=False)
 
                 # Récupération et modification des cookies de la session
                 cookies = session.cookies.get_dict()
-                del session.cookies['mpulseinject']
-                session.cookies['mpulseinject'] = 'false'
+                session.headers['Accept'] = '*/*'
+                session.headers["x-xsrf-token"] = cookies["frsx"]
+                url_div = 'https://www.zalando.fr/api/navigation/banners?gender=unisex&membership=non-eligible&url=https%3A%2F%2Fwww.zalando.fr%2F'
+                url_div2 = 'https://www.zalando.fr/api/navigation'
+                url_div3 = 'https://www.zalando.fr/api/t/js_pixel?flowId=%s&cid=%s&js=true&ga=true' % (home.headers['X-Flow-Id'], home.cookies['Zalando-Client-Id'])
+                session.get(url_div, verify=False)
+                session.get(url_div2, verify=False)
+                session.headers['Accept'] = 'image/png,image/svg+xml,image/*;q=0.8,video/*;q=0.8,*/*;q=0.5'
+                del session.headers["x-xsrf-token"]
+                session.get(url_div3, verify=False)
 
                 # Connexion à la page de connexion
                 url_connexion_1 = "https://www.zalando.fr/login/?view=login"
@@ -283,7 +291,6 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['Host'] = 'checkout.payment.zalando.com'
                 session.headers['Referer'] = 'https://www.zalando.fr/checkout/address'
                 session.get(url_pay_ini, verify=False, allow_redirects=False)
-                cookie_session = session.cookies.get_dict()
 
                 # Mode de Paiement
                 url_pay = 'https://checkout.payment.zalando.com/selection'
@@ -310,7 +317,6 @@ def Paiement_Zalando(compte_objet_list):
                 session.headers['Content-Type'] = 'application/json'
                 session.headers['Host'] = 'card-entry-service.zalando-payments.com'
                 session.headers['Authorization'] = 'Bearer %s' % token
-                session.cookies.clear()
                 reponsepay = session.post(url_pay_2, json=cb, verify=False, allow_redirects=False)
                 reponsepaybis = json.loads(reponsepay.text)
 
@@ -321,16 +327,16 @@ def Paiement_Zalando(compte_objet_list):
                 url_pay_6 = 'https://www.zalando.fr/checkout/confirm'
                 data_pay_3 = 'payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_pay_later_store_option=opt-in&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s' % reponsepaybis["id"]
                 del session.headers['Authorization']
-                session.headers['Referer'] = 'https://checkout.payment.zalando.com/selection?show=true'
+                session.headers['Referer'] = 'https://checkout.payment.zalando.com/selection'
                 session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                 session.headers['Origin'] = 'https://checkout.payment.zalando.com'
                 session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
                 session.headers['Host'] = 'checkout.payment.zalando.com'
-                session.headers['Cookie'] = cookie_session
-                session.post(url_pay_3, data=data_pay_3, verify=False)
+                session.post(url_pay_3, data=data_pay_3, verify=False, allow_redirects=False)
                 session.post(url_pay_4, data=data_pay_3, verify=False, allow_redirects=False)
                 del session.headers['Origin']
                 del session.headers['Content-Type']
+                session.headers['Host'] = 'www.zalando.fr'
                 session.get(url_pay_5, verify=False, allow_redirects=False)
                 session.get(url_pay_6, verify=False, allow_redirects=False)
 
