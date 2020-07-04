@@ -338,7 +338,9 @@ def Paiement_Zalando(compte_objet_list):
                 del session.headers['Content-Type']
                 session.headers['Host'] = 'www.zalando.fr'
                 session.get(url_pay_5, verify=False, allow_redirects=False)
-                session.get(url_pay_6, verify=False, allow_redirects=False)
+                b = session.get(url_pay_6, verify=False, allow_redirects=False)
+                soupbis = BeautifulSoup(b.text, 'html.parser')
+                confirm = soupbis.find(string=re.compile("config.accessToken"))
 
             # Fermeture de la Session
             session.close()
