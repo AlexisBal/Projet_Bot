@@ -295,8 +295,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.headers["Accept"] = "application/json"
                     session.headers["Content-Type"] = "application/json"
                     session.headers["Origin"] = "https://www.zalando.fr"
-                    session.headers[
-                        "Referer"
+                    session.headers["Referer"
                     ] = "https://www.zalando.fr/checkout/address"
                     session.headers["x-zalando-footer-mode"] = "desktop"
                     session.headers["x-zalando-checkout-app"] = "web"
@@ -312,9 +311,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.headers["Accept"] = "*/*"
                     session.post(url_bot_1, json=bot, verify=False)
                     session.headers["Accept"] = "*/*"
-                    session.headers[
-                        "Referer"
-                    ] = "https://www.zalando.fr/checkout/address"
+                    session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
                     session.headers["x-zalando-footer-mode"] = "desktop"
                     session.headers["x-zalando-checkout-app"] = "web"
                     session.headers["x-xsrf-token"] = cookies["frsx"]
@@ -326,20 +323,16 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     del session.headers["x-zalando-checkout-app"]
                     del session.headers["x-xsrf-token"]
                     del session.headers["x-zalando-header-mode"]
-                    session.headers[
-                        "Accept"
-                    ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                    session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                     session.headers["Host"] = "checkout.payment.zalando.com"
-                    session.headers[
-                        "Referer"
-                    ] = "https://www.zalando.fr/checkout/address"
+                    session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
                     session.get(url_pay_ini, verify=False, allow_redirects=False)
 
                     # Paiement Partie 1
                     url_pay = "https://checkout.payment.zalando.com/selection"
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     cb = {
-                        "card_holder": "alexis balayre",
+                        "card_holder": "BALAYRE Alexis",
                         "pan": "4974 0182 7975 2162",
                         "cvv": "492",
                         "expiry_month": "8",
@@ -356,9 +349,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     token_ini = objet_token_ini.split("'")
                     token = token_ini[1]
                     session.headers["Accept"] = "*/*"
-                    session.headers[
-                        "Origin"
-                    ] = "https://card-entry-service.zalando-payments.com"
+                    session.headers["Origin"] = "https://card-entry-service.zalando-payments.com"
                     session.headers["Content-Type"] = "application/json"
                     session.headers["Host"] = "card-entry-service.zalando-payments.com"
                     session.headers["Authorization"] = "Bearer %s" % token
@@ -373,13 +364,11 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                         % session_id
                     )
                     data_pay_3 = (
-                        "CREDIT_CARD&payz_credit_card_former_payment_method_id=-1&payz_credit_card_store_option=opt-in&iframe_funding_source_id=%s"
+                        "payz_selected_payment_method=CREDIT_CARD&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s"
                         % reponsepaybis["id"]
                     )
                     del session.headers["Authorization"]
-                    session.headers[
-                        "Referer"
-                    ] = "https://checkout.payment.zalando.com/selection"
+                    session.headers["Referer"] = "https://checkout.payment.zalando.com/selection"
                     session.headers[
                         "Accept"
                     ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -388,21 +377,15 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                         "Content-Type"
                     ] = "application/x-www-form-urlencoded"
                     session.headers["Host"] = "checkout.payment.zalando.com"
-                    session.post(
-                        url_pay_3, data=data_pay_3, verify=False, allow_redirects=False
-                    )
+                    session.post(url_pay_3, data=data_pay_3, verify=False)
 
                     # Paiement Partie 3
                     url_pay_4 = "https://www.zalando.fr/checkout/payment-complete"
-                    url_pay_5 = "https://www.zalando.fr/checkout/confirm"
                     del session.headers["Content-Type"]
                     del session.headers["Origin"]
                     session.headers["Host"] = "www.zalando.fr"
-                    session.headers[
-                        "Accept"
-                    ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                    session.get(url_pay_4, verify=False, allow_redirects=False)
-                    b = session.get(url_pay_5, verify=False, allow_redirects=False)
+                    session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                    b = session.get(url_pay_4, verify=False)
                     soupbis = BeautifulSoup(b.text, "html.parser")
                     dict_rep = soupbis.find("div", re.compile("data-props"))
                     print(dict_rep["data-props"])

@@ -1,5 +1,6 @@
 import json
 import time
+import re
 
 import requests
 import urllib3
@@ -8,6 +9,7 @@ from urllib.parse import quote
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
+from bs4 import BeautifulSoup
 
 
 # Définition de la classe "Compte"
@@ -40,6 +42,15 @@ retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 urllib3.disable_warnings()
 
 
+def titre():
+    print("  ___                     _     __     ______    ___ ")
+    print("/ ___|  ___ ___  ___   __| |   /  \   |_    _| /  _  \ ")
+    print("\___ \ / __|  _|/ _ \ / _' |  / /\ \    |  |  |  / \  |")
+    print(" ___) | (__| |    __/| ( | | / /__\ \  _|  |_ |  \_/  |")
+    print("|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/")
+    print("\n")
+
+
 # Création des objets "Compte" et de la liste d'objet "compte_objet_list"
 def creation_objet_compte():
     acces_fichier = open("../Data/Comptes.json", "r")
@@ -65,6 +76,25 @@ def proxy():
 
         return liste_proxys
 
+
+def ModePaiementAutomatique():
+    while True:
+        print('Souhaitez-vous activer le checkout automatique ?')
+        reponse = input('o / n :')
+        if reponse == 'o':
+            nom = input('Entrer le nom sur la carte (DUPOND Jean) :')
+            num = input('Entrer le numéro de la carte avec espaces (3233 3288 3222 3333) :')
+            date = input('Entrer la date de validité sans "0" devant (8/23) :')
+            cripto = input('Entrer le cryptogramme visuel (134) :')
+            cb = [nom, num, date, cripto]
+            return cb
+
+        if reponse == 'n':
+            break
+        else:
+            print('Entrer "o" ou "n"')
+
+
 # -----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
@@ -72,20 +102,20 @@ def URLGen():
     base_url = 'https://www.zalando.fr/'
 
     # ------------------------------------------------------------------Code produit-------------------------------------------------------------#
-
+    print("Bienvenu dans le bot de recherche et commande de produit !")
     code_produit = input("Entrer la marque du produit (Nike Sportwear) :")
     # code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-")
 
     # -----------------------------------------------------------------Model--------------------------------------------------------------------#
 
-    model = str(input("Entrer le modèle du produit (SLHMELROSE - T-shirt imprimé) :"))
+    model = str(input("Entrer le modèle du produit (AIR FORCE 1 ’07 AN20  - Baskets basses) :"))
     # model = 'SLHMELROSE - T-shirt imprimé'
     model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
 
     # ---------------------------------------------------------------Couleur-------------------------------------------------------------#
 
-    couleur = input("Entrer la couleur du produit (sky captain) :")
+    couleur = input("Entrer la couleur du produit (black/white) :")
     # couleur = 'sky captain'
     couleur = couleur.lower().replace(" ", "-").replace("/", "")
 
@@ -97,12 +127,12 @@ def URLGen():
 
     # ------------------------------------------------------------------Sku--------------------------------------------------------#
 
-    sku_produit = input("Entrer le sku du produit (NI112O0CL-A110060000) :")
+    sku_produit = input("Entrer le SKU du produit (NI112O0CL-A110060000) :")
     # sku = 'NI112O0CL-A110060000'
 
     # -----------------------------------------------------------------Taille-----------------------------------------------------------#
 
-    taille_produit = input("Entrer la taille 'francaise' du produit :")
+    taille_produit = input("Entrer la taille 'francaise' du produit (42) :")
 
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
@@ -124,12 +154,12 @@ def scanner(lien):
         requette_2 = requests.get(lien[1], headers=header, verify=False)
         time.sleep(0.2)
 
-        if requette_2.status_code == 200:
+        if requette_1.status_code == 200:
             url_produit = lien[0]
             break
 
-        if requette_1.status_code == 200:
-            url_produit = lien[0]
+        if requette_2.status_code == 200:
+            url_produit = lien[1]
             break
 
     return url_produit
@@ -398,11 +428,17 @@ def checkout(compte_objet_list, url_produit, sku_produit, liste_proxys):
                     x = 0
 
 
+titre()
 comptes = creation_objet_compte()
-generateur_url = URLGen()
 proxies = proxy()
+liste_cb = ModePaiementAutomatique()
+generateur_url = URLGen()
 url = scanner(generateur_url)
 taille = generateur_url[2]
 sku = generateur_url[3]
 DisponibiliteProduit(proxies, taille, url)
 checkout(comptes, url, sku, proxies)
+if liste_cb:
+    Paiement_Zalando(comptes, proxies)
+else:
+    print("Fin de tache !")

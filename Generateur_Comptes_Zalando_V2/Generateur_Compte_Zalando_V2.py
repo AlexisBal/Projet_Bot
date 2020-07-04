@@ -337,7 +337,7 @@ def CreationComptes(compte_objet_list, liste_proxys):
                 # Fermeture de la session
                 session.close()
 
-                # Message de confimation pour chaque compte créé
+                # Message de confirmation pour chaque compte créé
                 print(
                     "Le compte de", compte_objet_list[compte].email, "a bien été créé !"
                 )
