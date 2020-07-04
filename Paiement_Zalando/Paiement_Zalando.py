@@ -334,7 +334,7 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     url_pay = "https://checkout.payment.zalando.com/selection"
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     cb = {
-                        "card_holder": "BALAYRE Alexis",
+                        "card_holder": "Balayre Alexis",
                         "pan": "4974 0182 7975 2162",
                         "cvv": "492",
                         "expiry_month": "8",
@@ -389,9 +389,21 @@ def Paiement_Zalando(compte_objet_list, liste_proxys):
                     session.headers["Host"] = "www.zalando.fr"
                     session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                     b = session.get(url_pay_4, verify=False)
-                    soupbis = BeautifulSoup(b.text, "html.parser")
-                    dict_rep = soupbis.find("div", re.compile("data-props"))
+                    soupbis = BeautifulSoup(b.content, "html.parser")
+                    dict_rep = soupbis.find(re.compile('data-props'))
+                    test1 = soupbis.find(string=re.compile('data-props'))
+                    test2 = soupbis.find(attrs=re.compile('data-props'))
+                    test3 = soupbis.find(attrs='data-props')
+                    test4 = soupbis.find({'data-props': re.compile('sku')})
+                    test5 = soupbis.find({'data-props': {re.compile('sku')}})
+                    test6 = soupbis.find('data-props')
                     print(dict_rep)
+                    print(test1)
+                    print(test2)
+                    print(test3)
+                    print(test4)
+                    print(test5)
+                    print(test6)
 
                 # Fermeture de la Session
                 session.close()
