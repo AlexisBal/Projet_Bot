@@ -1,1 +1,14 @@
-
+[
+    {
+        "prenom": "Pierre",
+        "nom": "Louis",
+        "email": "",
+        "motdepasse": "6(-b6CEmSB<gr&)M",
+        "codepostal": "78890",
+        "ville": "Garancieres",
+        "adresse": "8 rue du general leclerc",
+        "complement_adresse": "",
+        "id_adresse": "",
+        "telephone": "0695831470"
+    }
+]
