@@ -53,11 +53,10 @@ def titre():
     print("|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/")
     print("\n")
 
-#----------------------------------------------------------------------------------Fonction licenses--------------------------------------------------------------#
-# Pip install licensing
-# licensing-0.21
 
-# Informations du propriaitaire
+#----------------------------------------------------------------------------------Fonction licenses--------------------------------------------------------------#
+
+# Informations du propriétaire
 RSAPubKey = "<RSAKeyValue><Modulus>zGKjhD1u4eZQg+U2oZgX8inZ1SLvb83jD+oKD20GplwpYcqquQZMAPokGXTs8FMD5X2sc6FtiNKg/wcapvkuyS9KRTauaoQib/B2SW7e9b4zkfpg3hJHW8zm9CZ3F2xbH5E8aXOlm0Knu9lOxjE+e7IogTQGk5RvyO4TO6QRO71bc9dW9h44KWdzku6lcF1VBHM646E6F10ziq7beGhmyLt/dbz88Yt9VP5CKBRH+/QDafbV+KD86WFTQ69p/j+k/h1QF2LYY2tVOhz9TL0iF9zpb8e4mR/vL1RGU3T3ztS21AwGwyCI2j1xc8KvWsUWnPgfDsIr4SRi6EH0d5joxQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
 auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ=="
 
@@ -87,6 +86,7 @@ def VerificationLicense():
         pass
 
 #------------------------------------------------------------------------------------------------------------------------------------------------#
+
 
 # Création des objets "Compte" et de la liste d'objet "compte_objet_list"
 def creation_objet_compte():
@@ -1228,14 +1228,4 @@ def Paiement_Zalando(compte_objet_list, liste_proxys, cb):
                     x = 0
 
 
-titre()
-VerificationLicense()
-comptes = creation_objet_compte()
-proxies = proxy()
-liste_cb = ModePaiementAutomatique()
-DisponibiliteProduit(proxies, taille, url)
-checkout(comptes, url, sku, proxies)
-if liste_cb:
-    Paiement_Zalando(comptes, proxies, liste_cb)
-else:
-    print("Fin de tache !")
+
