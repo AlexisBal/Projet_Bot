@@ -74,6 +74,17 @@ def proxy():
         return liste_proxys
 
 
+# Création des objets "Compte" et de la liste d'objet "compte_objet_list"
+def creation_objet_compte():
+    acces_fichier = open("../Data/Comptes.json", "r")
+    compte_objet_list = []
+    for compte_attributes in json.load(acces_fichier):
+        compte_objet = Compte(**compte_attributes)
+        compte_objet_list.append(compte_objet)
+    acces_fichier.close()
+    return compte_objet_list
+
+
 # Saisie des informations personnelles et du nombre de comptes souhaité
 def SaisieInformations():
     # Création d'une liste "liste_compte" vide
@@ -95,6 +106,7 @@ def SaisieInformations():
     for i in range(0, nombrecompte):
         email = input("Entrer une adresse mail valide :")
         i = {
+            "id_liste": "",
             "prenom": prenom,
             "nom": nom,
             "email": email,
@@ -155,17 +167,6 @@ def ModePaiement():
 
     # Message de confimation
     print("Vos informations bancaires ont bien été sauvegardées !")
-
-
-# Création des objets "Compte" et de la liste d'objet "compte_objet_list"
-def creation_objet_compte():
-    acces_fichier = open("../Data/Comptes.json", "r")
-    compte_objet_list = []
-    for compte_attributes in json.load(acces_fichier):
-        compte_objet = Compte(**compte_attributes)
-        compte_objet_list.append(compte_objet)
-    acces_fichier.close()
-    return compte_objet_list
 
 
 # Création des objets "Carte" et de la liste d'objet "carte_objet_list"
