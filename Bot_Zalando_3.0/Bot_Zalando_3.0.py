@@ -111,7 +111,43 @@ def SaisieInformations():
     f.close()
 
     # Message de confimation
-    print("Vos informations ont bien été sauvegardées !")
+    print("Vos informations personnelles ont bien été sauvegardées !")
+
+
+def ModePaiement():
+    # Création d'une liste "liste_paiement" vide
+    liste_paiement = []
+
+    # Saisie des informations
+    nombrecb = int(
+        input(
+            "Entrer le nombre de carte bancaire à saisir :"
+        )
+    )
+    for i in range(0, nombrecb):
+        nom = input('Entrer le nom sur la carte (DUPOND Jean) :')
+        num = input('Entrer le numéro de la carte avec espaces (3233 3288 3222 3333) :')
+        mois = input("Entrer le mois d'expiration sans '0' devant (8) :")
+        annee = input("Entrer l'année d'expliration (2023) : ")
+        cripto = input('Entrer le cryptogramme visuel (134) :')
+        i = {
+            "nom": nom,
+            "numero": num,
+            "mois": mois,
+            "annee": annee,
+            "criptogramme": cripto
+        }
+
+        # Insertion des comptes dans la liste "liste_compte"
+        liste_paiement.append(i)
+
+    # Insertion des comptes dans la base de données "Comptes.json"
+    with open("../Data/Paiement.json", "w") as f:
+        json.dump(liste_paiement, f, indent=4)
+    f.close()
+
+    # Message de confimation
+    print("Vos informations bancaires ont bien été sauvegardées !")
 
 
 # Création des objets "Compte" et de la liste d'objet "compte_objet_list"
@@ -387,17 +423,12 @@ def Configuration(compte_objet_list, liste_proxys):
 
 # Réglage du checkout automatique
 def ModePaiementAutomatique():
-    print("Bienvenu dans la recherche et commande de produit !")
     while True:
         print('Souhaitez-vous activer le checkout automatique ?')
         reponse = input('o / n :')
 
         if reponse == 'o':
-            nom = input('Entrer le nom sur la carte (DUPOND Jean) :')
-            num = input('Entrer le numéro de la carte avec espaces (3233 3288 3222 3333) :')
-            mois = input("Entrer le mois d'expiration sans '0' devant (8) :")
-            annee = input("Entrer l'année d'expliration (2023) : ")
-            cripto = input('Entrer le cryptogramme visuel (134) :')
+
             cb = [nom, num, cripto, mois, annee]
             return cb
 
