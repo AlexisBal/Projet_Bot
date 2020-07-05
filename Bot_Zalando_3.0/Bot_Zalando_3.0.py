@@ -20,6 +20,13 @@ class Compte:
             setattr(self, attr_name, attr_value)
 
 
+# Définition de la classe "Compte"
+class Carte:
+    def __init__(self, **carte_attributes):
+        for attr_name, attr_value in carte_attributes.items():
+            setattr(self, attr_name, attr_value)
+
+
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
@@ -159,6 +166,17 @@ def creation_objet_compte():
         compte_objet_list.append(compte_objet)
     acces_fichier.close()
     return compte_objet_list
+
+
+# Création des objets "Carte" et de la liste d'objet "carte_objet_list"
+def creation_objet_carte():
+    acces_fichier = open("../Data/Paiement.json", "r")
+    carte_objet_list = []
+    for carte_attributes in json.load(acces_fichier):
+        carte_objet = Carte(**carte_attributes)
+        carte_objet_list.append(carte_objet)
+    acces_fichier.close()
+    return carte_objet_list
 
 
 # Création des comptes à partir des attributs de chaque objet "Compte"
@@ -428,7 +446,6 @@ def ModePaiementAutomatique():
         reponse = input('o / n :')
 
         if reponse == 'o':
-
             cb = [nom, num, cripto, mois, annee]
             return cb
 
