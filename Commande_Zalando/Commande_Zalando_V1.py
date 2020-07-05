@@ -168,6 +168,10 @@ def scanner(URLs_taille):
             url_produit = URLs_taille[1]
             break
 
+        if requette_1.status_code == 404 and requette_2.status_code == 404:
+            print("Problème non-référencé. Merci de contacter au plus vite l'administrateur.")
+            print("N'oubliez pas de fermer l'exécutable !")
+
     return url_produit
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------#
