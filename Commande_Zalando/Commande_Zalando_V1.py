@@ -22,7 +22,7 @@ class Compte:
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 5
+        self.timeout = 4
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -36,7 +36,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=8, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -109,13 +109,13 @@ def URLGen():
     # ------------------------------------------------------------------Code produit-------------------------------------------------------------#
     code_produit = input("Entrer la marque du produit (Nike Sportwear) :")
     # code_produit = 'Nike Sportwear'
-    code_produit = code_produit.lower().replace(" ", "-")
+    code_produit = code_produit.lower().replace(" ", "-").replace("&", "and")
 
     # -----------------------------------------------------------------Model--------------------------------------------------------------------#
 
     model = str(input("Entrer le modèle du produit (AIR FORCE 1 ’07 AN20  - Baskets basses) :"))
     # model = 'SLHMELROSE - T-shirt imprimé'
-    model = model.lower().replace("’", "").replace("  ", " ").replace(" - ", "-").replace(" ", "-").replace("é", "e")
+    model = model.lower().replace("’", "").replace("  ", "").replace(" - ", "-").replace(" ", "-").replace("é", "e").replace("regular", "").replace("--", "-")
 
     # ---------------------------------------------------------------Couleur-------------------------------------------------------------#
 
@@ -151,21 +151,21 @@ def URLGen():
 
 
 # Recherche du produit
-def scanner(lien):
+def scanner(URLs_taille):
     while True:
         header = {
             'User-Agent': generate_user_agent(os=('mac', 'linux'))
         }
-        requette_1 = requests.get(lien[0], headers=header, verify=False)
-        requette_2 = requests.get(lien[1], headers=header, verify=False)
+        requette_1 = requests.get(URLs_taille[0], headers=header, verify=False, allow_redirects=False)
+        requette_2 = requests.get(URLs_taille[1], headers=header, verify=False, allow_redirects=False)
         time.sleep(0.2)
 
-        if requette_1.status_code == 200:
-            url_produit = lien[0]
+        if requette_1.status_code != 404:
+            url_produit = URLs_taille[0]
             break
 
-        if requette_2.status_code == 200:
-            url_produit = lien[1]
+        if requette_2.status_code != 404:
+            url_produit = URLs_taille[1]
             break
 
     return url_produit
@@ -259,7 +259,7 @@ def DisponibiliteProduit(liste_proxys, taille_produit, url_produit):
             if liste_stock_bis[position_stock] == '1':
                 break
             else:
-                time.sleep(600)
+                time.sleep(60)
 
         # Gestion des exceptions
         except:
@@ -812,6 +812,7 @@ proxies = proxy()
 liste_cb = ModePaiementAutomatique()
 generateur_url = URLGen()
 url = scanner(generateur_url)
+print(url)
 taille = generateur_url[2]
 sku = generateur_url[3]
 DisponibiliteProduit(proxies, taille, url)
