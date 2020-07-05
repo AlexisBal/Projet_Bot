@@ -52,17 +52,6 @@ def titre():
     print("\n")
 
 
-# Création des objets "Compte" et de la liste d'objet "compte_objet_list"
-def creation_objet_compte():
-    acces_fichier = open("../Data/Comptes.json", "r")
-    compte_objet_list = []
-    for compte_attributes in json.load(acces_fichier):
-        compte_objet = Compte(**compte_attributes)
-        compte_objet_list.append(compte_objet)
-    acces_fichier.close()
-    return compte_objet_list
-
-
 # Récupérations des proxies
 def proxy():
     with open('../Data/proxy.txt', 'r') as f:
