@@ -9,7 +9,7 @@ buildOptions = dict(
 base = None
 executables = [
     Executable(
-        "Generateur_Compte_Zalando_V2.py",
+        "Generateur_Compte_Zalando.py",
         base=base,
     )
 ]
