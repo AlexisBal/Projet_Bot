@@ -85,6 +85,14 @@ def creation_objet_compte():
     return compte_objet_list
 
 
+# Récupération du SKU
+def Sku():
+    url = 'https://www.zalando.fr/adidas-originals-stan-smith-baskets-basses-footwear-whitemystery-rubymaroon-ad115o0m8-a11.html'
+    requete = requests.get(url, verify=False)
+    soup = BeautifulSoup(requete.content, "html.parser")
+    reponsefinale = soup.find(attrs={"data-props": re.compile('eTag')})
+
+
 # Saisie des informations personnelles et du nombre de comptes souhaité
 def SaisieInformations():
     # Création d'une liste "liste_compte" vide
