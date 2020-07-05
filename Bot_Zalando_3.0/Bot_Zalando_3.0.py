@@ -755,7 +755,7 @@ def checkout(compte_objet_list, url_produit, sku_produit, liste_proxys):
 
 
 # Commande du produit
-def Paiement_Zalando(compte_objet_list, liste_proxys, cb):
+def Paiement_Zalando(compte_objet_list, liste_proxys, carte_objet_list):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(compte_objet_list)
 
@@ -1024,11 +1024,11 @@ def Paiement_Zalando(compte_objet_list, liste_proxys, cb):
                     url_pay = "https://checkout.payment.zalando.com/selection"
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     data_cb = {
-                        "card_holder": cb[0],
-                        "pan": cb[1],
-                        "cvv": cb[2],
-                        "expiry_month": cb[3],
-                        "expiry_year": cb[4],
+                        "card_holder": carte_objet_list.nom,
+                        "pan": carte_objet_list.numero,
+                        "cvv": carte_objet_list.criptogramme,
+                        "expiry_month": carte_objet_list.mois,
+                        "expiry_year": carte_objet_list.annee,
                         "options": {
                             "selected": [],
                             "not_selected": ["store_for_reuse"],
