@@ -3,22 +3,21 @@ from cx_Freeze import setup, Executable
 # Dependencies are automatically detected, but it might need
 # fine tuning.
 buildOptions = dict(
-    packages=["idna", "json", "requests", "password_generator", "urllib3", "requests.adapters", "requests.packages.urllib3.util.retry"],
-    include_files=["Comptes.json"],
+    packages=["idna", "re", "urllib", "urllib.parse", "bs4", "user_agent", "time", "json", "requests", "password_generator", "urllib3", "requests.adapters", "requests.packages.urllib3.util.retry"]
 )
 
 base = None
 executables = [
     Executable(
-        "Generateur_Compte_Zalando_V2.py",
+        "Commande_Zalando_V1.py",
         base=base,
     )
 ]
 
 setup(
-    name="Generateur Compte Zalando V2",
-    version="1.0",
-    description="Generateur de comptes sur zalando",
+    name="Recherche_Checkout_Produit",
+    version="2.0",
+    description="Recherche et commande du produit",
     options=dict(build_exe=buildOptions),
     executables=executables,
 )
