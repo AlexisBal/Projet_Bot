@@ -108,36 +108,30 @@ def URLGen():
 
     # ------------------------------------------------------------------Code produit-------------------------------------------------------------#
     code_produit = input("Entrer la marque du produit (Nike Sportwear) :")
-    # code_produit = 'Nike Sportwear'
     code_produit = code_produit.lower().replace(" ", "-").replace("&", "and")
 
     # -----------------------------------------------------------------Model--------------------------------------------------------------------#
 
     model = str(input("Entrer le modèle du produit (AIR FORCE 1 ’07 AN20  - Baskets basses) :"))
-    # model = 'SLHMELROSE - T-shirt imprimé'
     model = model.lower().replace("’", "").replace("  ", "").replace(" - ", "-").replace(" ", "-").replace("é", "e").replace("regular", "").replace("--", "-")
 
     # ---------------------------------------------------------------Couleur-------------------------------------------------------------#
 
     couleur = input("Entrer la couleur du produit (black/white) :")
-    # couleur = 'sky captain'
     couleur = couleur.lower().replace(" ", "-").replace("/", "")
 
     # ---------------------------------------------------------------Reference--------------------------------------------------------#
 
     reference = input("Entrer la référence du produit (NI112O0CL-A11) :")
-    # reference = 'NI112O0CL-A11'
     reference = reference.lower().replace(" ", "")
 
     # ------------------------------------------------------------------Sku--------------------------------------------------------#
 
     sku_produit = input("Entrer le SKU du produit (NI112O0CL-A110060000) :")
-    # sku = 'NI112O0CL-A110060000'
 
     # -----------------------------------------------------------------Taille-----------------------------------------------------------#
 
     taille_produit = input("Entrer la taille 'francaise' du produit (42) :")
-    # taille = '42'
 
     # -----------------------------------------------------------------------------------------------------------------------------------#
 
