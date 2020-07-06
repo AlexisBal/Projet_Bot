@@ -525,19 +525,29 @@ def ModePaiementAutomatique(carte_objet_list):
 
 
 # Récupération du SKU
-def Sku():
-    headers = {
-        "User-Agent": generate_user_agent(os=("mac", "linux"))
-    }
-    url = 'https://www.zalando.fr/adidas-originals-stan-smith-baskets-basses-footwear-whitemystery-rubymaroon-ad115o0m8-a11.html'
-    requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
-    soup = BeautifulSoup(requete.content, "html.parser")
-    reponse = soup.find(type="application/json", class_="re-1-1")
-    reponsebis = reponse.contents
-    reponsebis2 = json.loads(reponsebis[0])
-    id_produit = reponsebis2['enrichedEntity']['id']
-    sku_liste = reponsebis2['graphqlCache']['{"id":"79b404b0f26a318349c1b29b57e789da91cb39a541a668c96c2f4945bc7df528","variables":{"id":"%s"}}' % id_produit]['data']['product']['simples']
-    print(sku_liste)
+def Sku(taille_produit, url_produit):
+    while True:
+        headers = {
+            "User-Agent": generate_user_agent(os=("mac", "linux"))
+        }
+        url = url_produit
+        requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
+        soup = BeautifulSoup(requete.content, "html.parser")
+        reponse = soup.find(type="application/json", class_="re-1-1")
+        if reponse is not None:
+            reponsebis = reponse.contents
+            reponsebis2 = json.loads(reponsebis[0])
+            id_produit = reponsebis2['enrichedEntity']['id']
+            sku_list = reponsebis2['graphqlCache'][
+                '{"id":"79b404b0f26a318349c1b29b57e789da91cb39a541a668c96c2f4945bc7df528","variables":{"id":"%s"}}' % id_produit][
+                'data']['product']['simples']
+            liste_sku = []
+            for n in range(0, len(sku_list)):
+                liste_sku.append(sku_list[n]['sku'])
+                liste_sku.append(sku_list[n]['size'])
+            position_taille = liste_sku.index(taille_produit)
+            sku = liste_sku[position_taille - 1]
+            return sku
 
 
 # Verification du stock
@@ -1100,4 +1110,5 @@ def Paiement_Zalando(compte_objet_list, liste_proxys, carte_objet_list):
                     x = 0
 
 
-Sku()
+
+
