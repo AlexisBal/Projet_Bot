@@ -532,121 +532,31 @@ def Sku():
     url = 'https://www.zalando.fr/adidas-originals-stan-smith-baskets-basses-footwear-whitemystery-rubymaroon-ad115o0m8-a11.html'
     requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
     soup = BeautifulSoup(requete.content, "html.parser")
+    reponse = soup.find(type="application/json", class_="re-1-1")
+    reponsebis = reponse.contents
+    reponsebis2 = json.loads(reponsebis[0])
+    id_produit = reponsebis2['enrichedEntity']['id']
+    sku_liste = reponsebis2['graphqlCache']['{"id":"79b404b0f26a318349c1b29b57e789da91cb39a541a668c96c2f4945bc7df528","variables":{"id":"%s"}}' % id_produit]['data']['product']['simples']
+    print(sku_liste)
+
+
+# Verification du stock
+def CheckStock():
+    headers = {
+        "User-Agent": generate_user_agent(os=("mac", "linux"))
+    }
+    url = 'https://www.zalando.fr/adidas-originals-stan-smith-baskets-basses-footwear-whitemystery-rubymaroon-ad115o0m8-a11.html'
+    requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
+    soup = BeautifulSoup(requete.content, "html.parser")
     reponse = soup.find(type="application/ld+json")
     reponsebis = reponse.contents
     reponsebis2 = json.loads(reponsebis[0])
     x = 0
-    liste_sku = []
+    liste_stock = []
     while True:
-        liste_sku.extend(reponsebis2['offers'][x]['sku'])
-        liste_sku.extend(reponsebis2['offers'][x]['availability'])
+        liste_stock.extend(reponsebis2['offers'][x]['sku'])
+        liste_stock.extend(reponsebis2['offers'][x]['availability'])
         x = x + 1
-
-
-
-
-
-# Vérification du stock
-def DisponibiliteProduit(liste_proxys, taille_produit, url_produit):
-    x = 0
-    while True:
-        try:
-            # Ouverture de la Session
-            with requests.Session() as session:
-                # Réglage des paramètres de la session
-                session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
-
-                session.headers.update(
-                    {
-                        'User-Agent': generate_user_agent(os=('mac', 'linux'))
-                    }
-                )
-
-                # Réglage du proxy
-                session.proxies = {
-                    'https': 'https://%s' % liste_proxys[x]
-                }
-
-                # Connexion à la page d'accueil de Zalando
-                url_google = 'https://www.google.com/?client=safari'
-                url_home = 'https://www.zalando.fr'
-                session.get(url_google, verify=False)
-                session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                session.headers["Accept-Language"] = "fr-fr"
-                session.headers["Accept-Encoding"] = "gzip, deflate, br"
-                session.get(url_home, verify=False)
-
-                # Récupération et modification des cookies de la session
-                cookies = session.cookies.get_dict()
-                del session.cookies['mpulseinject']
-                session.cookies['mpulseinject'] = 'false'
-
-                # Connexion à la page du produit
-                session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                produit_session = session.get(url_produit, verify=False)
-
-                # Diversion anti-bot
-                url_bot = 'https://www.zalando.fr/resources/35692132da201d42d0a3ba96882c7b'
-                data_bot = {
-                    'sensor_data': '7a74G7m23Vrp0o5c9178231.59-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392058,5583660,1440,816,1440,900,1440,457,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.310461937155,796712791830,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1136,-1,0;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1136,-1,0;-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/reebok-classic-club-c-85-baskets-basses-whitedark-greenchalk-white-re015o075-a11.html-1,2,-94,-115,1,32,32,0,0,0,0,1,0,1593425583660,-999999,17046,0,0,2841,0,0,2,0,0,AD852DA9CB75216A40393C9EA4B27CA9~-1~YAAQLux7XEmFhfJyAQAA99qQ/wSQeuSr3yA2nUWFM355G9Au4k+JM7EsIxUEh2qBoJucheaV8nK4A7qzhqSTeRkqZmCARZtx49bK2n7Yp4WukXx0R69NrR+2q6VKAUVuGLvIi5xh3yU0oRYCSPryGSabiW3mhyrr8H+fPR8si9AU9vlhW00znwELGASR7UZzoJEB2kLR+0FBqQR2TxiK63dFJfppynpweN0GJHNXgAzWWEWBH5cAPljF1HUmYsum6zn2qMlPytR20miWUC7oUnvNMbOfYSN66+bePb5+PLjc2w/lma8ZW4PFT8UGkkZ77oa7HDRfAzPORuamSL1XvY2+QCE=~0~-1~-1,32125,-1,-1,26018161,NVFO,124,-1-1,2,-94,-106,0,0-1,2,-94,-119,-1-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,-1-1,2,-94,-80,94-1,2,-94,-116,150758334-1,2,-94,-118,88956-1,2,-94,-121,;1;-1;0' %
-                                   session.headers["User-Agent"]
-                }
-                session.headers["Accept"] = "*/*"
-                session.headers["Content-Type"] = "text/plain;charset=UTF-8"
-                session.headers["Origin"] = "https://www.zalando.fr"
-                session.headers["Content-Length"] = '1452'
-                session.headers["Referer"] = url_produit
-                session.post(url_bot, json=data_bot, verify=False)
-
-                # Accès aux informations
-                del session.headers["Content-Type"]
-                del session.headers["Content-Length"]
-                del session.headers["Origin"]
-                session.headers["x-xsrf-token"] = cookies["frsx"]
-                flowid_produit = urllib.parse.quote(produit_session.headers["X-Flow-Id"])
-                url_get_2 = (
-                        "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1" % flowid_produit
-                )
-                a = session.get(url_get_2, verify=False)
-
-                # Récupération de la liste du stock
-                objet = json.loads(a.text)
-                stock = objet['gtm']['productSizeAvailability']
-
-            # Fermeture de la Session
-            session.close()
-
-            # Séparation des valeurs
-            liste_stock = stock.split('|')
-            liste_stock_bis = []
-
-            # Séparation des pointures et du stock
-            for valeur in liste_stock:
-                y = valeur.split('_')
-                liste_stock_bis.extend(y)
-
-            # Détermination de la position de la pointure et du stock
-            position_pointure = liste_stock_bis.index(taille_produit)
-            position_stock = position_pointure + 1
-
-            # Affichage du stock de la pointure concernée
-            if liste_stock_bis[position_stock] == '1':
-                print("Le produit est disponible !")
-                break
-            else:
-                print("Le produit n'est pas disponible !")
-                print("Mode restock activé")
-                time.sleep(60)
-
-        # Gestion des exceptions
-        except:
-            pass
-
-        finally:
-            print("Problème avec le proxie", liste_proxys[x])
-            x = x + 1
-            if x == (len(liste_proxys) + 1):
-                x = 0
 
 
 # Mise dans le panier du produit
