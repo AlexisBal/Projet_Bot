@@ -264,8 +264,8 @@ class RechercheCommande(Thread):
                 except:
                     pass
 
+        # Commande du produit si checkout automatique activé
         if self.carte_objet_list:
-            # Commande du produit
             for compte in range(0, nombrecompte):
                 while True:
                     try:
@@ -627,7 +627,7 @@ class RechercheCommande(Thread):
 
         else:
             print("Fin de tâche")
-            
+
 
 def titre():
     print("  ___                     _     __     ______    ___ ")
