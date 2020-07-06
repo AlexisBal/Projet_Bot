@@ -3,6 +3,8 @@ import time
 import re
 import random
 from threading import Thread
+from colorama import Back, Fore, Style, deinit, init
+
 
 import requests
 import urllib3
@@ -630,11 +632,11 @@ class RechercheCommande(Thread):
 
 
 def titre():
-    print("  ___                     _     __     ______    ___ ")
-    print("/ ___|  ___ ___  ___   __| |   /  \   |_    _| /  _  \ ")
-    print("\___ \ / __|  _|/ _ \ / _' |  / /\ \    |  |  |  / \  |")
-    print(" ___) | (__| |    __/| ( | | / /__\ \  _|  |_ |  \_/  |")
-    print("|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/")
+    print(Fore.RED + Style.BRIGHT + "  ___                     _     __     ______    ___ ")
+    print(Fore.RED + Style.BRIGHT + "/ ___|  ___ ___  ___   __| |   /  \   |_    _| /  _  \ ")
+    print(Fore.RED + Style.BRIGHT + "\___ \ / __|  _|/ _ \ / _' |  / /\ \    |  |  |  / \  |")
+    print(Fore.RED + Style.BRIGHT + " ___) | (__| | |  __/| ( | | / /__\ \  _|  |_ |  \_/  |")
+    print(Fore.RED + Style.BRIGHT + "|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/")
     print("\n")
 
 
@@ -1099,5 +1101,5 @@ def ModePaiementAutomatique(carte_objet_list):
         else:
             print('Entrer "o" ou "n"')
 
-
-
+init()
+titre()
