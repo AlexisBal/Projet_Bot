@@ -552,21 +552,30 @@ def Sku(taille_produit, url_produit):
 
 # Verification du stock
 def CheckStock():
-    headers = {
-        "User-Agent": generate_user_agent(os=("mac", "linux"))
-    }
-    url = 'https://www.zalando.fr/adidas-originals-stan-smith-baskets-basses-footwear-whitemystery-rubymaroon-ad115o0m8-a11.html'
-    requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
-    soup = BeautifulSoup(requete.content, "html.parser")
-    reponse = soup.find(type="application/ld+json")
-    reponsebis = reponse.contents
-    reponsebis2 = json.loads(reponsebis[0])
-    x = 0
-    liste_stock = []
     while True:
-        liste_stock.extend(reponsebis2['offers'][x]['sku'])
-        liste_stock.extend(reponsebis2['offers'][x]['availability'])
-        x = x + 1
+        sku = 'NI112O0CD-A110075000'
+        url = 'https://www.zalando.fr/nike-sportswear-air-max-2090-baskets-basses-whiteblackpure-platinumbright-crimsonwolf-greyblue-hero-ni112o0cd-a11.html'
+        headers = {
+            "User-Agent": generate_user_agent(os=("mac", "linux"))
+        }
+        requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
+        soup = BeautifulSoup(requete.content, "html.parser")
+        reponse = soup.find(type="application/ld+json")
+        if reponse is not None:
+            reponsebis = reponse.contents
+            reponsebis2 = json.loads(reponsebis[0])
+            stock_list = reponsebis2['offers']
+            liste_stock = []
+            for n in range(0, len(stock_list)):
+                liste_stock.append(stock_list[n]['sku'])
+                liste_stock.append(stock_list[n]['availability'])
+            position_sku = liste_stock.index(sku)
+            stock_schema = liste_stock[position_sku + 1]
+            if stock_schema == 'http://schema.org/InStock':
+                print('Le produit est disponible !')
+                break
+            else:
+                time.sleep(0.2)
 
 
 # Mise dans le panier du produit
@@ -1110,5 +1119,4 @@ def Paiement_Zalando(compte_objet_list, liste_proxys, carte_objet_list):
                     x = 0
 
 
-
-
+CheckStock()
