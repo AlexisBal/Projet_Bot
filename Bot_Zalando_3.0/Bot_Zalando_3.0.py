@@ -551,10 +551,8 @@ def Sku(taille_produit, url_produit):
 
 
 # Verification du stock
-def CheckStock():
+def CheckStock(sku, url):
     while True:
-        sku = 'NI112O0CD-A110075000'
-        url = 'https://www.zalando.fr/nike-sportswear-air-max-2090-baskets-basses-whiteblackpure-platinumbright-crimsonwolf-greyblue-hero-ni112o0cd-a11.html'
         headers = {
             "User-Agent": generate_user_agent(os=("mac", "linux"))
         }
