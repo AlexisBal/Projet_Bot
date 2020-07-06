@@ -70,8 +70,9 @@ def horloge():
     milisecondes = now.microsecond
     milisecondes = str(milisecondes)
     milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
-    horloge = "[" + heures + ":" + minutes + ":" + secondes + "." + milisecondes + "]"
-    print(Fore.RED + Style.BRIGHT + horloge, end="")
+    horloge = Style.RESET_ALL + "[" + Fore.RED + heures + ":" + minutes + ":" + secondes + "." + milisecondes + Style.RESET_ALL + "]"
+    #print( horloge, end="")
+    return horloge
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -663,9 +664,10 @@ def titre():
 
 
 #Fonction latence
-def latence():
+def latence(start):
     stop = timeit.default_timer()
-    print ('[' , stop - start , ']', sep="")
+    latence = Style.RESET_ALL + '[' + Fore.RED + str(stop - start) + Style.RESET_ALL + ']' 
+    return latence
 
 
 # ----------------------------------------------------------------------------------Fonction licenses--------------------------------------------------------------#
@@ -1132,13 +1134,32 @@ def ModePaiementAutomatique(carte_objet_list):
         else:
             print('Entrer "o" ou "n"')
 
+#-----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 
 def fonction_Zalando():
-    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence
+    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
     init()
-    titre()
-    horloge()
     
+    
+    
+#----------------------------Initialisation du programme-------------------------------------------------------------#
+
+VerificationLicense()
+titre()    
+start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
+print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
+print(horloge(), "[Scred AIO]", latence(start), "> 2. Courir")
+print(horloge(), "[Scred AIO]", latence(start), "> 3. Supreme")
+choix_depart = input()
+
+if choix_depart == "1":
+    fonction_Zalando()
+
+if choix_depart == "2":
+    print("La ca sera la fonction pour un autre site")
+
+if choix_depart == "3":
+    print("Fonction Supreme")
 
 
-fonction_Zalando()
+
