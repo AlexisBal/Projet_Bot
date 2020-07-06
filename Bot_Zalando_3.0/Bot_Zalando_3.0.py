@@ -620,7 +620,7 @@ class RechercheCommande(Thread):
 
                         # Fermeture de la Session
                         session.close()
-                        print("Le produit a été commandé !")
+                        print("The product has been ordered !")
                         break
 
                     # Gestion des exceptions
@@ -652,7 +652,7 @@ def VerificationLicense():
     with open("Data/License.txt", "r") as f:
         License = f.read()
         if License == "":
-            print("Inserrez votre License dans le fichier License.txt\n")
+            print("Enter your License key in file : License.txt\n")
             exit()
 
     result = Key.activate(token=auth,
@@ -664,11 +664,11 @@ def VerificationLicense():
     if result[0] is None or not Helpers.IsOnRightMachine(result[0]):
         print("ERREUR: {0}".format(result[1]))
 
-        print("\nVotre License est invalide.\n")
+        print("\nYour License is invalid.\n")
         exit()
 
     else:
-        print("Votre license est valide.\n")
+        print("Your license is valid.\n")
         pass
 
 
@@ -695,8 +695,8 @@ def proxy():
                 liste_proxys.append(ligne.strip('\n'))
 
         if not liste_proxys:
-            print("Vous n'avez spécifié aucun proxy.")
-            print("Entrer l'adresse des serveurs proxy dans le fichier proxy.txt")
+            print("You did not specify any proxy.")
+            print("Enter the address of the proxy servers in the proxy.txt file.")
 
         return liste_proxys
 
@@ -707,21 +707,21 @@ def SaisieInformations():
     liste_comptes = []
 
     # Saisie des informations
-    print("Bienvenu dans le generateur de compte Zalando !")
-    prenom = input("Entrer votre prenom :")
-    nom = input("Entrer votre nom :")
-    cp = input("Entrer votre code postal :")
-    ville = input("Entrer votre ville (sans accents) :")
-    adresse = input("Entrer votre adresse (sans accents) :")
+    print("Welcome to the Zalando account generator !")
+    prenom = input("Enter your first name:")
+    nom = input("Enter your name :")
+    cp = input("Enter your postal code :")
+    ville = input("Enter your city of residence (without accents) :")
+    adresse = input("Enter your address (without accents) :")
     complement = input("Complément d'adresse (cliquer sur entrer pour passer) :")
-    telephone = input("Entrer un numéro de téléphone mobile :")
+    telephone = input("Enter a mobile phone number :")
     nombrecompte = int(
         input(
-            "Entrer le nombre de comptes souhaité (1 adresse mail valide par compte) :"
+            "Enter the desired number of accounts (1 valid email address per account) :"
         )
     )
     for i in range(0, nombrecompte):
-        email = input("Entrer une adresse mail valide :")
+        email = input("Enter a valid email address:")
         i = {
             "id_liste": "",
             "prenom": prenom,
@@ -747,7 +747,7 @@ def SaisieInformations():
     f.close()
 
     # Message de confimation
-    print("Vos informations personnelles ont bien été sauvegardées !")
+    print("Your personal information has been saved !")
 
 
 def ModePaiement():
