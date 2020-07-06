@@ -17,6 +17,7 @@ from password_generator import PasswordGenerator
 from bs4 import BeautifulSoup
 from licensing.models import *
 from licensing.methods import Key, Helpers
+from datetime import datetime
 
 
 # Définition de la classe "Compte"
@@ -55,6 +56,24 @@ retries = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
 
+#-----------------------------------------------------------Affichage horloge-------------------------------------------------------------------------#
+
+def horloge():
+
+    now = datetime.now()
+    heures = now.hour
+    heures = str(heures)
+    minutes= now.minute
+    minutes = str(minutes)
+    secondes = now.second
+    secondes = str(secondes)
+    milisecondes = now.microsecond
+    milisecondes= str(milisecondes)
+    milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
+    horloge = "[" + heures + ":" + minutes + ":" + secondes + "." + milisecondes + "]"
+    print(Fore.RED + Style.BRIGHT + horloge, end = "")
+
+#------------------------------------------------------------------------------------------------------------------------------------------------#
 
 class RechercheCommande(Thread):
     def __init__(self, compte_objet_list, carte_objet_list, liste_proxys, taille_produit, url_produit):
@@ -1103,3 +1122,4 @@ def ModePaiementAutomatique(carte_objet_list):
 
 init()
 titre()
+horloge()
