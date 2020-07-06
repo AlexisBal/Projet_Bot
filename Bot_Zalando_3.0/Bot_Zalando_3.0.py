@@ -5,7 +5,6 @@ import random
 from threading import Thread
 from colorama import Back, Fore, Style, deinit, init
 
-
 import requests
 import urllib3
 import urllib
@@ -56,24 +55,25 @@ retries = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
 
-#-----------------------------------------------------------Affichage horloge-------------------------------------------------------------------------#
+
+# -----------------------------------------------------------Affichage horloge-------------------------------------------------------------------------#
 
 def horloge():
-
     now = datetime.now()
     heures = now.hour
     heures = str(heures)
-    minutes= now.minute
+    minutes = now.minute
     minutes = str(minutes)
     secondes = now.second
     secondes = str(secondes)
     milisecondes = now.microsecond
-    milisecondes= str(milisecondes)
+    milisecondes = str(milisecondes)
     milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
     horloge = "[" + heures + ":" + minutes + ":" + secondes + "." + milisecondes + "]"
-    print(Fore.RED + Style.BRIGHT + horloge, end = "")
+    print(Fore.RED + Style.BRIGHT + horloge, end="")
 
-#------------------------------------------------------------------------------------------------------------------------------------------------#
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------#
 
 class RechercheCommande(Thread):
     def __init__(self, compte_objet_list, carte_objet_list, liste_proxys, taille_produit, url_produit):
@@ -541,7 +541,8 @@ class RechercheCommande(Thread):
                             del session.headers["x-zalando-checkout-app"]
                             del session.headers["x-xsrf-token"]
                             del session.headers["x-zalando-header-mode"]
-                            session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                            session.headers[
+                                "Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                             session.headers["Host"] = "checkout.payment.zalando.com"
                             session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
                             session.get(url_pay_ini, verify=False, allow_redirects=False)
@@ -603,7 +604,8 @@ class RechercheCommande(Thread):
                             del session.headers["Content-Type"]
                             del session.headers["Origin"]
                             session.headers["Host"] = "www.zalando.fr"
-                            session.headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                            session.headers[
+                                "Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                             b = session.get(url_pay_4, verify=False)
                             soupbis_3 = BeautifulSoup(b.content, "html.parser")
                             reponsefinale_3 = soupbis_3.find(attrs={"data-props": re.compile('eTag')})
@@ -1119,6 +1121,7 @@ def ModePaiementAutomatique(carte_objet_list):
 
         else:
             print('Entrer "o" ou "n"')
+
 
 init()
 titre()
