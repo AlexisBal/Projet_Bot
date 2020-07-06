@@ -1,6 +1,7 @@
 import json
 import time
 import re
+from threading import Thread
 
 import requests
 import urllib3
@@ -525,10 +526,24 @@ def ModePaiementAutomatique(carte_objet_list):
 
 # Récupération du SKU
 def Sku():
+    headers = {
+        "User-Agent": generate_user_agent(os=("mac", "linux"))
+    }
     url = 'https://www.zalando.fr/adidas-originals-stan-smith-baskets-basses-footwear-whitemystery-rubymaroon-ad115o0m8-a11.html'
-    requete = requests.get(url, verify=False)
+    requete = requests.get(url, headers=headers, verify=False, allow_redirects=False)
     soup = BeautifulSoup(requete.content, "html.parser")
-    reponsefinale = soup.find(attrs={"data-props": re.compile('eTag')})
+    reponse = soup.find(type="application/ld+json")
+    reponsebis = reponse.contents
+    reponsebis2 = json.loads(reponsebis[0])
+    x = 0
+    liste_sku = []
+    while True:
+        liste_sku.extend(reponsebis2['offers'][x]['sku'])
+        liste_sku.extend(reponsebis2['offers'][x]['availability'])
+        x = x + 1
+
+
+
 
 
 # Vérification du stock
@@ -1173,3 +1188,6 @@ def Paiement_Zalando(compte_objet_list, liste_proxys, carte_objet_list):
                 x = x + 1
                 if x == (len(liste_proxys) + 1):
                     x = 0
+
+
+Sku()
