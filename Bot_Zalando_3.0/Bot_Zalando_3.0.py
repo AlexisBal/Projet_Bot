@@ -1139,27 +1139,37 @@ def ModePaiementAutomatique(carte_objet_list):
 def fonction_Zalando():
     start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
     init()
+    print("")
+    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
+    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Optimised Tasks")
+    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
+    choix = input("\nChoice :")
+
     
     
     
 #----------------------------Initialisation du programme-------------------------------------------------------------#
+def main():
+    VerificationLicense()
+    titre()    
+    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
+    print(Style.RESET_ALL + "Welcome ! Initializing Scred AIO - User data loaded !\n")
+    print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
+    print(horloge(), "[Scred AIO]", latence(start), "> 2. Courir")
+    print(horloge(), "[Scred AIO]", latence(start), "> 3. Supreme")
+    choix_depart = input("\nWebsite :")
 
-VerificationLicense()
-titre()    
-start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
-print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
-print(horloge(), "[Scred AIO]", latence(start), "> 2. Courir")
-print(horloge(), "[Scred AIO]", latence(start), "> 3. Supreme")
-choix_depart = input()
+    if choix_depart == "1":
+        fonction_Zalando()
 
-if choix_depart == "1":
-    fonction_Zalando()
+    if choix_depart == "2":
+        print("La ca sera la fonction pour un autre site")
 
-if choix_depart == "2":
-    print("La ca sera la fonction pour un autre site")
+    if choix_depart == "3":
+        print("Fonction Supreme")
 
-if choix_depart == "3":
-    print("Fonction Supreme")
+#--------------------------------------------------------------------------------------------------------------------#
 
-
+#main()
+fonction_Zalando()
 
