@@ -1,5 +1,6 @@
 import json
 import time
+import timeit
 import re
 import random
 from threading import Thread
@@ -661,11 +662,19 @@ def titre():
     print("\n")
 
 
+#Fonction latence
+def latence():
+    stop = timeit.default_timer()
+    print ('[' , stop - start , ']', sep="")
+
+
 # ----------------------------------------------------------------------------------Fonction licenses--------------------------------------------------------------#
 
-# Informations du propriétaire
+# Informations du propriétaire à remplir 
 RSAPubKey = "<RSAKeyValue><Modulus>zGKjhD1u4eZQg+U2oZgX8inZ1SLvb83jD+oKD20GplwpYcqquQZMAPokGXTs8FMD5X2sc6FtiNKg/wcapvkuyS9KRTauaoQib/B2SW7e9b4zkfpg3hJHW8zm9CZ3F2xbH5E8aXOlm0Knu9lOxjE+e7IogTQGk5RvyO4TO6QRO71bc9dW9h44KWdzku6lcF1VBHM646E6F10ziq7beGhmyLt/dbz88Yt9VP5CKBRH+/QDafbV+KD86WFTQ69p/j+k/h1QF2LYY2tVOhz9TL0iF9zpb8e4mR/vL1RGU3T3ztS21AwGwyCI2j1xc8KvWsUWnPgfDsIr4SRi6EH0d5joxQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
 auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ=="
+
+#-------------------------------------------------------------------------------------------------------------------------------------#
 
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
@@ -674,6 +683,7 @@ def VerificationLicense():
         License = f.read()
         if License == "":
             print("Enter your License key in file : License.txt\n")
+            time.sleep(5)
             exit()
 
     result = Key.activate(token=auth,
@@ -1123,6 +1133,12 @@ def ModePaiementAutomatique(carte_objet_list):
             print('Entrer "o" ou "n"')
 
 
-init()
-titre()
-horloge()
+def fonction_Zalando():
+    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence
+    init()
+    titre()
+    horloge()
+    
+
+
+fonction_Zalando()
