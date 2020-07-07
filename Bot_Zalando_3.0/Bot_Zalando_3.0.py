@@ -1154,4 +1154,3 @@ def main():
 
 # main()
 # fonction_Zalando()
-creation_objet_compte()
