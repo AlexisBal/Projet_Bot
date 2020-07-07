@@ -566,7 +566,7 @@ class RechercheCommande(Thread):
                             a_2 = session.get(url_pay, verify=False, allow_redirects=False)
 
                             # Paiement par carte bancaire
-                            if self.carte_objet_list != ['paypal'] and self.carte_objet_list != []:
+                            if self.carte_objet_list != ['paypal']:
                                 session_id_2 = session.cookies["Session-ID"]
                                 soup_3 = BeautifulSoup(a_2.text, "html.parser")
                                 objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
@@ -643,9 +643,11 @@ class RechercheCommande(Thread):
                                 session.headers['Content-Type'] = 'application/json'
                                 session.headers['x-zalando-header-mode'] = 'desktop'
                                 session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                                # Rajouter les notifications à print
+                                # Envoyer le message de confirmation sur le webhook discord de l'utilisateur
 
                             # Paiement par paypal
-                            if self.carte_objet_list == ['paypal'] and self.carte_objet_list != []:
+                            if self.carte_objet_list == ['paypal']:
                                 session_id_2 = session.cookies["Session-ID"]
                                 url_pay_3 = (
                                         "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
@@ -701,18 +703,20 @@ class RechercheCommande(Thread):
                                 reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
                                 json_reponse = json.loads(reponse_checkout.text)
                                 url_paypal = str(json_reponse["url"])
+                                # Rajouter les notifications à print
+                                # Envoyer le lien paypal sur le webhook discord de l'utilisateur
+                                break
 
                         # Fermeture de la Session
                         session.close()
-                        print("The product has been ordered !")
-                        break
 
                     # Gestion des exceptions
                     except:
                         pass
 
         else:
-            print("Fin de tâche")
+            print('')
+        # Rajouter les notifications à print
 
 
 def titre():
@@ -843,42 +847,6 @@ def SaisieInformations():
 
     # Message de confimation
     print("Your personal information has been saved !")
-
-
-def ModePaiement():
-    # Création d'une liste "liste_paiement" vide
-    liste_paiement = []
-
-    # Saisie des informations
-    nombrecb = int(
-        input(
-            "Entrer le nombre de carte bancaire à saisir :"
-        )
-    )
-    for i in range(0, nombrecb):
-        nom = input('Entrer le nom sur la carte (DUPOND Jean) :')
-        num = input('Entrer le numéro de la carte avec espaces (3233 3288 3222 3333) :')
-        mois = input("Entrer le mois d'expiration sans '0' devant (8) :")
-        annee = input("Entrer l'année d'expliration (2023) : ")
-        cripto = input('Entrer le cryptogramme visuel (134) :')
-        i = {
-            "nom": nom,
-            "numero": num,
-            "mois": mois,
-            "annee": annee,
-            "criptogramme": cripto
-        }
-
-        # Insertion des comptes dans la liste "liste_compte"
-        liste_paiement.append(i)
-
-    # Insertion des comptes dans la base de données "Comptes.json"
-    with open("../Data/Paiement.json", "w") as f:
-        json.dump(liste_paiement, f, indent=4)
-    f.close()
-
-    # Message de confimation
-    print("Vos informations bancaires ont bien été sauvegardées !")
 
 
 # Création des objets "Carte" et de la liste d'objet "carte_objet_list"
@@ -1158,7 +1126,6 @@ def Configuration(compte_objet_list, liste_proxys):
 
 # Réglage du checkout automatique
 def ModePaiementAutomatique(carte_objet_list):
-    print("Bienvenu dans la recherche et commande de produit !")
     while True:
         print('Souhaitez-vous activer le checkout automatique ?')
         reponse = input('o / n :')
