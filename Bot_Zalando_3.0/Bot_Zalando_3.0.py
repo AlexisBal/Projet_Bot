@@ -43,26 +43,6 @@ retries = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503,
 urllib3.disable_warnings()
 
 
-# -----------------------------------------------------------Affichage horloge-------------------------------------------------------------------------#
-
-def horloge():
-    now = datetime.now()
-    heures = now.hour
-    heures = str(heures)
-    minutes = now.minute
-    minutes = str(minutes)
-    secondes = now.second
-    secondes = str(secondes)
-    milisecondes = now.microsecond
-    milisecondes = str(milisecondes)
-    milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
-    horloge = Style.RESET_ALL + "[" + Fore.RED + heures + ":" + minutes + ":" + secondes + "." + milisecondes + Style.RESET_ALL + "]"
-    # print( horloge, end="")
-    return horloge
-
-
-# ------------------------------------------------------------------------------------------------------------------------------------------------#
-
 class RechercheCommande(Thread):
     def __init__(self, compte_objet_list, carte_objet_list, liste_proxys, taille_produit, url_produit):
         Thread.__init__(self)
@@ -640,7 +620,7 @@ class RechercheCommande(Thread):
                                         % session_id_2
                                 )
                                 data_pay_3 = (
-                                        "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
+                                    "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                                 )
                                 session.headers["Referer"] = "https://checkout.payment.zalando.com/selection"
                                 session.headers[
@@ -668,7 +648,8 @@ class RechercheCommande(Thread):
                                 url_pay_bot = 'https://www.zalando.fr/resources/ef7c5d53c52028b315fc23b805e921'
                                 url_pay_fin = 'https://www.zalando.fr/api/checkout/buy-now'
                                 data_bot_pay = {
-                                    'sensor_data': '7a74G7m23Vrp0o5c9179081.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392213,6747499,1920,1080,1920,1080,1920,1017,1920,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.11229682656,797028373749,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3960,0;-1,2,-94,-102,0,-1,0,0,-1,3960,0;-1,2,-94,-108,-1,2,-94,-110,0,1,866,1219,589;1,1,952,1330,303;2,1,956,1335,268;3,1,1052,1335,262;4,1,1053,1334,227;5,1,1223,1334,226;6,1,1232,1332,209;7,3,1457,1332,209,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/confirm-1,2,-94,-115,1,21705,32,0,0,0,21673,1457,0,1594056747498,15,17052,0,8,2842,1,0,1458,8791,0,76260A165DC066A281E308D22442E210~-1~YAAQNex7XPmwUBBzAQAAL6wvJQQStigQokMVnZeVwO3MmTr9ShhhdNV9l0dDLJJncTeUUmbw1GxS3ewJgO07jimqFmuwVJLCKb+yJW1ozK9zuKyzyQ8n1t32g9OTRvVUauyicyddqYedyA/mGe0i4GjORlN34urlDCmDhGcVeOqX3n9bEJ7IbeFP4Ex8ublQhESaDOaEjbeK66uI99vMYtuREoZscMGcp3bDMxgOZQqnTJzzvBiNxsFutrC2KZXr+LcYRblAoMD85YVKZZnsgRcYT7OAHAHkGLXTn2HWI6DvnJ+Y/NHiqABiHh/beN3WtkNCCeHwHcowgTha20OefnKadT8=~-1~-1~-1,33150,7,-1229804841,26018161,PiZtE,91344,48-1,2,-94,-106,1,2-1,2,-94,-119,800,0,0,200,200,200,200,200,0,200,200,1600,1600,2200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,506063805-1,2,-94,-118,93065-1,2,-94,-121,;1;8;0' % session.headers['User-Agent']
+                                    'sensor_data': '7a74G7m23Vrp0o5c9179081.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392213,6747499,1920,1080,1920,1080,1920,1017,1920,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.11229682656,797028373749,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3960,0;-1,2,-94,-102,0,-1,0,0,-1,3960,0;-1,2,-94,-108,-1,2,-94,-110,0,1,866,1219,589;1,1,952,1330,303;2,1,956,1335,268;3,1,1052,1335,262;4,1,1053,1334,227;5,1,1223,1334,226;6,1,1232,1332,209;7,3,1457,1332,209,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/confirm-1,2,-94,-115,1,21705,32,0,0,0,21673,1457,0,1594056747498,15,17052,0,8,2842,1,0,1458,8791,0,76260A165DC066A281E308D22442E210~-1~YAAQNex7XPmwUBBzAQAAL6wvJQQStigQokMVnZeVwO3MmTr9ShhhdNV9l0dDLJJncTeUUmbw1GxS3ewJgO07jimqFmuwVJLCKb+yJW1ozK9zuKyzyQ8n1t32g9OTRvVUauyicyddqYedyA/mGe0i4GjORlN34urlDCmDhGcVeOqX3n9bEJ7IbeFP4Ex8ublQhESaDOaEjbeK66uI99vMYtuREoZscMGcp3bDMxgOZQqnTJzzvBiNxsFutrC2KZXr+LcYRblAoMD85YVKZZnsgRcYT7OAHAHkGLXTn2HWI6DvnJ+Y/NHiqABiHh/beN3WtkNCCeHwHcowgTha20OefnKadT8=~-1~-1~-1,33150,7,-1229804841,26018161,PiZtE,91344,48-1,2,-94,-106,1,2-1,2,-94,-119,800,0,0,200,200,200,200,200,0,200,200,1600,1600,2200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,506063805-1,2,-94,-118,93065-1,2,-94,-121,;1;8;0' %
+                                                   session.headers['User-Agent']
                                 }
                                 data_pay_fin = {
                                     'checkoutId': checkout_id,
@@ -713,6 +694,25 @@ def titre():
     print(Fore.RED + Style.BRIGHT + "|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/")
     print("\n")
 
+
+# -----------------------------------------------------------Affichage horloge-------------------------------------------------------------------------#
+def horloge():
+    now = datetime.now()
+    heures = now.hour
+    heures = str(heures)
+    minutes = now.minute
+    minutes = str(minutes)
+    secondes = now.second
+    secondes = str(secondes)
+    milisecondes = now.microsecond
+    milisecondes = str(milisecondes)
+    milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
+    horloge = Style.RESET_ALL + "[" + Fore.RED + heures + ":" + minutes + ":" + secondes + "." + milisecondes + Style.RESET_ALL + "]"
+    # print( horloge, end="")
+    return horloge
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------#
 
 # Fonction latence
 def latence(start):
@@ -759,18 +759,6 @@ def VerificationLicense():
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------#
 
-
-# Création des objets "Compte" et de la liste d'objet "compte_objet_list"
-def creation_objet_compte():
-    acces_fichier = open("../Data/Comptes.json", "r")
-    compte_objet_list = []
-    for compte_attributes in json.load(acces_fichier):
-        compte_objet = Compte(**compte_attributes)
-        compte_objet_list.append(compte_objet)
-    acces_fichier.close()
-    return compte_objet_list
-
-
 # Récupérations des proxies
 def proxy():
     with open('../Data/proxy.txt', 'r') as f:
@@ -786,64 +774,37 @@ def proxy():
         return liste_proxys
 
 
-# Saisie des informations personnelles et du nombre de comptes souhaité
-def SaisieInformations():
-    # Création d'une liste "liste_compte" vide
-    liste_comptes = []
-
-    # Saisie des informations
-    print("Welcome to the Zalando account generator !")
-    prenom = input("Enter your first name:")
-    nom = input("Enter your name :")
-    cp = input("Enter your postal code :")
-    ville = input("Enter your city of residence (without accents) :")
-    adresse = input("Enter your address (without accents) :")
-    complement = input("Complément d'adresse (cliquer sur entrer pour passer) :")
-    telephone = input("Enter a mobile phone number :")
-    nombrecompte = int(
-        input(
-            "Enter the desired number of accounts (1 valid email address per account) :"
-        )
-    )
-    for i in range(0, nombrecompte):
-        email = input("Enter a valid email address:")
-        i = {
-            "id_liste": "",
-            "prenom": prenom,
-            "nom": nom,
-            "email": email,
-            "motdepasse": "",
-            "codepostal": cp,
-            "ville": ville,
-            "adresse": adresse,
-            "complement_adresse": complement,
-            "id_adresse": "",
-            "telephone": telephone,
-        }
-        # Création d'un mot de passe aléatoire et sécurisé
-        pwo = PasswordGenerator()
-        i["motdepasse"] = pwo.generate()
-        # Insertion des comptes dans la liste "liste_compte"
-        liste_comptes.append(i)
-
-    # Insertion des comptes dans la base de données "Comptes.json"
-    with open("../Data/Comptes.json", "w") as f:
-        json.dump(liste_comptes, f, indent=4)
+# Création de la liste de compte "Liste_compte"
+def compte():
+    with open('../Data/Accounts.csv', 'r') as f:
+        Liste_compte = []
+        for ligne in f:
+            compte_list = ligne.split(";")
+            Liste_compte.append(compte_list)
     f.close()
-
-    # Message de confimation
-    print("Your personal information has been saved !")
+    return Liste_compte
 
 
-# Création des objets "Carte" et de la liste d'objet "carte_objet_list"
-def creation_objet_carte():
-    acces_fichier = open("../Data/Paiement.json", "r")
-    carte_objet_list = []
-    for carte_attributes in json.load(acces_fichier):
-        carte_objet = Carte(**carte_attributes)
-        carte_objet_list.append(carte_objet)
-    acces_fichier.close()
-    return carte_objet_list
+# Création de la liste de compte "Liste_compte"
+def listecomptegenerator():
+    with open('../Data/AccountGenerator.csv', 'w') as f:
+        Liste_comptegenerator = []
+        for ligne in f:
+            comptegenerator_list = ligne.split(";")
+            Liste_comptegenerator.append(comptegenerator_list)
+    f.close()
+    return Liste_comptegenerator
+
+
+# Création de la liste de compte "Liste_carte"
+def carte():
+    with open('../Data/Payment.csv', 'r') as f:
+        Liste_carte = []
+        for ligne in f:
+            carte_list = ligne.split(";")
+            Liste_carte.append(carte_list)
+    f.close()
+    return Liste_carte
 
 
 # Création des comptes à partir des attributs de chaque objet "Compte"
@@ -1182,8 +1143,8 @@ def main():
     if choix_depart == "3":
         print("Fonction Supreme")
 
-
 # --------------------------------------------------------------------------------------------------------------------#
 
-#main()
-#fonction_Zalando()
+# main()
+# fonction_Zalando()
+creation_objet_compte()
