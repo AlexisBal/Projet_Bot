@@ -20,20 +20,6 @@ from licensing.methods import Key, Helpers
 from datetime import datetime
 
 
-# Définition de la classe "Compte"
-class Compte:
-    def __init__(self, **compte_attributes):
-        for attr_name, attr_value in compte_attributes.items():
-            setattr(self, attr_name, attr_value)
-
-
-# Définition de la classe "Carte"
-class Carte:
-    def __init__(self, **carte_attributes):
-        for attr_name, attr_value in carte_attributes.items():
-            setattr(self, attr_name, attr_value)
-
-
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
