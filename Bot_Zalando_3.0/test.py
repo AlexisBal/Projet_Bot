@@ -3,8 +3,10 @@ with open('../Data/AccountGenerator.csv', 'r') as f:
     for ligne in f:
         comptegenerator_list = ligne.split(";")
         Liste_comptegenerator.append(comptegenerator_list)
-        Liste_comptegenerator.insert(5, "Id_Address")
+
 f.close()
+Liste_comptegenerator[0].insert(5, "Id_Address")
+print(Liste_comptegenerator)
 
 # Comptage du nombre de compte présents dans la base de données
 nombrecompte = len(Liste_comptegenerator)
@@ -12,11 +14,8 @@ nombrecompte = len(Liste_comptegenerator)
 for compte in range(1, nombrecompte):
     id_adresse = '123213'
     Liste_comptegenerator[compte].insert(5, id_adresse)
-    liste_compte = []
-    for b in range(0, len(Liste_comptegenerator)):
-        liste_compte.append(Liste_comptegenerator[b])
     with open("../Data/Accounts.csv", "w") as f:
-        for eleve in liste_compte:
+        for eleve in Liste_comptegenerator:
             f.write(str(eleve[0]))
             f.write(";")
             f.write(eleve[1])
@@ -36,4 +35,6 @@ for compte in range(1, nombrecompte):
             f.write(eleve[8])
             f.write(";")
             f.write(eleve[9])
+            f.write(";")
+            f.write(eleve[10])
     f.close()
