@@ -44,10 +44,10 @@ urllib3.disable_warnings()
 
 
 class RechercheCommande(Thread):
-    def __init__(self, compte_objet_list, carte_objet_list, liste_proxys, taille_produit, url_produit):
+    def __init__(self, Liste_compte, Liste_carte, liste_proxys, taille_produit, url_produit):
         Thread.__init__(self)
-        self.carte_objet_list = carte_objet_list
-        self.compte_objet_list = compte_objet_list
+        self.Liste_carte = Liste_carte
+        self.Liste_compte = Liste_compte
         self.taille_produit = taille_produit
         self.url_produit = url_produit
         self.liste_proxys = liste_proxys
