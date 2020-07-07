@@ -785,7 +785,7 @@ def compte():
     return Liste_compte
 
 
-# Création de la liste de compte "Liste_compte"
+# Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
     with open('../Data/AccountGenerator.csv', 'w') as f:
         Liste_comptegenerator = []
@@ -807,14 +807,13 @@ def carte():
     return Liste_carte
 
 
-# Création des comptes à partir des attributs de chaque objet "Compte"
-def CreationComptes(compte_objet_list, liste_proxys):
+# Création des comptes à partir des informations saisies dans AccountGenerator.csv
+def CreationComptes(Liste_comptegenerator, liste_proxys):
     # Comptage du nombre de comptes présents dans la base de données
-    nombrecompte = len(compte_objet_list)
+    nombrecompte = len(Liste_comptegenerator)
 
     # Création d'un compte pour chaque objet "Compte" présent dans la base de données
-    for compte in range(0, nombrecompte):
-        x = 0
+    for compte in range(1, nombrecompte):
         while True:
             try:
                 # Ouverture de la session
@@ -826,7 +825,7 @@ def CreationComptes(compte_objet_list, liste_proxys):
                     )
 
                     # Réglage du proxy
-                    session.proxies = {"https": "https://%s" % liste_proxys[x]}
+                    session.proxies = {"https": "https://%s" % random.choice(liste_proxys)}
 
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
@@ -874,10 +873,10 @@ def CreationComptes(compte_objet_list, liste_proxys):
                     url_post2 = "https://www.zalando.fr/api/reef/register"
                     register = {
                         "newCustomerData": {
-                            "firstname": compte_objet_list[compte].prenom,
-                            "lastname": compte_objet_list[compte].nom,
-                            "email": compte_objet_list[compte].email,
-                            "password": compte_objet_list[compte].motdepasse,
+                            "firstname": Liste_comptegenerator[compte][2],
+                            "lastname": Liste_comptegenerator[compte][3],
+                            "email": Liste_comptegenerator[compte][0],
+                            "password": Liste_comptegenerator[compte][1],
                             "fashion_preference": [],
                             "subscribe_to_news_letter": False,
                             "accepts_terms_and_conditions": True,
@@ -894,7 +893,7 @@ def CreationComptes(compte_objet_list, liste_proxys):
 
                 # Message de confirmation pour chaque compte créé
                 print(
-                    "Le compte de", compte_objet_list[compte].email, "a bien été créé !"
+                    "Le compte de", Liste_comptegenerator[compte][0], "a bien été créé !"
                 )
                 break
 
@@ -902,19 +901,13 @@ def CreationComptes(compte_objet_list, liste_proxys):
             except:
                 pass
 
-            finally:
-                x = x + 1
-                if x == (len(liste_proxys) + 1):
-                    x = 0
 
-
-def Configuration(compte_objet_list, liste_proxys):
+def Configuration(Liste_comptegenerator, liste_proxys):
     # Comptage du nombre de compte présents dans la base de données
-    nombrecompte = len(compte_objet_list)
+    nombrecompte = len(Liste_comptegenerator)
 
     # Création d'un compte pour chaque objet "Compte" présent dans la base de données
-    for y in range(0, nombrecompte):
-        x = 0
+    for compte in range(1, nombrecompte):
         while True:
             try:
                 with requests.Session() as session:
@@ -932,7 +925,7 @@ def Configuration(compte_objet_list, liste_proxys):
                     session.headers.update(headers)
 
                     # Réglage du proxy
-                    session.proxies = {"https": "https://%s" % liste_proxys[x]}
+                    session.proxies = {"https": "https://%s" % random.choice(liste_proxys)}
 
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
@@ -981,8 +974,8 @@ def Configuration(compte_objet_list, liste_proxys):
                     url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
                     url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
                     identifiants = {
-                        "username": compte_objet_list[y].email,
-                        "password": compte_objet_list[y].motdepasse,
+                        "username": Liste_comptegenerator[compte][0],
+                        "password": Liste_comptegenerator[compte][1],
                         "wnaMode": "shop",
                     }
                     session.headers["Accept"] = "application/json"
@@ -1008,11 +1001,11 @@ def Configuration(compte_objet_list, liste_proxys):
                         "https://www.zalando.fr/api/user-account-details/details"
                     )
                     informations = {
-                        "first_name": compte_objet_list[y].prenom,
-                        "last_name": compte_objet_list[y].nom,
+                        "first_name": Liste_comptegenerator[compte][2],
+                        "last_name": Liste_comptegenerator[compte][3],
                         "fashion_category": [],
                         "birth_date": None,
-                        "phone": compte_objet_list[y].telephone,
+                        "phone": Liste_comptegenerator[compte][4],
                     }
                     session.get(url_informations_get, verify=False)
                     session.post(url_informations_post, json=informations, verify=False)
@@ -1024,16 +1017,16 @@ def Configuration(compte_objet_list, liste_proxys):
                     )
                     adresse = {
                         "type": "HomeAddress",
-                        "city": compte_objet_list[y].ville,
+                        "city": Liste_comptegenerator[compte][8],
                         "countryCode": "FR",
-                        "firstname": compte_objet_list[y].prenom,
-                        "lastname": compte_objet_list[y].nom,
-                        "street": compte_objet_list[y].adresse,
-                        "additional": compte_objet_list[y].complement_adresse,
+                        "firstname": Liste_comptegenerator[compte][2],
+                        "lastname": Liste_comptegenerator[compte][3],
+                        "street": Liste_comptegenerator[compte][5],
+                        "additional": Liste_comptegenerator[compte][6],
                         "gender": "MALE",
                         "defaultBilling": True,
                         "defaultShipping": True,
-                        "zip": compte_objet_list[y].codepostal,
+                        "zip": Liste_comptegenerator[compte][7],
                     }
                     session.get(url_profil_get, verify=False)
                     reponse = session.post(url_profil_post, json=adresse, verify=False)
@@ -1041,22 +1034,44 @@ def Configuration(compte_objet_list, liste_proxys):
                     # Récupération de l'id de d'adresse
                     objet = json.loads(reponse.text)
                     id_adresse = objet[0]["id"]
-                    compte_objet_list[y].id_adresse = id_adresse
+                    Liste_comptegenerator[compte].insert(5, id_adresse)
+                    Liste_comptegenerator[0].insert(5, 'id_adresse')
 
                 # Fermeture de la session
                 session.close()
 
                 # Message de confimation pour chaque compte configuré
                 print(
-                    "Le compte de", compte_objet_list[y].email, "a bien été configuré !"
+                    "Le compte de", Liste_comptegenerator[compte][0], "a bien été configuré !"
                 )
 
-                # Insertion des comptes actualisés dans la base de données "Comptes.json"
+                # Insertion des comptes actualisés dans la base de données "Accounts.csv"
                 liste_compte = []
-                for b in range(0, len(compte_objet_list)):
-                    liste_compte.append(compte_objet_list[b].__dict__)
-                with open("../Data/Comptes.json", "w") as f:
-                    json.dump(liste_compte, f, indent=4)
+                for b in range(0, len(Liste_comptegenerator)):
+                    liste_compte.append(Liste_comptegenerator[b])
+                with open("../Data/Accounts.csv", "w") as f:
+                    for eleve in liste_compte:
+                        f.write(str(eleve[0]))
+                        f.write(";")
+                        f.write(eleve[1])
+                        f.write(";")
+                        f.write(eleve[2])
+                        f.write(";")
+                        f.write(eleve[3])
+                        f.write(";")
+                        f.write(eleve[4])
+                        f.write(";")
+                        f.write(eleve[5])
+                        f.write(";")
+                        f.write(eleve[6])
+                        f.write(";")
+                        f.write(eleve[7])
+                        f.write(";")
+                        f.write(eleve[8])
+                        f.write(";")
+                        f.write(eleve[9])
+                        f.write(";")
+                        f.write(eleve[10])
                 f.close()
 
                 break
@@ -1064,11 +1079,6 @@ def Configuration(compte_objet_list, liste_proxys):
             # Gestion des exceptions
             except:
                 pass
-
-            finally:
-                x = x + 1
-                if x == (len(liste_proxys) + 1):
-                    x = 0
 
 
 # Réglage du checkout automatique
