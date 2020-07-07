@@ -1,5 +1,6 @@
 import json
 import time
+import timeit
 import re
 import random
 from threading import Thread
@@ -69,8 +70,9 @@ def horloge():
     milisecondes = now.microsecond
     milisecondes = str(milisecondes)
     milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
-    horloge = "[" + heures + ":" + minutes + ":" + secondes + "." + milisecondes + "]"
-    print(Fore.RED + Style.BRIGHT + horloge, end="")
+    horloge = Style.RESET_ALL + "[" + Fore.RED + heures + ":" + minutes + ":" + secondes + "." + milisecondes + Style.RESET_ALL + "]"
+    #print( horloge, end="")
+    return horloge
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -662,11 +664,20 @@ def titre():
     print("\n")
 
 
+#Fonction latence
+def latence(start):
+    stop = timeit.default_timer()
+    latence = Style.RESET_ALL + '[' + Fore.RED + str(stop - start) + Style.RESET_ALL + ']' 
+    return latence
+
+
 # ----------------------------------------------------------------------------------Fonction licenses--------------------------------------------------------------#
 
-# Informations du propriétaire
+# Informations du propriétaire à remplir 
 RSAPubKey = "<RSAKeyValue><Modulus>zGKjhD1u4eZQg+U2oZgX8inZ1SLvb83jD+oKD20GplwpYcqquQZMAPokGXTs8FMD5X2sc6FtiNKg/wcapvkuyS9KRTauaoQib/B2SW7e9b4zkfpg3hJHW8zm9CZ3F2xbH5E8aXOlm0Knu9lOxjE+e7IogTQGk5RvyO4TO6QRO71bc9dW9h44KWdzku6lcF1VBHM646E6F10ziq7beGhmyLt/dbz88Yt9VP5CKBRH+/QDafbV+KD86WFTQ69p/j+k/h1QF2LYY2tVOhz9TL0iF9zpb8e4mR/vL1RGU3T3ztS21AwGwyCI2j1xc8KvWsUWnPgfDsIr4SRi6EH0d5joxQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
 auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ=="
+
+#-------------------------------------------------------------------------------------------------------------------------------------#
 
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
@@ -675,6 +686,7 @@ def VerificationLicense():
         License = f.read()
         if License == "":
             print("Enter your License key in file : License.txt\n")
+            time.sleep(5)
             exit()
 
     result = Key.activate(token=auth,
@@ -1123,7 +1135,42 @@ def ModePaiementAutomatique(carte_objet_list):
         else:
             print('Entrer "o" ou "n"')
 
+#-----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 
-init()
-titre()
-horloge()
+def fonction_Zalando():
+    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
+    init()
+    print("")
+    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
+    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Optimised Tasks")
+    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
+    choix = input("\nChoice :")
+
+    
+    
+    
+#----------------------------Initialisation du programme-------------------------------------------------------------#
+def main():
+    VerificationLicense()
+    titre()    
+    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
+    print(Style.RESET_ALL + "Welcome ! Initializing Scred AIO - User data loaded !\n")
+    print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
+    print(horloge(), "[Scred AIO]", latence(start), "> 2. Courir")
+    print(horloge(), "[Scred AIO]", latence(start), "> 3. Supreme")
+    choix_depart = input("\nWebsite :")
+
+    if choix_depart == "1":
+        fonction_Zalando()
+
+    if choix_depart == "2":
+        print("La ca sera la fonction pour un autre site")
+
+    if choix_depart == "3":
+        print("Fonction Supreme")
+
+#--------------------------------------------------------------------------------------------------------------------#
+
+#main()
+fonction_Zalando()
+
