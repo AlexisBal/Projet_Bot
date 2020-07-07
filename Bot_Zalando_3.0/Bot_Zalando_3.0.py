@@ -71,7 +71,7 @@ def horloge():
     milisecondes = str(milisecondes)
     milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
     horloge = Style.RESET_ALL + "[" + Fore.RED + heures + ":" + minutes + ":" + secondes + "." + milisecondes + Style.RESET_ALL + "]"
-    #print( horloge, end="")
+    # print( horloge, end="")
     return horloge
 
 
@@ -564,7 +564,9 @@ class RechercheCommande(Thread):
                                 },
                             }
                             a_2 = session.get(url_pay, verify=False, allow_redirects=False)
-                            if self.liste_proxys != ['paypal']:
+
+                            # Paiement par carte bancaire
+                            if self.carte_objet_list != ['paypal'] and self.carte_objet_list != []:
                                 session_id_2 = session.cookies["Session-ID"]
                                 soup_3 = BeautifulSoup(a_2.text, "html.parser")
                                 objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
@@ -642,6 +644,64 @@ class RechercheCommande(Thread):
                                 session.headers['x-zalando-header-mode'] = 'desktop'
                                 session.post(url_pay_fin, json=data_pay_fin, verify=False)
 
+                            # Paiement par paypal
+                            if self.carte_objet_list == ['paypal'] and self.carte_objet_list != []:
+                                session_id_2 = session.cookies["Session-ID"]
+                                url_pay_3 = (
+                                        "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
+                                        % session_id_2
+                                )
+                                data_pay_3 = (
+                                        "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
+                                )
+                                session.headers["Referer"] = "https://checkout.payment.zalando.com/selection"
+                                session.headers[
+                                    "Accept"
+                                ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                                session.headers["Origin"] = "https://checkout.payment.zalando.com"
+                                session.headers[
+                                    "Content-Type"
+                                ] = "application/x-www-form-urlencoded"
+                                session.headers["Host"] = "checkout.payment.zalando.com"
+                                session.post(url_pay_3, data=data_pay_3, verify=False)
+                                url_pay_4 = "https://www.zalando.fr/checkout/payment-complete"
+                                del session.headers["Content-Type"]
+                                del session.headers["Origin"]
+                                session.headers["Host"] = "www.zalando.fr"
+                                session.headers[
+                                    "Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                                b = session.get(url_pay_4, verify=False)
+                                soupbis_3 = BeautifulSoup(b.content, "html.parser")
+                                reponsefinale_3 = soupbis_3.find(attrs={"data-props": re.compile('eTag')})
+                                reponsefinale1_3 = reponsefinale_3['data-props']
+                                reponsefinale2_3 = json.loads(reponsefinale1_3)
+                                checkout_id = reponsefinale2_3['model']['checkoutId']
+                                etagini = reponsefinale2_3['model']['eTag']
+                                url_pay_bot = 'https://www.zalando.fr/resources/ef7c5d53c52028b315fc23b805e921'
+                                url_pay_fin = 'https://www.zalando.fr/api/checkout/buy-now'
+                                data_bot_pay = {
+                                    'sensor_data': '7a74G7m23Vrp0o5c9179081.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392213,6747499,1920,1080,1920,1080,1920,1017,1920,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.11229682656,797028373749,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3960,0;-1,2,-94,-102,0,-1,0,0,-1,3960,0;-1,2,-94,-108,-1,2,-94,-110,0,1,866,1219,589;1,1,952,1330,303;2,1,956,1335,268;3,1,1052,1335,262;4,1,1053,1334,227;5,1,1223,1334,226;6,1,1232,1332,209;7,3,1457,1332,209,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/confirm-1,2,-94,-115,1,21705,32,0,0,0,21673,1457,0,1594056747498,15,17052,0,8,2842,1,0,1458,8791,0,76260A165DC066A281E308D22442E210~-1~YAAQNex7XPmwUBBzAQAAL6wvJQQStigQokMVnZeVwO3MmTr9ShhhdNV9l0dDLJJncTeUUmbw1GxS3ewJgO07jimqFmuwVJLCKb+yJW1ozK9zuKyzyQ8n1t32g9OTRvVUauyicyddqYedyA/mGe0i4GjORlN34urlDCmDhGcVeOqX3n9bEJ7IbeFP4Ex8ublQhESaDOaEjbeK66uI99vMYtuREoZscMGcp3bDMxgOZQqnTJzzvBiNxsFutrC2KZXr+LcYRblAoMD85YVKZZnsgRcYT7OAHAHkGLXTn2HWI6DvnJ+Y/NHiqABiHh/beN3WtkNCCeHwHcowgTha20OefnKadT8=~-1~-1~-1,33150,7,-1229804841,26018161,PiZtE,91344,48-1,2,-94,-106,1,2-1,2,-94,-119,800,0,0,200,200,200,200,200,0,200,200,1600,1600,2200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,506063805-1,2,-94,-118,93065-1,2,-94,-121,;1;8;0' % session.headers['User-Agent']
+                                }
+                                data_pay_fin = {
+                                    'checkoutId': checkout_id,
+                                    'eTag': etagini
+                                }
+                                session.headers["Host"] = "www.zalando.fr"
+                                session.headers["Accept"] = "*/*"
+                                session.headers["Referer"] = "https://www.zalando.fr/checkout/confirm"
+                                session.headers["Origin"] = 'https://www.zalando.fr'
+                                session.headers['Content-Type'] = 'text/plain;charset=UTF-8'
+                                session.post(url_pay_bot, json=data_bot_pay, verify=False)
+                                session.headers["Accept"] = "application/json"
+                                session.headers["x-zalando-footer-mode"] = "desktop"
+                                session.headers["x-zalando-checkout-app"] = "web"
+                                session.headers["x-xsrf-token"] = cookies_2["frsx"]
+                                session.headers['Content-Type'] = 'application/json'
+                                session.headers['x-zalando-header-mode'] = 'desktop'
+                                reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                                json_reponse = json.loads(reponse_checkout.text)
+                                url_paypal = str(json_reponse["url"])
+
                         # Fermeture de la Session
                         session.close()
                         print("The product has been ordered !")
@@ -664,10 +724,10 @@ def titre():
     print("\n")
 
 
-#Fonction latence
+# Fonction latence
 def latence(start):
     stop = timeit.default_timer()
-    latence = Style.RESET_ALL + '[' + Fore.RED + str(stop - start) + Style.RESET_ALL + ']' 
+    latence = Style.RESET_ALL + '[' + Fore.RED + str(stop - start) + Style.RESET_ALL + ']'
     return latence
 
 
@@ -677,12 +737,13 @@ def latence(start):
 RSAPubKey = "<RSAKeyValue><Modulus>zGKjhD1u4eZQg+U2oZgX8inZ1SLvb83jD+oKD20GplwpYcqquQZMAPokGXTs8FMD5X2sc6FtiNKg/wcapvkuyS9KRTauaoQib/B2SW7e9b4zkfpg3hJHW8zm9CZ3F2xbH5E8aXOlm0Knu9lOxjE+e7IogTQGk5RvyO4TO6QRO71bc9dW9h44KWdzku6lcF1VBHM646E6F10ziq7beGhmyLt/dbz88Yt9VP5CKBRH+/QDafbV+KD86WFTQ69p/j+k/h1QF2LYY2tVOhz9TL0iF9zpb8e4mR/vL1RGU3T3ztS21AwGwyCI2j1xc8KvWsUWnPgfDsIr4SRi6EH0d5joxQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
 auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ=="
 
-#-------------------------------------------------------------------------------------------------------------------------------------#
+
+# -------------------------------------------------------------------------------------------------------------------------------------#
 
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
 def VerificationLicense():
-    with open("Data/License.txt", "r") as f:
+    with open("../Data/License.txt", "r") as f:
         License = f.read()
         if License == "":
             print("Enter your License key in file : License.txt\n")
@@ -1135,10 +1196,11 @@ def ModePaiementAutomatique(carte_objet_list):
         else:
             print('Entrer "o" ou "n"')
 
-#-----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
+
+# -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 
 def fonction_Zalando():
-    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
+    start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
     init()
     print("")
     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
@@ -1146,14 +1208,12 @@ def fonction_Zalando():
     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
     choix = input("\nChoice :")
 
-    
-    
-    
-#----------------------------Initialisation du programme-------------------------------------------------------------#
+
+# ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     VerificationLicense()
-    titre()    
-    start = timeit.default_timer() #J'ai besoin de cette ligne pour calculer la latence.
+    titre()
+    start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
     print(Style.RESET_ALL + "Welcome ! Initializing Scred AIO - User data loaded !\n")
     print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
     print(horloge(), "[Scred AIO]", latence(start), "> 2. Courir")
@@ -1169,8 +1229,8 @@ def main():
     if choix_depart == "3":
         print("Fonction Supreme")
 
-#--------------------------------------------------------------------------------------------------------------------#
+
+# --------------------------------------------------------------------------------------------------------------------#
 
 #main()
-fonction_Zalando()
-
+#fonction_Zalando()
