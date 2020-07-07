@@ -99,7 +99,7 @@ class RechercheCommande(Thread):
                     time.sleep(0.2)
 
         # Mise dans le panier du produit
-        nombrecompte = len(self.compte_objet_list)
+        nombrecompte = len(self.Liste_compte)
         for compte in range(0, nombrecompte):
             while True:
                 try:
@@ -227,8 +227,8 @@ class RechercheCommande(Thread):
                             "Content-Type": "application/json"
                         }
                         identifiants_1 = {
-                            "username": self.compte_objet_list[compte].email,
-                            "password": self.compte_objet_list[compte].motdepasse,
+                            "username": self.Liste_compte[compte][0],
+                            "password": self.Liste_compte[compte][1],
                             "wnaMode": "checkout"
                         }
                         session.headers.update(headers_2)
@@ -243,7 +243,7 @@ class RechercheCommande(Thread):
                     # Message de confimation pour chaque compte configuré
                     print(
                         "Le produit a bien été mis dans le panier du compte ",
-                        self.compte_objet_list[compte].email
+                        self.Liste_compte[compte].email
                     )
 
                     # Fin de la boucle
@@ -254,7 +254,7 @@ class RechercheCommande(Thread):
                     pass
 
         # Commande du produit si checkout automatique activé
-        if self.carte_objet_list:
+        if self.Liste_carte:
             for compte in range(0, nombrecompte):
                 while True:
                     try:
@@ -415,15 +415,15 @@ class RechercheCommande(Thread):
                             }
                             checkout_2 = {
                                 "address": {
-                                    "id": self.compte_objet_list[compte].id_adresse,
+                                    "id": self.Liste_compte[compte][5],
                                     "salutation": "Mr",
-                                    "first_name": self.compte_objet_list[compte].prenom,
-                                    "last_name": self.compte_objet_list[compte].nom,
-                                    "zip": self.compte_objet_list[compte].codepostal,
-                                    "city": self.compte_objet_list[compte].ville,
+                                    "first_name": self.Liste_compte[compte][2],
+                                    "last_name": self.Liste_compte[compte][3],
+                                    "zip": self.Liste_compte[compte][8],
+                                    "city": self.Liste_compte[compte][9],
                                     "country_code": "FR",
-                                    "street": self.compte_objet_list[compte].adresse,
-                                    "additional": self.compte_objet_list[compte].complement_adresse,
+                                    "street": self.Liste_compte[compte][6],
+                                    "additional": self.Liste_compte[compte][7],
                                 }
                             }
                             session.headers["Accept"] = "*/*"
@@ -469,7 +469,7 @@ class RechercheCommande(Thread):
                             # Adresse de livraison
                             url_checkout_1 = (
                                     "https://www.zalando.fr/api/checkout/address/%s/default"
-                                    % self.compte_objet_list[compte].id_adresse
+                                    % self.Liste_compte[compte][5]
                             )
                             url_bot_1_2 = "https://www.zalando.fr/resources/35692132da2028b315fc23b805e921"
                             url_checkout_2_2 = "https://www.zalando.fr/api/checkout/next-step"
@@ -519,11 +519,11 @@ class RechercheCommande(Thread):
                             url_pay = "https://checkout.payment.zalando.com/selection"
                             url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                             data_cb = {
-                                "card_holder": self.carte_objet_list.nom,
-                                "pan": self.carte_objet_list.numero,
-                                "cvv": self.carte_objet_list.criptogramme,
-                                "expiry_month": self.carte_objet_list.mois,
-                                "expiry_year": self.carte_objet_list.annee,
+                                "card_holder": self.Liste_carte[compte][0],
+                                "pan": self.Liste_carte[compte][1],
+                                "cvv": self.Liste_carte[compte][4],
+                                "expiry_month": self.Liste_carte[compte][2],
+                                "expiry_year": self.Liste_carte[compte][3],
                                 "options": {
                                     "selected": [],
                                     "not_selected": ["store_for_reuse"],
@@ -532,7 +532,7 @@ class RechercheCommande(Thread):
                             a_2 = session.get(url_pay, verify=False, allow_redirects=False)
 
                             # Paiement par carte bancaire
-                            if self.carte_objet_list != ['paypal']:
+                            if self.Liste_carte != ['paypal']:
                                 session_id_2 = session.cookies["Session-ID"]
                                 soup_3 = BeautifulSoup(a_2.text, "html.parser")
                                 objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
@@ -613,7 +613,7 @@ class RechercheCommande(Thread):
                                 # Envoyer le message de confirmation sur le webhook discord de l'utilisateur
 
                             # Paiement par paypal
-                            if self.carte_objet_list == ['paypal']:
+                            if self.Liste_carte == ['paypal']:
                                 session_id_2 = session.cookies["Session-ID"]
                                 url_pay_3 = (
                                         "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
