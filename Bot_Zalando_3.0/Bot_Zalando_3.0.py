@@ -796,7 +796,7 @@ def listecomptegenerator():
     return Liste_comptegenerator
 
 
-# Création de la liste de compte "Liste_carte"
+# Création de la liste de carte bancaire "Liste_carte"
 def carte():
     with open('../Data/Payment.csv', 'r') as f:
         Liste_carte = []
@@ -805,6 +805,17 @@ def carte():
             Liste_carte.append(carte_list)
     f.close()
     return Liste_carte
+
+
+# Création de la liste de tache "Liste_tache"
+def tache():
+    with open('../Data/Task.csv', 'r') as f:
+        Liste_tache = []
+        for ligne in f:
+            liste_list = ligne.split(";")
+            Liste_tache.append(liste_list)
+    f.close()
+    return Liste_tache
 
 
 # Création des comptes à partir des informations saisies dans AccountGenerator.csv
