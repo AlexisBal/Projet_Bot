@@ -793,8 +793,6 @@ def listecomptegenerator():
             comptegenerator_list = ligne.split(";")
             Liste_comptegenerator.append(comptegenerator_list)
     f.close()
-    # Préparation du fichier 'Accounts.csv'
-    Liste_comptegenerator[0].insert(5, "Id_Address")
     return Liste_comptegenerator
 
 
@@ -1047,9 +1045,12 @@ def Configuration(Liste_comptegenerator, liste_proxys):
                 )
 
                 # Insertion des comptes actualisés dans la base de données "Accounts.csv"
-                with open("../Data/Accounts.csv", "w") as f:
-                    for compte_1 in Liste_comptegenerator:
-                        f.write(str(compte_1[0]))
+                comptelist = []
+                for b in range(1, len(Liste_comptegenerator)):
+                    comptelist.append(Liste_comptegenerator[b])
+                with open("../Data/Accounts.csv", "a") as f:
+                    for compte_1 in comptelist:
+                        f.write(compte_1[0])
                         f.write(";")
                         f.write(compte_1[1])
                         f.write(";")
@@ -1070,6 +1071,31 @@ def Configuration(Liste_comptegenerator, liste_proxys):
                         f.write(compte_1[9])
                         f.write(";")
                         f.write(compte_1[10])
+                f.close()
+
+                # Rénitialisation du fichier AccountGenerator.csv
+                comptelist2 = ['Email', 'Password', 'Firstname', 'Lastname', 'Phone', 'Address', 'Additional_Address',
+                               'Postcode', 'City', 'Country']
+                with open("../Data/AccountGenerator.csv", "w") as f:
+                    f.write(comptelist2[0])
+                    f.write(";")
+                    f.write(comptelist2[1])
+                    f.write(";")
+                    f.write(comptelist2[2])
+                    f.write(";")
+                    f.write(comptelist2[3])
+                    f.write(";")
+                    f.write(comptelist2[4])
+                    f.write(";")
+                    f.write(comptelist2[5])
+                    f.write(";")
+                    f.write(comptelist2[6])
+                    f.write(";")
+                    f.write(comptelist2[7])
+                    f.write(";")
+                    f.write(comptelist2[8])
+                    f.write(";")
+                    f.write(comptelist2[9])
                 f.close()
                 break
 
