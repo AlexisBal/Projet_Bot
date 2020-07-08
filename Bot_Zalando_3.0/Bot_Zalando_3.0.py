@@ -332,8 +332,8 @@ class RechercheCommande(Thread):
                             url_connexion_3 = "https://www.zalando.fr/api/reef/login"
                             url_compte = "https://www.zalando.fr/myaccount"
                             identifiants_2 = {
-                                "username": self.compte_objet_list[compte].email,
-                                "password": self.compte_objet_list[compte].motdepasse,
+                                "username": self.Liste_compte[compte][0],
+                                "password": self.Liste_compte[compte][1],
                                 "wnaMode": "shop",
                             }
                             session.headers["x-xsrf-token"] = cookies_2["frsx"]
