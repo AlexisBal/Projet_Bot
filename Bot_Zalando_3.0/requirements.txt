@@ -18,3 +18,4 @@ tagui==1.27.1
 urllib3==1.25.9
 user-agent==0.1.9
 licensing==0.21
+discord==1.3.3
