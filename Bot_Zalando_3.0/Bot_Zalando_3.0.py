@@ -785,15 +785,26 @@ def compte():
     return Liste_compte
 
 
-# Création de la liste de compte "Liste_comptegenerator"
-def listecomptegenerator():
-    with open('../Data/AccountGenerator.csv', 'r') as f:
-        Liste_comptegenerator = []
+# Création de la liste de compte "Liste_comptegenerator1"
+def listecomptegenerator1():
+    with open('../Data/AccountGenerator_List1.csv', 'r') as f:
+        Liste_comptegenerator1 = []
         for ligne in f:
             comptegenerator_list = ligne.split(";")
-            Liste_comptegenerator.append(comptegenerator_list)
+            Liste_comptegenerator1.append(comptegenerator_list)
     f.close()
-    return Liste_comptegenerator
+    return Liste_comptegenerator1
+
+
+# Création de la liste de compte "Liste_comptegenerator2"
+def listecomptegenerator2():
+    with open('../Data/AccountGenerator_List2.csv', 'r') as f:
+        Liste_comptegenerator2 = []
+        for ligne in f:
+            comptegenerator_list = ligne.split(";")
+            Liste_comptegenerator2.append(comptegenerator_list)
+    f.close()
+    return Liste_comptegenerator2
 
 
 # Création de la liste de carte bancaire "Liste_carte"
@@ -1082,6 +1093,7 @@ def Configuration(Liste_comptegenerator, liste_proxys):
                         f.write(compte_1[9])
                         f.write(";")
                         f.write(compte_1[10])
+                    f.write('\n')
                 f.close()
 
                 # Rénitialisation du fichier AccountGenerator.csv
@@ -1115,49 +1127,9 @@ def Configuration(Liste_comptegenerator, liste_proxys):
                 pass
 
 
-# Réglage du checkout automatique
-def ModePaiementAutomatique(carte_objet_list):
-    while True:
-        print('Souhaitez-vous activer le checkout automatique ?')
-        reponse = input('o / n :')
-
-        if reponse == 'o':
-            # Verification
-            if len(carte_objet_list) == 0:
-                print("Merci de saisir une carte bancaire !")
-                break
-
-            # Affichage des cartes bancaires disponibles
-            print("Cartes bancaire disponibles : ")
-            for carte in carte_objet_list:
-                print("%s -" % carte, "Numéro de carte :", carte_objet_list[carte].numero)
-
-            # Choix de la carte bancaire
-            if len(carte_objet_list) == 1:
-                rep_1 = input('Cliquer sur entrer pour valider ou taper sur une autre touche : ')
-                if rep_1 == "" \
-                            "":
-                    return carte_objet_list
-                else:
-                    break
-            else:
-                rep_2 = int(input("Saisir le numéro de la carte souhaitée (2) ou cliquer sur entrer"))
-                if rep_2 == "" \
-                            "":
-                    break
-                else:
-                    return carte_objet_list[rep_2]
-
-        if reponse == 'n':
-            break
-
-        else:
-            print('Entrer "o" ou "n"')
-
-
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 
-def fonction_Zalando():
+def fonction_Zalando(Liste_comptegenerator, liste_proxys):
     start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
     init()
     print("")
@@ -1165,6 +1137,62 @@ def fonction_Zalando():
     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Optimised Tasks")
     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
     choix = input("\nChoice :")
+    if choix == 2:
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Credit Card Autocheckout")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Credit Card Manual Checkout")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Paypal Manual Checkout")
+        choix_2 = input("\nChoice :")
+        if choix_2 == 1:
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 1. Profile 1")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 2. Profile 2")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 3. Select Multiple Profiles")
+            choix_3 = input("\nChoice :")
+            if choix_3 == 1:
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 1. List 1")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 2. List 2")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 3. Select Multiple Lists")
+
+        if choix_2 == 2:
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 1. Profile 1")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 2. Profile 2")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 3. Select Multiple Profiles")
+            choix_3 = input("\nChoice :")
+            if choix_3 == 1:
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 1. List 1")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 2. List 2")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 3. Select Multiple Lists")
+
+        if choix_2 == 3:
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 1. Profile 1")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 2. Profile 2")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 3. Select Mltiple Profiles")
+            choix_3 = input("\nChoice :")
+            if choix_3 == 1:
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 1. List 1")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 2. List 2")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 3. Select Multiple Lists")
+
+    if choix == 3:
+        CreationComptes(Liste_comptegenerator, liste_proxys)
+        Configuration(Liste_comptegenerator, liste_proxys)
 
 
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
@@ -1187,7 +1215,8 @@ def main():
     if choix_depart == "3":
         print("Fonction Supreme")
 
+
 # --------------------------------------------------------------------------------------------------------------------#
 
 # main()
-# fonction_Zalando()
+fonction_Zalando()
