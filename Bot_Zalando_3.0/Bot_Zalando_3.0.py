@@ -785,26 +785,15 @@ def compte():
     return Liste_compte
 
 
-# Création de la liste de compte "Liste_comptegenerator1"
-def listecomptegenerator1():
+# Création de la liste de compte "Liste_comptegenerator"
+def listecomptegenerator():
     with open('../Data/AccountGenerator_List1.csv', 'r') as f:
-        Liste_comptegenerator1 = []
+        Liste_comptegenerator = []
         for ligne in f:
             comptegenerator_list = ligne.split(";")
-            Liste_comptegenerator1.append(comptegenerator_list)
+            Liste_comptegenerator.append(comptegenerator_list)
     f.close()
-    return Liste_comptegenerator1
-
-
-# Création de la liste de compte "Liste_comptegenerator2"
-def listecomptegenerator2():
-    with open('../Data/AccountGenerator_List2.csv', 'r') as f:
-        Liste_comptegenerator2 = []
-        for ligne in f:
-            comptegenerator_list = ligne.split(";")
-            Liste_comptegenerator2.append(comptegenerator_list)
-    f.close()
-    return Liste_comptegenerator2
+    return Liste_comptegenerator
 
 
 # Création de la liste de carte bancaire "Liste_carte"
@@ -924,7 +913,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys):
                 pass
 
 
-def Configuration(Liste_comptegenerator, liste_proxys):
+def Configuration(Liste_comptegenerator, liste_proxys, list):
     # Comptage du nombre de compte présents dans la base de données
     nombrecompte = len(Liste_comptegenerator)
 
@@ -1066,11 +1055,11 @@ def Configuration(Liste_comptegenerator, liste_proxys):
                     "Le compte de", Liste_comptegenerator[compte][0], "a bien été configuré !"
                 )
 
-                # Insertion des comptes actualisés dans la base de données "Accounts.csv"
+                # Insertion des comptes actualisés dans la base de données
                 comptelist = []
                 for b in range(1, len(Liste_comptegenerator)):
                     comptelist.append(Liste_comptegenerator[b])
-                with open("../Data/Accounts.csv", "a") as f:
+                with open("../Data/%s" % list, "a") as f:
                     for compte_1 in comptelist:
                         f.write(compte_1[0])
                         f.write(";")
@@ -1191,8 +1180,19 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys):
                       Style.RESET_ALL + "> 3. Select Multiple Lists")
 
     if choix == 3:
-        CreationComptes(Liste_comptegenerator, liste_proxys)
-        Configuration(Liste_comptegenerator, liste_proxys)
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+              Style.RESET_ALL + "> 1. List 1")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+              Style.RESET_ALL + "> 2. List 2")
+        choix_2 = input("\nChoice :")
+        if choix_2 == 1:
+            liste = 'Accounts_List1.csv'
+            CreationComptes(Liste_comptegenerator, liste_proxys)
+            Configuration(Liste_comptegenerator, liste_proxys, liste)
+        if choix_2 == 2:
+            liste = 'Accounts_List2.csv'
+            CreationComptes(Liste_comptegenerator, liste_proxys)
+            Configuration(Liste_comptegenerator, liste_proxys, liste)
 
 
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
