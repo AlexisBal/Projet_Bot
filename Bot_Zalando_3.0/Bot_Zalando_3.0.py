@@ -262,7 +262,7 @@ class RechercheCommande(Thread):
                 pass
 
         # Credit Card Autocheckout
-        if self.Mode == 'CB_Auto':
+        if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
             while True:
                 try:
                     # Ouverture de la Session
