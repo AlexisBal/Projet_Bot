@@ -1245,7 +1245,7 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
 
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 
-def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, Liste_compte, Liste_carte):
+def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_profile1, List_profile2, Liste_compte1, Liste_compte2):
     start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
     init()
     print("")
@@ -1275,9 +1275,41 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, Liste_com
                       Style.RESET_ALL + "> 3. Select Multiple Lists")
                 choix_4 = input("\nChoice :")
                 if choix_4 == 1:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
                     for x in range(0, len(Liste_tache)):
-                        RechercheCommande(Liste_compte, Liste_carte, liste_proxys, taille_produit, url_produit, Mode)
+                        RechercheCommande(liste_proxys,
+                                          List_profile1,
+                                          Liste_compte1,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
 
+                if choix_4 == 2:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile1,
+                                          Liste_compte2,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
+
+                if choix_4 == 3:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    Liste_compte3 = Liste_compte1.append(Liste_compte2)
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile1,
+                                          Liste_compte3,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
 
         if choix_2 == 2:
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1294,6 +1326,43 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, Liste_com
                       Style.RESET_ALL + "> 2. List 2")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 3. Select Multiple Lists")
+                choix_4 = input("\nChoice :")
+                if choix_4 == 1:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile2,
+                                          Liste_compte1,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
+
+                if choix_4 == 2:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile2,
+                                          Liste_compte2,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
+
+                if choix_4 == 3:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    Liste_compte3 = Liste_compte1.append(Liste_compte2)
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile2,
+                                          Liste_compte3,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
 
         if choix_2 == 3:
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1310,6 +1379,46 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, Liste_com
                       Style.RESET_ALL + "> 2. List 2")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 3. Select Multiple Lists")
+                choix_4 = input("\nChoice :")
+                if choix_4 == 1:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    List_profile3 = List_profile2.append(List_profile1)
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile3,
+                                          Liste_compte1,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
+
+                if choix_4 == 2:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    List_profile3 = List_profile2.append(List_profile1)
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile3,
+                                          Liste_compte2,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
+
+                if choix_4 == 3:
+                    Paiement = 'CB_Auto'
+                    Mode = 'Normal'
+                    List_profile3 = List_profile2.append(List_profile1)
+                    Liste_compte3 = Liste_compte1.append(Liste_compte2)
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(liste_proxys,
+                                          List_profile3,
+                                          Liste_compte3,
+                                          Liste_tache[x][0],
+                                          Liste_tache[x][1],
+                                          Paiement,
+                                          Mode)
 
     if choix == 3:
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
