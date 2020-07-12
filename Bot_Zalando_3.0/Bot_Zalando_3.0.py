@@ -869,7 +869,7 @@ def VerificationLicense():
 
 # Récupérations des proxies
 def proxy():
-    with open('../Data/proxy.txt', 'r') as f:
+    with open('../Data/Proxy.txt', 'r') as f:
         liste_proxys = []
         for ligne in f:
             if ligne.strip('\n') != '':
@@ -884,7 +884,7 @@ def proxy():
 
 # Création de la liste de compte "Liste_compte1"
 def compte1():
-    with open('../Data/Accounts_List1.csv', 'r') as f:
+    with open('../Data/Accounts/Accounts_List1.csv', 'r') as f:
         Liste_compte1 = []
         for ligne in f:
             compte_list1 = ligne.split(";")
@@ -895,7 +895,7 @@ def compte1():
 
 # Création de la liste de compte "Liste_compte2"
 def compte2():
-    with open('../Data/Accounts_List2.csv', 'r') as f:
+    with open('../Data/Accounts/Accounts_List2.csv', 'r') as f:
         Liste_compte2 = []
         for ligne in f:
             compte_list2 = ligne.split(";")
@@ -917,7 +917,7 @@ def listecomptegenerator():
 
 # Création de la liste de profiles "List_profile1"
 def profile1():
-    with open('../Data/Profile1.csv', 'r') as f:
+    with open('../Data/Profiles/Profile1.csv', 'r') as f:
         List_profile1 = []
         for ligne in f:
             profile_list1 = ligne.split(";")
@@ -928,7 +928,7 @@ def profile1():
 
 # Création de la liste de profiles "List_profile2"
 def profile2():
-    with open('../Data/Profile2.csv', 'r') as f:
+    with open('../Data/Profiles/Profile2.csv', 'r') as f:
         List_profile2 = []
         for ligne in f:
             profile_list2 = ligne.split(";")
@@ -939,7 +939,7 @@ def profile2():
 
 # Création de la liste de tache "Liste_tache"
 def tache():
-    with open('../Data/Task.csv', 'r') as f:
+    with open('../Data/Tasks/Task.csv', 'r') as f:
         Liste_tache = []
         for ligne in f:
             liste_list = ligne.split(";")
