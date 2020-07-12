@@ -875,15 +875,26 @@ def proxy():
         return liste_proxys
 
 
-# Création de la liste de compte "Liste_compte"
-def compte():
-    with open('../Data/Accounts.csv', 'r') as f:
-        Liste_compte = []
+# Création de la liste de compte "Liste_compte1"
+def compte1():
+    with open('../Data/Accounts_List1.csv', 'r') as f:
+        Liste_compte1 = []
         for ligne in f:
-            compte_list = ligne.split(";")
-            Liste_compte.append(compte_list)
+            compte_list1 = ligne.split(";")
+            Liste_compte1.append(compte_list1)
     f.close()
-    return Liste_compte
+    return Liste_compte1
+
+
+# Création de la liste de compte "Liste_compte2"
+def compte2():
+    with open('../Data/Accounts_List2.csv', 'r') as f:
+        Liste_compte2 = []
+        for ligne in f:
+            compte_list2 = ligne.split(";")
+            Liste_compte2.append(compte_list2)
+    f.close()
+    return Liste_compte2
 
 
 # Création de la liste de compte "Liste_comptegenerator"
@@ -897,15 +908,26 @@ def listecomptegenerator():
     return Liste_comptegenerator
 
 
-# Création de la liste de carte bancaire "Liste_carte"
-def carte():
-    with open('../Data/Payment.csv', 'r') as f:
-        Liste_carte = []
+# Création de la liste de profiles "List_profile1"
+def profile1():
+    with open('../Data/Profile1.csv', 'r') as f:
+        List_profile1 = []
         for ligne in f:
-            carte_list = ligne.split(";")
-            Liste_carte.append(carte_list)
+            profile_list1 = ligne.split(";")
+            List_profile1.append(profile_list1)
     f.close()
-    return Liste_carte
+    return List_profile1
+
+
+# Création de la liste de profiles "List_profile2"
+def profile2():
+    with open('../Data/Profile2.csv', 'r') as f:
+        List_profile2 = []
+        for ligne in f:
+            profile_list2 = ligne.split(";")
+            List_profile2.append(profile_list2)
+    f.close()
+    return List_profile2
 
 
 # Création de la liste de tache "Liste_tache"
@@ -1253,8 +1275,8 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, Liste_com
                       Style.RESET_ALL + "> 3. Select Multiple Lists")
                 choix_4 = input("\nChoice :")
                 if choix_4 == 1:
-                    list_thread = []
-                    for n in range(1, len(Liste_tache)):
+                    for x in range(0, len(Liste_tache)):
+                        RechercheCommande(Liste_compte, Liste_carte, liste_proxys, taille_produit, url_produit, Mode)
 
 
         if choix_2 == 2:
