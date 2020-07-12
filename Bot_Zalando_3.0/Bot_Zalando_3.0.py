@@ -1285,7 +1285,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 1:
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte1,
@@ -1297,7 +1297,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 2:
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte2,
@@ -1310,7 +1310,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte3,
@@ -1330,7 +1330,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 1:
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte1,
@@ -1342,7 +1342,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 2:
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte2,
@@ -1355,7 +1355,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte3,
@@ -1376,7 +1376,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte1,
@@ -1389,7 +1389,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB_Auto'
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte2,
@@ -1403,7 +1403,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte3,
@@ -1431,7 +1431,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 1:
                     Paiement = 'CB'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte1,
@@ -1443,7 +1443,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 2:
                     Paiement = 'CB'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte2,
@@ -1456,7 +1456,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB'
                     Mode = 'Normal'
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte3,
@@ -1476,7 +1476,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 1:
                     Paiement = 'CB'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte1,
@@ -1488,7 +1488,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 2:
                     Paiement = 'CB'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte2,
@@ -1501,7 +1501,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB'
                     Mode = 'Normal'
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte3,
@@ -1522,7 +1522,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB'
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte1,
@@ -1535,7 +1535,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'CB'
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte2,
@@ -1549,7 +1549,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte3,
@@ -1577,7 +1577,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 1:
                     Paiement = 'Paypal'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte1,
@@ -1589,7 +1589,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 2:
                     Paiement = 'Paypal'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte2,
@@ -1602,7 +1602,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'Paypal'
                     Mode = 'Normal'
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile1,
                                           Liste_compte3,
@@ -1622,7 +1622,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 1:
                     Paiement = 'Paypal'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte1,
@@ -1634,7 +1634,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                 if choix_4 == 2:
                     Paiement = 'Paypal'
                     Mode = 'Normal'
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte2,
@@ -1647,7 +1647,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'Paypal'
                     Mode = 'Normal'
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile2,
                                           Liste_compte3,
@@ -1668,7 +1668,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'Paypal'
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte1,
@@ -1681,7 +1681,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Paiement = 'Paypal'
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte2,
@@ -1695,7 +1695,7 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, List_prof
                     Mode = 'Normal'
                     List_profile3 = List_profile2.append(List_profile1)
                     Liste_compte3 = Liste_compte1.append(Liste_compte2)
-                    for x in range(0, len(Liste_tache)):
+                    for x in range(1, len(Liste_tache)):
                         RechercheCommande(liste_proxys,
                                           List_profile3,
                                           Liste_compte3,
