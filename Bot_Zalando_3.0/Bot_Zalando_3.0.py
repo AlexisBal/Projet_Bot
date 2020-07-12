@@ -47,7 +47,7 @@ class RechercheCommande(Thread):
     def __init__(self, liste_proxys, List_profile, Liste_compte, url_produit, taille_produit, Paiement, Mode):
         Thread.__init__(self)
         self.liste_proxys = liste_proxys
-        self.Liste_List_profile = List_profile
+        self.Liste_profile = List_profile
         self.Liste_compte = Liste_compte
         self.url_produit = url_produit
         self.taille_produit = taille_produit
@@ -100,8 +100,19 @@ class RechercheCommande(Thread):
                 else:
                     time.sleep(0.2)
 
+        # Choix au hasard d'un compte
+        Liste_compte_bis = []
+        for z in range(1, len(self.Liste_compte)):
+            Liste_compte_bis.append([self.Liste_compte[z]])
+        compte = random.choice(Liste_compte_bis)
+
+        # Choix au hasard d'un profil
+        Liste_profil_bis = []
+        for y in range(1, len(self.Liste_profile)):
+            Liste_profil_bis.append([self.Liste_profile[y]])
+        profil = random.choice(Liste_profil_bis)
+
         # Mise dans le panier du produit
-        compte = random.choice(self.Liste_compte)
         while True:
             try:
                 # Ouverture de la Session
@@ -419,20 +430,20 @@ class RechercheCommande(Thread):
                                 "zip": compte[9],
                                 "city": compte[10],
                                 "country_code": "FR",
-                                "street": compte[6],
+                                "street": compte[6] + " " + compte[7],
                                 "additional": compte[8]
                             }
                         }
                         checkout_2_2 = {
                             'address': {
                                 'address': {
-                                    'city': self.Liste_compte[compte][9],
+                                    'city': profil[7],
                                     'salutation': 'Mr',
-                                    'first_name': self.Liste_compte[compte][2],
-                                    'last_name': self.Liste_compte[compte][3],
+                                    'first_name': profil[0],
+                                    'last_name': profil[1],
                                     'country_code': 'FR',
-                                    'street': self.Liste_compte[compte][6],
-                                    'zip': self.Liste_compte[compte][8]
+                                    'street': profil[3] + " " + profil[4],
+                                    'zip': profil[6]
                                 }
                             }
                         }
@@ -469,7 +480,7 @@ class RechercheCommande(Thread):
                         ] = "https://www.zalando.fr/checkout/address"
                         session.post(bot_6, json=data_bot6_2, verify=False)
 
-                        if self.Mode == 'normal':
+                        if self.Mode == 'Normal':
                             del session.headers["Content-Type"]
                             session.headers["Accept"] = "application/json"
                             session.headers["x-zalando-footer-mode"] = "desktop"
@@ -481,7 +492,7 @@ class RechercheCommande(Thread):
                             # Adresse de livraison
                             url_checkout_1 = (
                                     "https://www.zalando.fr/api/checkout/address/%s/default"
-                                    % self.Liste_compte[compte][5]
+                                    % compte[5]
                             )
                             url_bot_1_2 = "https://www.zalando.fr/resources/35692132da2028b315fc23b805e921"
                             url_checkout_2_2 = "https://www.zalando.fr/api/checkout/next-step"
@@ -544,32 +555,32 @@ class RechercheCommande(Thread):
                             )
                             data_panier4 = {
                                 'address': {
-                                    'city': self.Liste_compte[compte][9],
+                                    'city': profil[7],
                                     'salutation': 'Mr',
-                                    'first_name': self.Liste_compte[compte][2],
-                                    'last_name': self.Liste_compte[compte][3],
+                                    'first_name': profil[1],
+                                    'last_name': profil[2],
                                     'country_code': 'FR',
-                                    'street': self.Liste_compte[compte][6],
-                                    'zip': self.Liste_compte[compte][8]
+                                    'street': profil[3] + " " + profil[4],
+                                    'zip': profil[6]
                                 },
                                 'addressDestination': {
                                     'destination': {
                                         'address': {
                                             'salutation': 'Mr',
-                                            'first_name': self.Liste_compte[compte][2],
-                                            'last_name': self.Liste_compte[compte][3],
+                                            'first_name': profil[1],
+                                            'last_name': profil[2],
                                             'country_code': 'FR',
-                                            'city': self.Liste_compte[compte][9],
-                                            'zip': self.Liste_compte[compte][8],
-                                            'street': self.Liste_compte[compte][6]
+                                            'city': profil[7],
+                                            'zip': profil[6],
+                                            'street': profil[3] + " " + profil[4]
                                         }
                                     },
                                     'normalized_address': {
                                         'country_code': "FR",
-                                        'city': self.Liste_compte[compte][9],
-                                        'zip': self.Liste_compte[compte][8],
-                                        'street': 'Rue Du General Leclerc',
-                                        'house_number': "8"
+                                        'city': profil[7],
+                                        'zip': profil[6],
+                                        'street': profil[4],
+                                        'house_number': profil[3]
                                     },
                                     'status': 'https://docs.riskmgmt.zalan.do/address/correct',
                                     'blacklisted': 'false'
