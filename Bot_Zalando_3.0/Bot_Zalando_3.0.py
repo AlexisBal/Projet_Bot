@@ -1117,7 +1117,7 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                         "last_name": Liste_comptegenerator[compte][3],
                         "fashion_category": [],
                         "birth_date": None,
-                        "phone": Liste_comptegenerator[compte][4],
+                        "phone": Liste_comptegenerator[compte][4]
                     }
                     session.get(url_informations_get, verify=False)
                     session.post(url_informations_post, json=informations, verify=False)
@@ -1138,7 +1138,7 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                         "gender": "MALE",
                         "defaultBilling": True,
                         "defaultShipping": True,
-                        "zip": Liste_comptegenerator[compte][7],
+                        "zip": Liste_comptegenerator[compte][7]
                     }
                     session.get(url_profil_get, verify=False)
                     reponse = session.post(url_profil_post, json=adresse, verify=False)
@@ -1183,12 +1183,14 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                         f.write(compte_1[9])
                         f.write(";")
                         f.write(compte_1[10])
+                        f.write(";")
+                        f.write(compte_1[11])
                     f.write('\n')
                 f.close()
 
                 # Rénitialisation du fichier AccountGenerator.csv
-                comptelist2 = ['Email', 'Password', 'Firstname', 'Lastname', 'Phone', 'Address', 'Additional_Address',
-                               'Postcode', 'City', 'Country']
+                comptelist2 = ['Email', 'Password', 'Firstname', 'Lastname', 'Phone', 'House Number', 'Street',
+                               'Additional Address', 'Postcode', 'City', 'Country']
                 with open("../Data/AccountGenerator.csv", "w") as f:
                     f.write(comptelist2[0])
                     f.write(";")
@@ -1209,6 +1211,8 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                     f.write(comptelist2[8])
                     f.write(";")
                     f.write(comptelist2[9])
+                    f.write(";")
+                    f.write(comptelist2[10])
                 f.close()
                 break
 
@@ -1219,7 +1223,7 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
 
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 
-def fonction_Zalando(Liste_comptegenerator, liste_proxys):
+def fonction_Zalando(Liste_comptegenerator, liste_proxys, Liste_tache, Liste_compte, Liste_carte):
     start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
     init()
     print("")
@@ -1247,6 +1251,11 @@ def fonction_Zalando(Liste_comptegenerator, liste_proxys):
                       Style.RESET_ALL + "> 2. List 2")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 3. Select Multiple Lists")
+                choix_4 = input("\nChoice :")
+                if choix_4 == 1:
+                    list_thread = []
+                    for n in range(1, len(Liste_tache)):
+
 
         if choix_2 == 2:
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
