@@ -572,7 +572,8 @@ class RechercheCommande(Thread):
                                             'country_code': 'FR',
                                             'city': profil[7],
                                             'zip': profil[6],
-                                            'street': profil[3] + " " + profil[4]
+                                            'street': profil[3] + " " + profil[4],
+                                            "additional": profil[5]
                                         }
                                     },
                                     'normalized_address': {
@@ -580,6 +581,7 @@ class RechercheCommande(Thread):
                                         'city': profil[7],
                                         'zip': profil[6],
                                         'street': profil[4],
+                                        "additional": profil[5],
                                         'house_number': profil[3]
                                     },
                                     'status': 'https://docs.riskmgmt.zalan.do/address/correct',
