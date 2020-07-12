@@ -626,11 +626,11 @@ class RechercheCommande(Thread):
                         url_pay = "https://checkout.payment.zalando.com/selection"
                         url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                         data_cb = {
-                            "card_holder": self.Liste_carte[compte][0],
-                            "pan": self.Liste_carte[compte][1],
-                            "cvv": self.Liste_carte[compte][4],
-                            "expiry_month": self.Liste_carte[compte][2],
-                            "expiry_year": self.Liste_carte[compte][3],
+                            "card_holder": profil[9],
+                            "pan": profil[10],
+                            "cvv": profil[13],
+                            "expiry_month": profil[11],
+                            "expiry_year": profil[12],
                             "options": {
                                 "selected": [],
                                 "not_selected": ["store_for_reuse"],
@@ -639,7 +639,7 @@ class RechercheCommande(Thread):
                         a_2 = session.get(url_pay, verify=False, allow_redirects=False)
 
                         # Paiement par carte bancaire
-                        if self.Liste_carte != ['paypal']:
+                        if self.Paiement != ['Paypal']:
                             session_id_2 = session.cookies["Session-ID"]
                             soup_3 = BeautifulSoup(a_2.text, "html.parser")
                             objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
@@ -720,7 +720,7 @@ class RechercheCommande(Thread):
                             # Envoyer le message de confirmation sur le webhook discord de l'utilisateur
 
                         # Paiement par paypal
-                        if self.Liste_carte == ['paypal']:
+                        if self.Paiement == ['Paypal']:
                             session_id_2 = session.cookies["Session-ID"]
                             url_pay_3 = (
                                     "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
