@@ -878,7 +878,7 @@ def proxy():
                 liste_proxys.append(ligne.strip('\n'))
 
         if not liste_proxys:
-            print(colored("You did not specify any proxy !", "red"))
+            print(colored("You have not specified any proxies !", "red"))
             print(colored("Enter the address of the proxy servers in the Proxy.txt file.", "red"))
 
         return liste_proxys
@@ -1266,13 +1266,72 @@ def fonction_Zalando():
         List_profile2 = profile2()
         Liste_tache = tache()
 
+        if Liste_compte1 == [['Email',
+                              'Password',
+                              'Firstname',
+                              'Lastname',
+                              'Phone',
+                              'Id Address',
+                              'House Number',
+                              'Street',
+                              'Additional Address',
+                              'Postcode',
+                              'City',
+                              'Country\n']] and Liste_compte2 == [['Email',
+                                                  'Password',
+                                                  'Firstname',
+                                                  'Lastname',
+                                                  'Phone',
+                                                  'Id Address',
+                                                  'House Number',
+                                                  'Street',
+                                                  'Additional Address',
+                                                  'Postcode',
+                                                  'City',
+                                                  'Country\n']]:
+            print(colored("You have not specified any accounts !", "yellow"))
+            print(colored("You have to use the Account Generator.", "yellow"))
+
+        if List_profile1 == [[
+            'Firstname',
+            'Lastname',
+            'Phone',
+            'House Number',
+            'Street',
+            'Additional Address',
+            'Postcode',
+            'City',
+            'Country',
+            'Name (DUPOND Tom)',
+            'Card Number',
+            'Exp Month (8)',
+            'Exp Year (2022)',
+            'CVV (530)']] and List_profile2 == [[
+                                    'Firstname',
+                                    'Lastname',
+                                    'Phone',
+                                    'House Number',
+                                    'Street',
+                                    'Additional Address',
+                                    'Postcode',
+                                    'City',
+                                    'Country',
+                                    'Name (DUPOND Tom)',
+                                    'Card Number',
+                                    'Exp Month (8)',
+                                    'Exp Year (2022)',
+                                    'CVV (530)']]:
+            print(colored("You have not specified any profiles !", "red"))
+            print(colored("You have to complete the Profiles files.", "red"))
+
         print("")
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Optimised Tasks")
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 4. Main Menu")
 
         choix = input("\nChoice :")
-        if choix == 2:
+        if choix == "2":
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                   Style.RESET_ALL + "> 1. Credit Card Autocheckout")
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1280,7 +1339,7 @@ def fonction_Zalando():
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Paypal Manual Checkout")
 
             choix_2 = input("\nChoice :")
-            if choix_2 == 1:
+            if choix_2 == "1":
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 1. Profile 1")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1288,7 +1347,7 @@ def fonction_Zalando():
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 3. Select Multiple Profiles")
                 choix_3 = input("\nChoice :")
-                if choix_3 == 1:
+                if choix_3 == "1":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1296,7 +1355,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1308,7 +1367,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1320,7 +1379,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         Liste_compte3 = Liste_compte1.append(Liste_compte2)
@@ -1333,7 +1392,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                if choix_3 == 2:
+                if choix_3 == "2":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1341,7 +1400,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1353,7 +1412,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1365,7 +1424,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         Liste_compte3 = Liste_compte1.append(Liste_compte2)
@@ -1378,7 +1437,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                if choix_3 == 3:
+                if choix_3 == "3":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1386,7 +1445,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1399,7 +1458,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1412,7 +1471,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1426,7 +1485,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-            if choix_2 == 2:
+            if choix_2 == "2":
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 1. Profile 1")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1434,7 +1493,7 @@ def fonction_Zalando():
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 3. Select Multiple Profiles")
                 choix_3 = input("\nChoice :")
-                if choix_3 == 1:
+                if choix_3 == "1":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1442,7 +1501,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1454,7 +1513,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1466,7 +1525,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         Liste_compte3 = Liste_compte1.append(Liste_compte2)
@@ -1479,7 +1538,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                if choix_3 == 2:
+                if choix_3 == "2":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1487,7 +1546,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1499,7 +1558,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1511,7 +1570,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         Liste_compte3 = Liste_compte1.append(Liste_compte2)
@@ -1524,7 +1583,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                if choix_3 == 3:
+                if choix_3 == "3":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1532,7 +1591,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1545,7 +1604,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1558,7 +1617,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'CB'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1572,7 +1631,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-            if choix_2 == 3:
+            if choix_2 == "3":
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 1. Profile 1")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1580,7 +1639,7 @@ def fonction_Zalando():
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                       Style.RESET_ALL + "> 3. Select Multiple Profiles")
                 choix_3 = input("\nChoice :")
-                if choix_3 == 1:
+                if choix_3 == "1":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1588,7 +1647,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1600,7 +1659,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1612,7 +1671,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         Liste_compte3 = Liste_compte1.append(Liste_compte2)
@@ -1625,7 +1684,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                if choix_3 == 2:
+                if choix_3 == "2":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1633,7 +1692,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1645,7 +1704,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         for x in range(1, len(Liste_tache)):
@@ -1657,7 +1716,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         Liste_compte3 = Liste_compte1.append(Liste_compte2)
@@ -1670,7 +1729,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                if choix_3 == 3:
+                if choix_3 == "3":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 1. List 1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1678,7 +1737,7 @@ def fonction_Zalando():
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> 3. Select Multiple Lists")
                     choix_4 = input("\nChoice :")
-                    if choix_4 == 1:
+                    if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1691,7 +1750,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 2:
+                    if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1704,7 +1763,7 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-                    if choix_4 == 3:
+                    if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         List_profile3 = List_profile2.append(List_profile1)
@@ -1718,89 +1777,31 @@ def fonction_Zalando():
                                               Paiement,
                                               Mode).start()
 
-        if choix == 3:
+        if choix == "3":
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                   Style.RESET_ALL + "> 1. List 1")
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                   Style.RESET_ALL + "> 2. List 2")
             choix_2 = input("\nChoice :")
-            if choix_2 == 1:
+            if choix_2 == "1":
                 liste = 'Accounts_List1.csv'
                 CreationComptes(Liste_comptegenerator, liste_proxys)
                 Configuration(Liste_comptegenerator, liste_proxys, liste)
-            if choix_2 == 2:
+            if choix_2 == "2":
                 liste = 'Accounts_List2.csv'
                 CreationComptes(Liste_comptegenerator, liste_proxys)
                 Configuration(Liste_comptegenerator, liste_proxys, liste)
 
+        if choix == "4":
+            break
+
 
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
-    VerificationLicense()
-    titre()
-    proxy()
-    Liste_compte1 = compte1()
-    Liste_compte2 = compte2()
-    List_profile1 = profile1()
-    List_profile2 = profile2()
-    start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
-    if Liste_compte1 == [['Email',
-                          'Password',
-                          'Firstname',
-                          'Lastname',
-                          'Phone',
-                          'Id Address',
-                          'House Number',
-                          'Street',
-                          'Additional Address',
-                          'Postcode',
-                          'City',
-                          'Country\n']] and Liste_compte2 == [['Email',
-                                              'Password',
-                                              'Firstname',
-                                              'Lastname',
-                                              'Phone',
-                                              'Id Address',
-                                              'House Number',
-                                              'Street',
-                                              'Additional Address',
-                                              'Postcode',
-                                              'City',
-                                              'Country\n']]:
-        print(colored("You have not specified any accounts !", "yellow"))
-        print(colored("You have to use the Account Generator.", "yellow"))
-    if List_profile1 == [[
-        'Firstname',
-        'Lastname',
-        'Phone',
-        'House Number',
-        'Street',
-        'Additional Address',
-        'Postcode',
-        'City',
-        'Country',
-        'Name (DUPOND Tom)',
-        'Card Number',
-        'Exp Month (8)',
-        'Exp Year (2022)',
-        'CVV (530)\n']] and List_profile2 == [[
-                                'Firstname',
-                                'Lastname',
-                                'Phone',
-                                'House Number',
-                                'Street',
-                                'Additional Address',
-                                'Postcode',
-                                'City',
-                                'Country',
-                                'Name (DUPOND Tom)',
-                                'Card Number',
-                                'Exp Month (8)',
-                                'Exp Year (2022)',
-                                'CVV (530)\n']]:
-        print(colored("You have not specified any profiles !", "yellow"))
-        print(colored("You have to complete the Profiles files.", "yellow"))
-    else:
+    while True:
+        VerificationLicense()
+        titre()
+        start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         print(colored("Welcome ! Initializing Scred AIO - User data loaded !\n", "green"))
         print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
         choix_depart = input("\nChoice :")
