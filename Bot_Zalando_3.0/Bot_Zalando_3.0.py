@@ -857,11 +857,11 @@ def VerificationLicense():
     if result[0] is None or not Helpers.IsOnRightMachine(result[0]):
         print("ERREUR: {0}".format(result[1]))
 
-        print("\nYour License is invalid.\n")
+        print(Fore.RED + Style.BRIGHT + "\nYour License is invalid.\n")
         exit()
 
     else:
-        print("Your license is valid.\n")
+        print(Fore.GREEN + "Your license is valid.\n")
         pass
 
 
@@ -906,7 +906,7 @@ def compte2():
 
 # Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
-    with open('../Data/AccountGenerator_List1.csv', 'r') as f:
+    with open('../Data/AccountGenerator.csv', 'r') as f:
         Liste_comptegenerator = []
         for ligne in f:
             comptegenerator_list = ligne.split(";")
@@ -1737,7 +1737,7 @@ def main():
     start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
     print(Style.RESET_ALL + "Welcome ! Initializing Scred AIO - User data loaded !\n")
     print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
-    choix_depart = input("\nWebsite :")
+    choix_depart = input("\nChoice :")
 
     if choix_depart == "1":
         fonction_Zalando()
