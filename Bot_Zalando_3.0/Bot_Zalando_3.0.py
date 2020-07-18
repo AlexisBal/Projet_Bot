@@ -25,7 +25,7 @@ from datetime import datetime
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 3
+        self.timeout = 1
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -42,7 +42,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 verrou = RLock()
 
 # Réglage des "Retries"
-retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=1, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -574,8 +574,8 @@ class RechercheCommande(Thread):
                                 'address': {
                                     'city': profil[7],
                                     'salutation': 'Mr',
-                                    'first_name': profil[1],
-                                    'last_name': profil[2],
+                                    'first_name': profil[0],
+                                    'last_name': profil[1],
                                     'country_code': 'FR',
                                     'street': profil[3] + " " + profil[4],
                                     'zip': profil[6]
@@ -584,8 +584,8 @@ class RechercheCommande(Thread):
                                     'destination': {
                                         'address': {
                                             'salutation': 'Mr',
-                                            'first_name': profil[1],
-                                            'last_name': profil[2],
+                                            'first_name': profil[0],
+                                            'last_name': profil[1],
                                             'country_code': 'FR',
                                             'city': profil[7],
                                             'zip': profil[6],
