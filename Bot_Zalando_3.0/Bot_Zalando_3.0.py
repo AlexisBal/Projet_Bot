@@ -46,7 +46,7 @@ urllib3.disable_warnings()
 
 
 class RechercheCommande(Thread):
-    def __init__(self, liste_proxys, List_profile, Liste_compte, url_produit, taille_produit, Paiement, Mode):
+    def __init__(self, liste_proxys, List_profile, Liste_compte, url_produit, taille_produit, Paiement, Mode, Task):
         Thread.__init__(self)
         self.liste_proxys = liste_proxys
         self.Liste_profile = List_profile
@@ -55,6 +55,7 @@ class RechercheCommande(Thread):
         self.taille_produit = taille_produit
         self.Paiement = Paiement
         self.Mode = Mode
+        self.Task = Task
 
     def run(self):
         # Récupération du Sku
@@ -1389,13 +1390,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
-                                              List_profile,
-                                              Liste_compte,
-                                              url_produit,
-                                              taille_produit,
-                                              Paiement,
-                                              Mode).start()
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode,
+                                                       Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1409,13 +1412,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1429,13 +1434,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1457,13 +1464,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1477,13 +1486,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1497,13 +1508,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1525,13 +1538,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1545,13 +1560,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1565,13 +1582,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1601,13 +1620,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1621,13 +1642,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1641,13 +1664,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1669,13 +1694,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1689,13 +1716,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1709,13 +1738,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1737,13 +1768,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1757,13 +1790,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1777,13 +1812,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1813,14 +1850,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1834,14 +1872,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1855,14 +1894,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1884,14 +1924,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1905,14 +1946,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1926,14 +1968,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1955,14 +1998,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1976,14 +2020,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -1997,14 +2042,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2042,13 +2088,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2062,13 +2110,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2082,13 +2132,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2110,14 +2162,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
-
+                                              Mode,
+                                              Task).start()
                         while True:
                             if threading.active_count() == 0:
                                 break
@@ -2130,13 +2183,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2150,14 +2205,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
-
+                                              Mode,
+                                              Task).start()
                         while True:
                             if threading.active_count() == 0:
                                 break
@@ -2178,13 +2234,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2198,13 +2256,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2218,13 +2278,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2254,13 +2316,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2274,13 +2338,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2294,13 +2360,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2322,13 +2390,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2342,13 +2412,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2362,13 +2434,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2390,13 +2464,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2410,13 +2486,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2430,13 +2508,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
+                            Task = x
                             RechercheCommande(liste_proxys,
                                               List_profile,
                                               Liste_compte,
                                               url_produit,
                                               taille_produit,
                                               Paiement,
-                                              Mode).start()
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2466,14 +2546,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2487,14 +2568,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2508,14 +2590,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2537,14 +2620,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2558,15 +2642,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
-
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
                         while True:
                             if threading.active_count() == 0:
                                 break
@@ -2579,14 +2663,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2608,14 +2693,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2629,14 +2715,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2650,14 +2737,15 @@ def fonction_Zalando():
                         for x in range(1, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode)
-                            thread.start()
+                            Task = x
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2697,7 +2785,6 @@ def main():
 
         if choix_depart == "1":
             fonction_Zalando()
-
 
 # --------------------------------------------------------------------------------------------------------------------#
 
