@@ -1762,14 +1762,23 @@ def fonction_Zalando():
                     if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte2
                         for x in range(1, len(Liste_tache)):
-                            RechercheCommande(liste_proxys,
-                                              List_profile2,
-                                              Liste_compte2,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
-                                              Paiement,
-                                              Mode).start()
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "3":
                         Paiement = 'Paypal'
