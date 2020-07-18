@@ -4,6 +4,7 @@ import timeit
 import re
 import random
 from threading import Thread
+import threading
 from colorama import Back, Fore, Style, deinit, init
 
 import requests
@@ -24,7 +25,7 @@ from datetime import datetime
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 4
+        self.timeout = 3
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -38,7 +39,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -70,13 +71,13 @@ class RechercheCommande(Thread):
                 reponsebis2_1 = json.loads(reponsebis_1[0])
                 id_produit = reponsebis2_1['enrichedEntity']['id']
                 sku_list = reponsebis2_1['graphqlCache'][
-                    '{"id":"79b404b0f26a318349c1b29b57e789da91cb39a541a668c96c2f4945bc7df528","variables":{"id":"%s"}}' % id_produit][
+                    '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
                     'data']['product']['simples']
                 liste_sku = []
                 for n in range(0, len(sku_list)):
                     liste_sku.append(sku_list[n]['sku'])
                     liste_sku.append(sku_list[n]['size'])
-                position_taille = liste_sku.index(self.taille_produit)
+                position_taille = liste_sku.index(self.taille_produit.strip('\n'))
                 sku = liste_sku[position_taille - 1]
                 break
 
@@ -93,7 +94,7 @@ class RechercheCommande(Thread):
                 for n in range(0, len(stock_list)):
                     liste_stock.append(stock_list[n]['sku'])
                     liste_stock.append(stock_list[n]['availability'])
-                position_sku = liste_stock.index(self.url_produit)
+                position_sku = liste_stock.index(sku)
                 stock_schema = liste_stock[position_sku + 1]
                 if stock_schema == 'http://schema.org/InStock':
                     print('Le produit est disponible !')
@@ -105,13 +106,15 @@ class RechercheCommande(Thread):
         Liste_compte_bis = []
         for z in range(1, len(self.Liste_compte)):
             Liste_compte_bis.append([self.Liste_compte[z]])
-        compte = random.choice(Liste_compte_bis)
+        compte_2 = random.choice(Liste_compte_bis)
+        compte = compte_2[0]
 
         # Choix au hasard d'un profil
         Liste_profil_bis = []
         for y in range(1, len(self.Liste_profile)):
             Liste_profil_bis.append([self.Liste_profile[y]])
-        profil = random.choice(Liste_profil_bis)
+        profil_2 = random.choice(Liste_profil_bis)
+        profil = profil_2[0]
 
         # Mise dans le panier du produit
         while True:
@@ -195,12 +198,12 @@ class RechercheCommande(Thread):
 
                     # Ouverture de la page de connexion
                     url_connexion_1 = "https://www.zalando.fr/welcomenoaccount/true"
-                    session.get(url_connexion_1, verify=False)
+                    portal = session.get(url_connexion_1, verify=False)
 
                     # Sécurité anti-bot
                     url_get_2 = (
                             "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=2"
-                            % home_1.headers["X-Flow-Id"]
+                            % portal.headers["X-Zalando-Child-Request-Id"]
                     )
                     url_post1 = (
                         "https://www.zalando.fr/resources/1f2f569be9201d42d0a3ba96882c7b"
@@ -224,27 +227,21 @@ class RechercheCommande(Thread):
                     url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
                     url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
                     url_checkout_1 = "https://www.zalando.fr/checkout/confirm"
-                    headers_2 = {
-                        "Host": "www.zalando.fr",
-                        "Accept": "application/json",
-                        "Accept-Encoding": "gzip, deflate, br",
-                        "x-zalando-request-uri": "/welcomenoaccount/true",
-                        "x-zalando-render-page-uri": "/welcomenoaccount/true",
-                        "x-xsrf-token": cookies_1["frsx"],
-                        "Accept-Language": "fr-fr",
-                        "User-Agent": generate_user_agent(os=('mac', 'linux')),
-                        "Referer": "https://www.zalando.fr/welcomenoaccount/true",
-                        "x-flow-id": home_1.headers["X-Flow-Id"],
-                        "x-zalando-client-id": cookies_1["Zalando-Client-Id"],
-                        "Connection": "keep-alive",
-                        "Content-Type": "application/json"
-                    }
+
                     identifiants_1 = {
                         "username": compte[0],
                         "password": compte[1],
                         "wnaMode": "checkout"
                     }
-                    session.headers.update(headers_2)
+
+                    session.headers['Host'] = 'www.zalando.fr'
+                    session.headers['Accept'] = 'application/json'
+                    session.headers['x-zalando-request-uri'] = '/welcomenoaccount/true'
+                    session.headers['x-zalando-render-page-uri'] = '/welcomenoaccount/true'
+                    session.headers['x-xsrf-token'] = cookies_1["frsx"]
+                    session.headers['Referer'] = 'https://www.zalando.fr/welcomenoaccount/true'
+                    session.headers['x-flow-id'] = portal.headers["X-Zalando-Child-Request-Id"]
+                    session.headers['Content-Type'] = 'application/json'
                     session.get(url_connexion_get, verify=False)
                     session.headers["Origin"] = "https://www.zalando.fr"
                     session.post(url_connexion_post2, json=identifiants_1, verify=False)
@@ -641,7 +638,7 @@ class RechercheCommande(Thread):
                         a_2 = session.get(url_pay, verify=False, allow_redirects=False)
 
                         # Paiement par carte bancaire
-                        if self.Paiement != ['Paypal']:
+                        if self.Paiement != 'Paypal':
                             session_id_2 = session.cookies["Session-ID"]
                             soup_3 = BeautifulSoup(a_2.text, "html.parser")
                             objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
@@ -722,7 +719,7 @@ class RechercheCommande(Thread):
                             # Envoyer le message de confirmation sur le webhook discord de l'utilisateur
 
                         # Paiement par paypal
-                        if self.Paiement == ['Paypal']:
+                        if self.Paiement == 'Paypal':
                             session_id_2 = session.cookies["Session-ID"]
                             url_pay_3 = (
                                     "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
@@ -950,6 +947,31 @@ def tache():
     return Liste_tache
 
 
+def VerificationProxys():
+    list_proxy = proxy()
+    for x in list_proxy:
+        try:
+            # Ouverture de la session
+            with requests.Session() as session:
+                # Réglage des paramètres de la session
+                retries_2 = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+                session.mount("https://", TimeoutHTTPAdapter(max_retries=retries_2))
+                session.headers.update(
+                    {"User-Agent": generate_user_agent(os=("mac", "linux"))}
+                )
+                # Réglage du proxy
+                session.proxies = {"https": "https://%s" % x}
+                # Connexion à la page d'accueil de Zalando
+                url_home = "https://www.zalando.fr"
+                session.get(url_home, verify=False)
+                # Test du proxy
+                print(colored('Proxy %s is OK !', 'green') % x)
+            session.close()
+        # Gestion des exceptions
+        except:
+            print(colored("Proxy %s doesn't work !", "red") % x)
+
+
 # Création des comptes à partir des informations saisies dans AccountGenerator.csv
 def CreationComptes(Liste_comptegenerator, liste_proxys):
     # Comptage du nombre de comptes présents dans la base de données
@@ -967,8 +989,10 @@ def CreationComptes(Liste_comptegenerator, liste_proxys):
                         {"User-Agent": generate_user_agent(os=("mac", "linux"))}
                     )
 
+                    proxy = random.choice(liste_proxys)
+
                     # Réglage du proxy
-                    session.proxies = {"https": "https://%s" % random.choice(liste_proxys)}
+                    session.proxies = {"https": "https://%s" % proxy}
 
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
@@ -1031,21 +1055,22 @@ def CreationComptes(Liste_comptegenerator, liste_proxys):
                     session.headers["Origin"] = "https://www.zalando.fr"
                     session.post(url_post2, json=register, verify=False)
 
+                    # Message de confirmation pour chaque compte créé
+                    print(
+                        "Le compte de", Liste_comptegenerator[compte][0], "a bien été créé !"
+                    )
+
                 # Fermeture de la session
                 session.close()
 
-                # Message de confirmation pour chaque compte créé
-                print(
-                    "Le compte de", Liste_comptegenerator[compte][0], "a bien été créé !"
-                )
-                break
+                return proxy
 
             # Gestion des exceptions
             except:
                 pass
 
 
-def Configuration(Liste_comptegenerator, liste_proxys, list):
+def Configuration(Liste_comptegenerator, proxy, list):
     # Comptage du nombre de compte présents dans la base de données
     nombrecompte = len(Liste_comptegenerator)
 
@@ -1068,7 +1093,7 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                     session.headers.update(headers)
 
                     # Réglage du proxy
-                    session.proxies = {"https": "https://%s" % random.choice(liste_proxys)}
+                    session.proxies = {"https": "https://%s" % proxy}
 
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
@@ -1160,16 +1185,16 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                     )
                     adresse = {
                         "type": "HomeAddress",
-                        "city": Liste_comptegenerator[compte][8],
+                        "city": Liste_comptegenerator[compte][9],
                         "countryCode": "FR",
                         "firstname": Liste_comptegenerator[compte][2],
                         "lastname": Liste_comptegenerator[compte][3],
-                        "street": Liste_comptegenerator[compte][5],
-                        "additional": Liste_comptegenerator[compte][6],
+                        "street": Liste_comptegenerator[compte][5] + " " + Liste_comptegenerator[compte][6],
+                        "additional": Liste_comptegenerator[compte][7],
                         "gender": "MALE",
                         "defaultBilling": True,
                         "defaultShipping": True,
-                        "zip": Liste_comptegenerator[compte][7]
+                        "zip": Liste_comptegenerator[compte][8]
                     }
                     session.get(url_profil_get, verify=False)
                     reponse = session.post(url_profil_post, json=adresse, verify=False)
@@ -1177,7 +1202,7 @@ def Configuration(Liste_comptegenerator, liste_proxys, list):
                     # Récupération de l'id de d'adresse
                     objet = json.loads(reponse.text)
                     id_adresse = objet[0]["id"]
-                    Liste_comptegenerator[compte].insert(5, id_adresse)
+                    Liste_comptegenerator[compte].insert(5, str(id_adresse))
 
                 # Fermeture de la session
                 session.close()
@@ -1278,17 +1303,17 @@ def fonction_Zalando():
                               'Postcode',
                               'City',
                               'Country\n']] and Liste_compte2 == [['Email',
-                                                  'Password',
-                                                  'Firstname',
-                                                  'Lastname',
-                                                  'Phone',
-                                                  'Id Address',
-                                                  'House Number',
-                                                  'Street',
-                                                  'Additional Address',
-                                                  'Postcode',
-                                                  'City',
-                                                  'Country\n']]:
+                                                                   'Password',
+                                                                   'Firstname',
+                                                                   'Lastname',
+                                                                   'Phone',
+                                                                   'Id Address',
+                                                                   'House Number',
+                                                                   'Street',
+                                                                   'Additional Address',
+                                                                   'Postcode',
+                                                                   'City',
+                                                                   'Country\n']]:
             print(colored("You have not specified any accounts !", "yellow"))
             print(colored("You have to use the Account Generator.", "yellow"))
 
@@ -1307,20 +1332,20 @@ def fonction_Zalando():
             'Exp Month (8)',
             'Exp Year (2022)',
             'CVV (530)']] and List_profile2 == [[
-                                    'Firstname',
-                                    'Lastname',
-                                    'Phone',
-                                    'House Number',
-                                    'Street',
-                                    'Additional Address',
-                                    'Postcode',
-                                    'City',
-                                    'Country',
-                                    'Name (DUPOND Tom)',
-                                    'Card Number',
-                                    'Exp Month (8)',
-                                    'Exp Year (2022)',
-                                    'CVV (530)']]:
+            'Firstname',
+            'Lastname',
+            'Phone',
+            'House Number',
+            'Street',
+            'Additional Address',
+            'Postcode',
+            'City',
+            'Country',
+            'Name (DUPOND Tom)',
+            'Card Number',
+            'Exp Month (8)',
+            'Exp Year (2022)',
+            'CVV (530)']]:
             print(colored("You have not specified any profiles !", "red"))
             print(colored("You have to complete the Profiles files.", "red"))
 
@@ -1328,7 +1353,8 @@ def fonction_Zalando():
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Optimised Tasks")
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 4. Main Menu")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 4. Proxy Check")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 5. Main Menu")
 
         choix = input("\nChoice :")
         if choix == "2":
@@ -1358,14 +1384,22 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1
                         for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
                             RechercheCommande(liste_proxys,
-                                              List_profile1,
-                                              Liste_compte1,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
                                               Paiement,
                                               Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "2":
                         Paiement = 'CB_Auto'
@@ -1378,6 +1412,9 @@ def fonction_Zalando():
                                               Liste_tache[x][1],
                                               Paiement,
                                               Mode).start()
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "3":
                         Paiement = 'CB_Auto'
@@ -1391,6 +1428,9 @@ def fonction_Zalando():
                                               Liste_tache[x][1],
                                               Paiement,
                                               Mode).start()
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                 if choix_3 == "2":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1411,6 +1451,9 @@ def fonction_Zalando():
                                               Liste_tache[x][1],
                                               Paiement,
                                               Mode).start()
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "2":
                         Paiement = 'CB_Auto'
@@ -1423,6 +1466,9 @@ def fonction_Zalando():
                                               Liste_tache[x][1],
                                               Paiement,
                                               Mode).start()
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "3":
                         Paiement = 'CB_Auto'
@@ -1650,14 +1696,23 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1
                         for x in range(1, len(Liste_tache)):
-                            RechercheCommande(liste_proxys,
-                                              List_profile1,
-                                              Liste_compte1,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
-                                              Paiement,
-                                              Mode).start()
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "2":
                         Paiement = 'Paypal'
@@ -1719,15 +1774,23 @@ def fonction_Zalando():
                     if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        Liste_compte3 = Liste_compte1.append(Liste_compte2)
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
                         for x in range(1, len(Liste_tache)):
-                            RechercheCommande(liste_proxys,
-                                              List_profile2,
-                                              Liste_compte3,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
-                                              Paiement,
-                                              Mode).start()
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                 if choix_3 == "3":
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1740,42 +1803,65 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        List_profile3 = List_profile2.append(List_profile1)
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte2
                         for x in range(1, len(Liste_tache)):
-                            RechercheCommande(liste_proxys,
-                                              List_profile3,
-                                              Liste_compte1,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
-                                              Paiement,
-                                              Mode).start()
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        List_profile3 = List_profile2.append(List_profile1)
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte2
                         for x in range(1, len(Liste_tache)):
-                            RechercheCommande(liste_proxys,
-                                              List_profile3,
-                                              Liste_compte2,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
-                                              Paiement,
-                                              Mode).start()
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
                     if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        List_profile3 = List_profile2.append(List_profile1)
-                        Liste_compte3 = Liste_compte1.append(Liste_compte2)
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
                         for x in range(1, len(Liste_tache)):
-                            RechercheCommande(liste_proxys,
-                                              List_profile3,
-                                              Liste_compte3,
-                                              Liste_tache[x][0],
-                                              Liste_tache[x][1],
-                                              Paiement,
-                                              Mode).start()
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
 
         if choix == "3":
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -1784,15 +1870,18 @@ def fonction_Zalando():
                   Style.RESET_ALL + "> 2. List 2")
             choix_2 = input("\nChoice :")
             if choix_2 == "1":
-                liste = 'Accounts_List1.csv'
-                CreationComptes(Liste_comptegenerator, liste_proxys)
-                Configuration(Liste_comptegenerator, liste_proxys, liste)
+                liste = 'Accounts/Accounts_List1.csv'
+                proxi = CreationComptes(Liste_comptegenerator, liste_proxys)
+                Configuration(Liste_comptegenerator, proxi, liste)
             if choix_2 == "2":
-                liste = 'Accounts_List2.csv'
-                CreationComptes(Liste_comptegenerator, liste_proxys)
-                Configuration(Liste_comptegenerator, liste_proxys, liste)
+                liste = 'Accounts/Accounts_List2.csv'
+                proxi = CreationComptes(Liste_comptegenerator, liste_proxys)
+                Configuration(Liste_comptegenerator, proxi, liste)
 
-        if choix == "4":
+        if choix == '4':
+            VerificationProxys()
+
+        if choix == "5":
             break
 
 
