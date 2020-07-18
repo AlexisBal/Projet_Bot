@@ -478,7 +478,7 @@ class RechercheCommande(Thread):
                         ] = "https://www.zalando.fr/checkout/address"
                         session.post(bot_6, json=data_bot6_2, verify=False)
 
-                        if self.Mode == 'Normal':
+                        if self.Mode == 'Quick':
                             del session.headers["Content-Type"]
                             session.headers["Accept"] = "application/json"
                             session.headers["x-zalando-footer-mode"] = "desktop"
@@ -1357,6 +1357,659 @@ def fonction_Zalando():
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 5. Main Menu")
 
         choix = input("\nChoice :")
+        if choix == "1":
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 1. Credit Card Autocheckout")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> 2. Credit Card Manual Checkout")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Paypal Manual Checkout")
+
+            choix_2 = input("\nChoice :")
+            if choix_2 == "1":
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 1. Profile 1")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 2. Profile 2")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 3. Select Multiple Profiles")
+                choix_3 = input("\nChoice :")
+                if choix_3 == "1":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                if choix_3 == "2":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                if choix_3 == "3":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'CB_Auto'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+            if choix_2 == "2":
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 1. Profile 1")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 2. Profile 2")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 3. Select Multiple Profiles")
+                choix_3 = input("\nChoice :")
+                if choix_3 == "1":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                if choix_3 == "2":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                if choix_3 == "3":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'CB'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            RechercheCommande(liste_proxys,
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode).start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+            if choix_2 == "3":
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 1. Profile 1")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 2. Profile 2")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> 3. Select Multiple Profiles")
+                choix_3 = input("\nChoice :")
+                if choix_3 == "1":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile1
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                if choix_3 == "2":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile2
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                if choix_3 == "3":
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                    choix_4 = input("\nChoice :")
+                    if choix_4 == "1":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "2":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte2
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
+                    if choix_4 == "3":
+                        Paiement = 'Paypal'
+                        Mode = 'Quick'
+                        List_profile = List_profile2.append(List_profile1)
+                        Liste_compte = Liste_compte1.append(Liste_compte2)
+                        for x in range(1, len(Liste_tache)):
+                            url_produit = Liste_tache[x][0]
+                            taille_produit = Liste_tache[x][1]
+                            thread = RechercheCommande(liste_proxys,
+                                                       List_profile,
+                                                       Liste_compte,
+                                                       url_produit,
+                                                       taille_produit,
+                                                       Paiement,
+                                                       Mode)
+                            thread.start()
+
+                        while True:
+                            if threading.active_count() == 0:
+                                break
+
         if choix == "2":
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                   Style.RESET_ALL + "> 1. Credit Card Autocheckout")
