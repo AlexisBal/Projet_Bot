@@ -67,6 +67,8 @@ class RechercheCommande(Thread):
             requete_1 = requests.get(url, headers=headers, verify=False, allow_redirects=False)
             soup_1 = BeautifulSoup(requete_1.content, "html.parser")
             reponse_1 = soup_1.find(type="application/json", class_="re-1-1")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> Task %s - " % self.Task + colored("Searching Product", "red"))
             if reponse_1 is not None:
                 reponsebis_1 = reponse_1.contents
                 reponsebis2_1 = json.loads(reponsebis_1[0])
@@ -80,6 +82,8 @@ class RechercheCommande(Thread):
                     liste_sku.append(sku_list[n]['size'])
                 position_taille = liste_sku.index(self.taille_produit.strip('\n'))
                 sku = liste_sku[position_taille - 1]
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> Task %s - " % self.Task + colored("Product Found", "yellow"))
                 break
 
         # Verification du stock
@@ -98,9 +102,11 @@ class RechercheCommande(Thread):
                 position_sku = liste_stock.index(sku)
                 stock_schema = liste_stock[position_sku + 1]
                 if stock_schema == 'http://schema.org/InStock':
-                    print('Le produit est disponible !')
                     break
                 else:
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "Product out of stock - Waiting for restock", "yellow"))
                     time.sleep(0.2)
 
         # Choix au hasard d'un compte
@@ -247,11 +253,14 @@ class RechercheCommande(Thread):
                     session.headers["Origin"] = "https://www.zalando.fr"
                     session.post(url_connexion_post2, json=identifiants_1, verify=False)
                     session.get(url_checkout_1, verify=False)
-
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "Account succefully logged", "green"))
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "Added to cart - size %s" % self.taille_produit, "yellow"))
                 # Fermeture de la session
                 session.close()
-
-                # Message de confimation pour chaque compte configuré
 
                 # Fin de la boucle
                 break
@@ -262,6 +271,9 @@ class RechercheCommande(Thread):
 
         # Credit Card Autocheckout
         if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                      "Payment Process", "yellow"))
             while True:
                 try:
                     # Ouverture de la Session
@@ -1392,13 +1404,13 @@ def fonction_Zalando():
                             taille_produit = Liste_tache[x][1]
                             Task = x
                             RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode,
-                                                       Task).start()
+                                              List_profile,
+                                              Liste_compte,
+                                              url_produit,
+                                              taille_produit,
+                                              Paiement,
+                                              Mode,
+                                              Task).start()
 
                         while True:
                             if threading.active_count() == 0:
@@ -2785,6 +2797,7 @@ def main():
 
         if choix_depart == "1":
             fonction_Zalando()
+
 
 # --------------------------------------------------------------------------------------------------------------------#
 
