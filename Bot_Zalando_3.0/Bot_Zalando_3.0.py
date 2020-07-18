@@ -3,7 +3,7 @@ import time
 import timeit
 import re
 import random
-from threading import Thread
+from threading import Thread, RLock
 import threading
 from colorama import Back, Fore, Style, deinit, init
 
@@ -37,6 +37,9 @@ class TimeoutHTTPAdapter(HTTPAdapter):
             kwargs["timeout"] = self.timeout
         return super().send(request, **kwargs)
 
+
+# Lock Thread
+verrou = RLock()
 
 # Réglage des "Retries"
 retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
@@ -110,18 +113,20 @@ class RechercheCommande(Thread):
                     time.sleep(0.2)
 
         # Choix au hasard d'un compte
-        Liste_compte_bis = []
-        for z in range(1, len(self.Liste_compte)):
-            Liste_compte_bis.append([self.Liste_compte[z]])
-        compte_2 = random.choice(Liste_compte_bis)
-        compte = compte_2[0]
+        with verrou:
+            Liste_compte_bis = []
+            for z in range(1, len(self.Liste_compte)):
+                Liste_compte_bis.append([self.Liste_compte[z]])
+            compte_2 = random.choice(Liste_compte_bis)
+            compte = compte_2[0]
 
         # Choix au hasard d'un profil
-        Liste_profil_bis = []
-        for y in range(1, len(self.Liste_profile)):
-            Liste_profil_bis.append([self.Liste_profile[y]])
-        profil_2 = random.choice(Liste_profil_bis)
-        profil = profil_2[0]
+        with verrou:
+            Liste_profil_bis = []
+            for y in range(1, len(self.Liste_profile)):
+                Liste_profil_bis.append([self.Liste_profile[y]])
+            profil_2 = random.choice(Liste_profil_bis)
+            profil = profil_2[0]
 
         # Mise dans le panier du produit
         while True:
@@ -132,9 +137,10 @@ class RechercheCommande(Thread):
                     session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
 
                     # Réglage du proxy
-                    session.proxies = {
-                        'https': 'https://%s' % random.choice(self.liste_proxys)
-                    }
+                    with verrou:
+                        session.proxies = {
+                            'https': 'https://%s' % random.choice(self.liste_proxys)
+                        }
 
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
@@ -828,7 +834,6 @@ def horloge():
     milisecondes = str(milisecondes)
     milisecondes = milisecondes[0] + milisecondes[1] + milisecondes[2]
     horloge = Style.RESET_ALL + "[" + Fore.RED + heures + ":" + minutes + ":" + secondes + "." + milisecondes + Style.RESET_ALL + "]"
-    # print( horloge, end="")
     return horloge
 
 
