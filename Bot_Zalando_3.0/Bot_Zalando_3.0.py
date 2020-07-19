@@ -19,7 +19,7 @@ from password_generator import PasswordGenerator
 from bs4 import BeautifulSoup
 from licensing.models import *
 from licensing.methods import Key, Helpers
-from datetime import datetime
+from datetime import *
 
 
 # Réglage des "Timeouts"
@@ -678,6 +678,67 @@ class RechercheCommande(Thread):
                     print(url_paypal)
 
         session.close()
+        # Insertion des tâches effectuées dans le fichier Task_History.csv
+        if self.Paiement == 'Paypal':
+            date = str(datetime.datetime.now().strftime("%x"))
+            heure = str(datetime.datetime.now().strftime("%X"))
+            mode_1 = 'Paypal - %s' % url_paypal
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
+            with open("../Data/Tasks/Task_History.csv", "a") as f:
+                for task_1 in tasklist:
+                    f.write(task_1[0])
+                    f.write(";")
+                    f.write(task_1[1])
+                    f.write(";")
+                    f.write(task_1[2])
+                    f.write(";")
+                    f.write(task_1[3])
+                    f.write(";")
+                    f.write(task_1[4])
+                    f.write(";")
+                    f.write(task_1[5])
+                f.write('\n')
+            f.close()
+        if self.Paiement == 'CB_Auto':
+            date = str(datetime.datetime.now().strftime("%x"))
+            heure = str(datetime.datetime.now().strftime("%X"))
+            mode_1 = 'Credit Card - %s' % self.Liste_profile[10]
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
+            with open("../Data/Tasks/Task_History.csv", "a") as f:
+                for task_1 in tasklist:
+                    f.write(task_1[0])
+                    f.write(";")
+                    f.write(task_1[1])
+                    f.write(";")
+                    f.write(task_1[2])
+                    f.write(";")
+                    f.write(task_1[3])
+                    f.write(";")
+                    f.write(task_1[4])
+                    f.write(";")
+                    f.write(task_1[5])
+                f.write('\n')
+            f.close()
+        if self.Paiement == 'CB':
+            date = str(datetime.datetime.now().strftime("%x"))
+            heure = str(datetime.datetime.now().strftime("%X"))
+            mode_1 = 'Manual Checkout'
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
+            with open("../Data/Tasks/Task_History.csv", "a") as f:
+                for task_1 in tasklist:
+                    f.write(task_1[0])
+                    f.write(";")
+                    f.write(task_1[1])
+                    f.write(";")
+                    f.write(task_1[2])
+                    f.write(";")
+                    f.write(task_1[3])
+                    f.write(";")
+                    f.write(task_1[4])
+                    f.write(";")
+                    f.write(task_1[5])
+                f.write('\n')
+            f.close()
 
 
 def titre():
@@ -833,7 +894,7 @@ def tache():
 
 def FinDeTache():
     # Rénitialisation du fichier Task.csv
-    tasklist2 = ['Product_Url', 'Size']
+    tasklist2 = ['Product Url', 'Size']
     with open("../Data/Tasks/Task.csv", "w") as f:
         f.write(tasklist2[0])
         f.write(";")
@@ -2495,7 +2556,7 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 1:
+                            if threading.active_count() == 0:
                                 FinDeTache()
                                 break
 
