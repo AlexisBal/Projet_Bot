@@ -25,7 +25,7 @@ from datetime import datetime
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 3
+        self.timeout = 5
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -720,9 +720,7 @@ def latence(start):
 RSAPubKey = "<RSAKeyValue><Modulus>zGKjhD1u4eZQg+U2oZgX8inZ1SLvb83jD+oKD20GplwpYcqquQZMAPokGXTs8FMD5X2sc6FtiNKg/wcapvkuyS9KRTauaoQib/B2SW7e9b4zkfpg3hJHW8zm9CZ3F2xbH5E8aXOlm0Knu9lOxjE+e7IogTQGk5RvyO4TO6QRO71bc9dW9h44KWdzku6lcF1VBHM646E6F10ziq7beGhmyLt/dbz88Yt9VP5CKBRH+/QDafbV+KD86WFTQ69p/j+k/h1QF2LYY2tVOhz9TL0iF9zpb8e4mR/vL1RGU3T3ztS21AwGwyCI2j1xc8KvWsUWnPgfDsIr4SRi6EH0d5joxQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
 auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ=="
 
-
 # -------------------------------------------------------------------------------------------------------------------------------------#
-
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
 def VerificationLicense():
@@ -831,6 +829,16 @@ def tache():
             Liste_tache.append(liste_list)
     f.close()
     return Liste_tache
+
+
+def FinDeTache():
+    # Rénitialisation du fichier Task.csv
+    tasklist2 = ['Product_Url', 'Size']
+    with open("../Data/Tasks/Task.csv", "w") as f:
+        f.write(tasklist2[0])
+        f.write(";")
+        f.write(tasklist2[1])
+    f.close()
 
 
 def VerificationProxys():
@@ -1286,7 +1294,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1308,7 +1317,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1330,7 +1340,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "2":
@@ -1360,7 +1371,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1382,7 +1394,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1404,7 +1417,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "3":
@@ -1434,7 +1448,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1456,7 +1471,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1478,7 +1494,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
             if choix_2 == "2":
@@ -1516,7 +1533,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1538,7 +1556,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1560,7 +1579,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "2":
@@ -1590,7 +1610,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1612,7 +1633,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1634,7 +1656,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "3":
@@ -1664,7 +1687,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1686,7 +1710,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1708,7 +1733,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
             if choix_2 == "3":
@@ -1746,7 +1772,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1768,7 +1795,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1790,7 +1818,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "2":
@@ -1820,7 +1849,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1842,7 +1872,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1864,7 +1895,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "3":
@@ -1894,7 +1926,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -1916,7 +1949,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -1938,7 +1972,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
         if choix == "2":
@@ -1984,7 +2019,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2006,7 +2042,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2028,7 +2065,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "2":
@@ -2057,7 +2095,8 @@ def fonction_Zalando():
                                               Mode,
                                               Task).start()
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2079,7 +2118,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2100,7 +2140,8 @@ def fonction_Zalando():
                                               Mode,
                                               Task).start()
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "3":
@@ -2130,7 +2171,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2152,7 +2194,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2174,7 +2217,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
             if choix_2 == "2":
@@ -2212,7 +2256,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2234,7 +2279,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2256,7 +2302,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "2":
@@ -2286,7 +2333,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2308,7 +2356,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2330,7 +2379,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "3":
@@ -2360,7 +2410,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2382,7 +2433,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2404,7 +2456,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
             if choix_2 == "3":
@@ -2442,7 +2495,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2464,7 +2518,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2486,7 +2541,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "2":
@@ -2516,7 +2572,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2537,7 +2594,8 @@ def fonction_Zalando():
                                               Mode,
                                               Task).start()
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2559,7 +2617,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                 if choix_3 == "3":
@@ -2589,7 +2648,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "2":
@@ -2611,7 +2671,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
                     if choix_4 == "3":
@@ -2633,7 +2694,8 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            if threading.active_count() == 1:
+                                FinDeTache()
                                 break
 
         if choix == "3":
@@ -2670,7 +2732,6 @@ def main():
 
         if choix_depart == "1":
             fonction_Zalando()
-
 
 # --------------------------------------------------------------------------------------------------------------------#
 
