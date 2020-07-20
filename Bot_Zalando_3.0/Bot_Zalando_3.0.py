@@ -20,6 +20,7 @@ from bs4 import BeautifulSoup
 from licensing.models import *
 from licensing.methods import Key, Helpers
 from datetime import *
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 
 # Réglage des "Timeouts"
@@ -42,7 +43,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 verrou = RLock()
 
 # Réglage des "Retries"
-retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -915,7 +916,7 @@ def VerificationProxys():
                     {"User-Agent": generate_user_agent(os=("mac", "linux"))}
                 )
                 # Réglage du proxy
-                session.proxies = {"https": "https://%s" % x}
+                session.proxies = {"http": "http://%s" % x}
                 # Connexion à la page d'accueil de Zalando
                 url_home = "https://www.zalando.fr"
                 session.get(url_home, verify=False)
