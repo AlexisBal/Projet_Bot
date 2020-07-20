@@ -135,7 +135,7 @@ class RechercheCommande(Thread):
 
             # Réglage du proxy
             session.proxies = {
-                'https': 'https://%s' % random.choice(self.liste_proxys)
+                'http': 'http://%s' % random.choice(self.liste_proxys)
             }
 
             # Connexion à la page d'accueil de Zalando
