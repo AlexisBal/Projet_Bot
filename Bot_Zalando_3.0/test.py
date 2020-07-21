@@ -1,6 +1,10 @@
-import _datetime
+from datetime import date
+from datetime import datetime
 
-date = datetime.datetime.now().strftime("%x")
-heure = datetime.datetime.now().strftime("%X")
+
+today = date.today()
+now = datetime.now()
+date = today.strftime("%b-%d-%Y")
+heure = now.strftime("%H:%M:%S")
 tasklist = [date, heure]
 print(tasklist)

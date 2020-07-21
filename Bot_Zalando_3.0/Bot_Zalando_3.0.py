@@ -19,14 +19,15 @@ from password_generator import PasswordGenerator
 from bs4 import BeautifulSoup
 from licensing.models import *
 from licensing.methods import Key, Helpers
-from datetime import *
+from datetime import datetime
+from datetime import date
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 5
+        self.timeout = None
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -63,6 +64,7 @@ class RechercheCommande(Thread):
 
     def run(self):
         # Récupération du Sku
+        global date, date
         while True:
             headers = {
                 "User-Agent": generate_user_agent(os=("mac", "linux"))
@@ -80,6 +82,12 @@ class RechercheCommande(Thread):
                 sku_list = reponsebis2_1['graphqlCache'][
                     '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
                     'data']['product']['simples']
+                link_photo = reponsebis2_1['graphqlCache'][
+                    '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
+                    'data']['product']['galleryThumbnails'][0]['uri']
+                name_product = reponsebis2_1['graphqlCache'][
+                    '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
+                    'data']['product']['name']
                 liste_sku = []
                 for n in range(0, len(sku_list)):
                     liste_sku.append(sku_list[n]['sku'])
@@ -676,33 +684,69 @@ class RechercheCommande(Thread):
                     reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
                     json_reponse = json.loads(reponse_checkout.text)
                     url_paypal = str(json_reponse["url"])
-                    print(url_paypal)
-
         session.close()
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+              Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                  "Successfully checked out !", "green"))
+
+        # Notification Discord WebHook
+        # Identifiants Discord Webhook
+        webhook = DiscordWebhook(
+            url='https://discordapp.com/api/webhooks/734518655043371120/5vLoCDUaInsAFhVr5MkjaVTOinMmh4GlpqCy3IipI6HgiCsbC5KNfUj86Tj5b7R5XwWT',
+            username="Scred AIO",
+            avatar_url='https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg',
+            verify=False,
+            proxies={
+                'http': 'http://%s' % random.choice(self.liste_proxys)
+            }
+        )
+        # Titre
+        embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
+        # Pied de page
+        embed.set_footer(text='SCRED AIO')
+        embed.set_timestamp()
+        # Photo du produit
+        embed.set_thumbnail(
+            url=link_photo)
+        embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+        embed.add_embed_field(name='Product', value=name_product, inline=False)
+        embed.add_embed_field(name='Size', value=self.taille_produit)
+        embed.add_embed_field(name='Mode', value='Manual')
+        embed.add_embed_field(name='Checkout Speed', value='6.33')
+        embed.add_embed_field(name='Checkout Link',
+                              value=url_paypal,
+                              incline=False)
+        webhook.add_embed(embed)
+        reponse = webhook.execute()
+
         # Insertion des tâches effectuées dans le fichier Task_History.csv
         if self.Paiement == 'Paypal':
-            date = str(datetime.datetime.now().strftime("%x"))
-            heure = str(datetime.datetime.now().strftime("%X"))
-            mode_1 = 'Paypal - %s' % url_paypal
-            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
+            today = date.today()
+            now = datetime.now()
+            date = today.strftime("%b-%d-%Y")
+            heure = now.strftime("%H:%M:%S")
+            mode_1 = 'Paypal'
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0][0]]
             with open("../Data/Tasks/Task_History.csv", "a") as f:
-                for task_1 in tasklist:
-                    f.write(task_1[0])
-                    f.write(";")
-                    f.write(task_1[1])
-                    f.write(";")
-                    f.write(task_1[2])
-                    f.write(";")
-                    f.write(task_1[3])
-                    f.write(";")
-                    f.write(task_1[4])
-                    f.write(";")
-                    f.write(task_1[5])
                 f.write('\n')
+                f.write(tasklist[0])
+                f.write(";")
+                f.write(tasklist[1])
+                f.write(";")
+                f.write(tasklist[2])
+                f.write(";")
+                f.write(tasklist[3])
+                f.write(";")
+                f.write(tasklist[4])
+                f.write(";")
+                f.write(tasklist[5])
             f.close()
+
         if self.Paiement == 'CB_Auto':
-            date = str(datetime.datetime.now().strftime("%x"))
-            heure = str(datetime.datetime.now().strftime("%X"))
+            today = date.today()
+            now = datetime.now()
+            date = today.strftime("%b-%d-%Y")
+            heure = now.strftime("%H:%M:%S")
             mode_1 = 'Credit Card - %s' % self.Liste_profile[10]
             tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
             with open("../Data/Tasks/Task_History.csv", "a") as f:
@@ -720,9 +764,12 @@ class RechercheCommande(Thread):
                     f.write(task_1[5])
                 f.write('\n')
             f.close()
+
         if self.Paiement == 'CB':
-            date = str(datetime.datetime.now().strftime("%x"))
-            heure = str(datetime.datetime.now().strftime("%X"))
+            today = date.today()
+            now = datetime.now()
+            date = today.strftime("%b-%d-%Y")
+            heure = now.strftime("%H:%M:%S")
             mode_1 = 'Manual Checkout'
             tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
             with open("../Data/Tasks/Task_History.csv", "a") as f:

@@ -1,9 +1,21 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
+import urllib3
 
 
 def ManualCheckout():
+    # Désactivation des messages d'avertissement
+    urllib3.disable_warnings()
+
     # Identifiants Discord Webhook
-    webhook = DiscordWebhook(url='https://discordapp.com/api/webhooks/734518655043371120/5vLoCDUaInsAFhVr5MkjaVTOinMmh4GlpqCy3IipI6HgiCsbC5KNfUj86Tj5b7R5XwWT', username="Scred AIO", avatar_url='https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg')
+    webhook = DiscordWebhook(
+        url='https://discordapp.com/api/webhooks/734518655043371120/5vLoCDUaInsAFhVr5MkjaVTOinMmh4GlpqCy3IipI6HgiCsbC5KNfUj86Tj5b7R5XwWT',
+        username="Scred AIO",
+        avatar_url='https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg',
+        verify=False,
+        proxies={
+            'http': 'http://ym7Y:ahpdkK@45.81.248.235:3128/'
+        }
+    )
     # Titre
     embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
     # Pied de page
