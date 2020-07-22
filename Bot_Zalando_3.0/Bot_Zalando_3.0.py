@@ -513,17 +513,31 @@ class RechercheCommande(Thread):
                 # Paiement Partie 1
                 url_pay = "https://checkout.payment.zalando.com/selection"
                 url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
-                data_cb = {
-                    "card_holder": profil[9],
-                    "pan": profil[10],
-                    "cvv": profil[13],
-                    "expiry_month": profil[11],
-                    "expiry_year": profil[12],
-                    "options": {
-                        "selected": [],
-                        "not_selected": ["store_for_reuse"],
-                    },
-                }
+                if self.Mode == 'Quick':
+                    data_cb = {
+                        "card_holder": self.List_Quick_Task[11],
+                        "pan": self.List_Quick_Task[12],
+                        "cvv": self.List_Quick_Task[15],
+                        "expiry_month": self.List_Quick_Task[13],
+                        "expiry_year": self.List_Quick_Task[14],
+                        "options": {
+                            "selected": [],
+                            "not_selected": ["store_for_reuse"],
+                        },
+                    }
+                else:
+                    data_cb = {
+                        "card_holder": profil[9],
+                        "pan": profil[10],
+                        "cvv": profil[13],
+                        "expiry_month": profil[11],
+                        "expiry_year": profil[12],
+                        "options": {
+                            "selected": [],
+                            "not_selected": ["store_for_reuse"],
+                        },
+                    }
+
                 a_2 = session.get(url_pay, verify=False, allow_redirects=False)
 
                 # Paiement par carte bancaire
@@ -550,7 +564,7 @@ class RechercheCommande(Thread):
                             % session_id_2
                     )
                     data_pay_3 = (
-                            "payz_selected_payment_method=CREDIT_CARD&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s"
+                            "payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s"
                             % reponsepaybis["id"]
                     )
                     del session.headers["Authorization"]
@@ -671,9 +685,15 @@ class RechercheCommande(Thread):
                   "Successfully checked out !", "green"))
 
         # Notification Discord WebHook
+        if self.Mode == 'Quick':
+            url_discord = self.List_Quick_Task[16]
+            creditcard = self.List_Quick_Task[12]
+        else:
+            url_discord = profil[14]
+            creditcard = profil[10]
         # Identifiants Discord Webhook
         webhook = DiscordWebhook(
-            url='https://discordapp.com/api/webhooks/734518655043371120/5vLoCDUaInsAFhVr5MkjaVTOinMmh4GlpqCy3IipI6HgiCsbC5KNfUj86Tj5b7R5XwWT',
+            url=url_discord,
             username="Scred AIO",
             avatar_url='https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg',
             verify=False,
@@ -681,23 +701,71 @@ class RechercheCommande(Thread):
                 'http': 'http://%s' % random.choice(self.liste_proxys)
             }
         )
-        # Titre
-        embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
-        # Pied de page
-        embed.set_footer(text='SCRED AIO')
-        embed.set_timestamp()
-        # Photo du produit
-        embed.set_thumbnail(
-            url=link_photo)
-        embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
-        embed.add_embed_field(name='Product', value=name_product, inline=False)
-        embed.add_embed_field(name='Size', value=self.taille_produit)
-        embed.add_embed_field(name='Mode', value='Manual')
-        embed.add_embed_field(name='Checkout Speed', value='6.33')
-        embed.add_embed_field(name='Checkout Link',
-                              value=url_paypal,
-                              incline=False)
-        webhook.add_embed(embed)
+        if self.Mode == 'Quick' or self.Paiement == 'CB_Auto':
+            # Titre
+            embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
+            # Pied de page
+            embed.set_footer(text='SCRED AIO')
+            embed.set_timestamp()
+            # Photo du produit
+            embed.set_thumbnail(
+                url=link_photo)
+            embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+            embed.add_embed_field(name='Product', value=name_product, inline=False)
+            embed.add_embed_field(name='Size', value=self.taille_produit)
+            embed.add_embed_field(name='Mode', value='Auto Checkout')
+            embed.add_embed_field(name='Checkout Speed', value='6.33')
+            embed.add_embed_field(name='Account',
+                                  value=compte[0],
+                                  incline=False)
+            embed.add_embed_field(name='Credit Card',
+                                  value=creditcard,
+                                  incline=False)
+            webhook.add_embed(embed)
+
+        if self.Paiement == 'Paypal':
+            # Titre
+            embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
+            # Pied de page
+            embed.set_footer(text='SCRED AIO')
+            embed.set_timestamp()
+            # Photo du produit
+            embed.set_thumbnail(
+                url=link_photo)
+            embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+            embed.add_embed_field(name='Product', value=name_product, inline=False)
+            embed.add_embed_field(name='Size', value=self.taille_produit)
+            embed.add_embed_field(name='Mode', value='Manual')
+            embed.add_embed_field(name='Checkout Speed', value='6.33')
+            embed.add_embed_field(name='Checkout Link',
+                                  value=url_paypal,
+                                  incline=False)
+            webhook.add_embed(embed)
+
+        if self.Paiement == 'CB':
+            # Titre
+            embed = DiscordEmbed(title='Successfully Added to cart !', color=1160473)
+            # Pied de page
+            embed.set_footer(text='SCRED AIO')
+            embed.set_timestamp()
+            # Photo du produit
+            embed.set_thumbnail(
+                url=link_photo)
+            embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+            embed.add_embed_field(name='Product', value=name_product, inline=False)
+            embed.add_embed_field(name='Size', value=self.taille_produit)
+            embed.add_embed_field(name='Mode', value='Manual')
+            embed.add_embed_field(name='Checkout Speed', value='6.33')
+            embed.add_embed_field(name='Username',
+                                  value=compte[0],
+                                  incline=False)
+            embed.add_embed_field(name='Password',
+                                  value=compte[1],
+                                  incline=False)
+            embed.add_embed_field(name='Login Link',
+                                  value='https://www.zalando.fr/welcomenoaccount/true',
+                                  incline=False)
+            webhook.add_embed(embed)
         reponse = webhook.execute()
 
         # Insertion des tâches effectuées dans le fichier Task_History.csv
@@ -707,7 +775,7 @@ class RechercheCommande(Thread):
             date = today.strftime("%b-%d-%Y")
             heure = now.strftime("%H:%M:%S")
             mode_1 = 'Paypal'
-            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0][0]]
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
             with open("../Data/Tasks/Task_History.csv", "a") as f:
                 f.write('\n')
                 f.write(tasklist[0])
@@ -728,8 +796,8 @@ class RechercheCommande(Thread):
             now = datetime.now()
             date = today.strftime("%b-%d-%Y")
             heure = now.strftime("%H:%M:%S")
-            mode_1 = 'Credit Card - %s' % self.Liste_profile[10]
-            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
+            mode_1 = 'Credit Card - %s' % creditcard
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
             with open("../Data/Tasks/Task_History.csv", "a") as f:
                 for task_1 in tasklist:
                     f.write(task_1[0])
@@ -752,7 +820,7 @@ class RechercheCommande(Thread):
             date = today.strftime("%b-%d-%Y")
             heure = now.strftime("%H:%M:%S")
             mode_1 = 'Manual Checkout'
-            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, self.Liste_compte[0]]
+            tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
             with open("../Data/Tasks/Task_History.csv", "a") as f:
                 for task_1 in tasklist:
                     f.write(task_1[0])
