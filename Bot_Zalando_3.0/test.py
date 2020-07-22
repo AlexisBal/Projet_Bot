@@ -1,10 +1,10 @@
-from datetime import date
-from datetime import datetime
+import random
 
+Liste_compte = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-today = date.today()
-now = datetime.now()
-date = today.strftime("%b-%d-%Y")
-heure = now.strftime("%H:%M:%S")
-tasklist = [date, heure]
-print(tasklist)
+# Choix au hasard d'un compte
+random.shuffle(Liste_compte)
+for Task in range(1, 5):
+    print(Task)
+    print(Liste_compte[Task])
+

@@ -27,7 +27,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 4
+        self.timeout = None
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -121,12 +121,10 @@ class RechercheCommande(Thread):
                               "Product out of stock - Waiting for restock", "yellow"))
                     time.sleep(0.2)
 
-        # Choix au hasard d'un compte
-        Liste_compte_bis = []
-        for z in range(1, len(self.Liste_compte)):
-            Liste_compte_bis.append([self.Liste_compte[z]])
-        compte_2 = random.choice(Liste_compte_bis)
-        compte = compte_2[0]
+        # Choix du compte
+        Liste_Compte = self.Liste_compte
+        Task = self.Task
+        compte = Liste_Compte[Task]
 
         # Choix au hasard d'un profil
         Liste_profil_bis = []
@@ -141,22 +139,21 @@ class RechercheCommande(Thread):
             # Réglage des paramètres de la session
             session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
 
-            # Réglage du proxy
-            session.proxies = {
-                'http': 'http://%s' % random.choice(self.liste_proxys)
-            }
-
-            # Connexion à la page d'accueil de Zalando
-            url_google = "https://www.google.com/?client=safari"
-            url_home = "https://www.zalando.fr"
-            session.get(url_google, verify=False)
-            session.headers[
-                "Accept"
-            ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-            session.headers['User-Agent'] = generate_user_agent(os=("mac", "linux"))
-            session.headers["Accept-Language"] = "fr-fr"
-            session.headers["Accept-Encoding"] = "gzip, deflate, br"
-            home_2 = session.get(url_home, verify=False)
+            while True:
+                # Réglage du proxy
+                proxy = random.choice(self.liste_proxys)
+                session.proxies = {"http": "http://%s" % proxy}
+                # Connexion à la page d'accueil de Zalando
+                url_home = "https://www.zalando.fr"
+                session.headers[
+                    "Accept"
+                ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                session.headers['User-Agent'] = generate_user_agent()
+                session.headers["Accept-Language"] = "fr-fr"
+                session.headers["Accept-Encoding"] = "gzip, deflate, br"
+                home_2 = session.get(url_home, verify=False)
+                if session.cookies != '<RequestsCookieJar[]>':
+                    break
 
             # Récupération et modification des cookies de la session
             cookies_2 = session.cookies.get_dict()
@@ -166,17 +163,12 @@ class RechercheCommande(Thread):
             session.headers["x-xsrf-token"] = cookies_2["frsx"]
             url_div = "https://www.zalando.fr/api/navigation/banners?gender=unisex&membership=non-eligible&url=https%3A%2F%2Fwww.zalando.fr%2F"
             url_div2 = "https://www.zalando.fr/api/navigation"
-            url_div3 = (
-                    "https://www.zalando.fr/api/t/js_pixel?flowId=%s&cid=%s&js=true&ga=true"
-                    % (home_2.headers["X-Flow-Id"], home_2.cookies["Zalando-Client-Id"])
-            )
             session.get(url_div, verify=False)
             session.get(url_div2, verify=False)
             session.headers[
                 "Accept"
             ] = "image/png,image/svg+xml,image/*;q=0.8,video/*;q=0.8,*/*;q=0.5"
             del session.headers["x-xsrf-token"]
-            session.get(url_div3, verify=False)
 
             # Connexion à la page de connexion
             url_connexion_1 = "https://www.zalando.fr/login/?view=login"
@@ -205,47 +197,48 @@ class RechercheCommande(Thread):
             del session.headers["Referer"]
 
             # Connexion au compte
-            url_connexion_2 = "https://www.zalando.fr/api/reef/login/schema"
-            url_connexion_3 = "https://www.zalando.fr/api/reef/login"
-            url_compte = "https://www.zalando.fr/myaccount"
-            identifiants_2 = {
-                "username": compte[0],
-                "password": compte[1],
-                "wnaMode": "shop",
-            }
-            session.headers["x-xsrf-token"] = cookies_2["frsx"]
-            session.headers["x-zalando-client-id"] = cookies_2[
-                "Zalando-Client-Id"
-            ]
-            session.headers["x-zalando-render-page-uri"] = "/login/?view=login"
-            session.headers["x-zalando-request-uri"] = "/login/?view=login"
-            session.headers["x-flow-id"] = login.headers[
-                "X-Zalando-Child-Request-Id"
-            ]
-            session.headers["Content-Type"] = "application/json"
-            session.headers["Accept"] = "application/json"
-            session.headers[
-                "Referer"
-            ] = "https://www.zalando.fr/login/?view=login"
-            session.get(url_connexion_2, verify=False)
-            session.headers["Origin"] = "https://www.zalando.fr"
-            session.headers["Content-Length"] = "76"
-            session.post(url_connexion_3, json=identifiants_2, verify=False)
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
-                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                      "Account succefully logged", "green"))
-            del session.headers["x-xsrf-token"]
-            del session.headers["x-zalando-client-id"]
-            del session.headers["x-zalando-render-page-uri"]
-            del session.headers["x-zalando-request-uri"]
-            del session.headers["x-flow-id"]
-            del session.headers["Content-Length"]
-            del session.headers["Content-Type"]
-            del session.headers["Origin"]
-            session.headers[
-                "Accept"
-            ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-            accueil = session.get(url_compte, verify=False)
+            with verrou:
+                url_connexion_2 = "https://www.zalando.fr/api/reef/login/schema"
+                url_connexion_3 = "https://www.zalando.fr/api/reef/login"
+                url_compte = "https://www.zalando.fr/myaccount"
+                identifiants_2 = {
+                    "username": compte[0],
+                    "password": compte[1],
+                    "wnaMode": "shop",
+                }
+                session.headers["x-xsrf-token"] = cookies_2["frsx"]
+                session.headers["x-zalando-client-id"] = cookies_2[
+                    "Zalando-Client-Id"
+                ]
+                session.headers["x-zalando-render-page-uri"] = "/login/?view=login"
+                session.headers["x-zalando-request-uri"] = "/login/?view=login"
+                session.headers["x-flow-id"] = login.headers[
+                    "X-Zalando-Child-Request-Id"
+                ]
+                session.headers["Content-Type"] = "application/json"
+                session.headers["Accept"] = "application/json"
+                session.headers[
+                    "Referer"
+                ] = "https://www.zalando.fr/login/?view=login"
+                session.get(url_connexion_2, verify=False)
+                session.headers["Origin"] = "https://www.zalando.fr"
+                session.headers["Content-Length"] = "76"
+                session.post(url_connexion_3, json=identifiants_2, verify=False)
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                          "Account succefully logged", "green"))
+                del session.headers["x-xsrf-token"]
+                del session.headers["x-zalando-client-id"]
+                del session.headers["x-zalando-render-page-uri"]
+                del session.headers["x-zalando-request-uri"]
+                del session.headers["x-flow-id"]
+                del session.headers["Content-Length"]
+                del session.headers["Content-Type"]
+                del session.headers["Origin"]
+                session.headers[
+                    "Accept"
+                ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                accueil = session.get(url_compte, verify=False)
 
             # Connexion à la page du produit
             session.headers[
@@ -254,15 +247,6 @@ class RechercheCommande(Thread):
             session.headers["Accept-Language"] = "fr-fr"
             session.headers["Accept-Encoding"] = "gzip, deflate, br"
             session.get(self.url_produit, verify=False)
-
-            # Envoie de requetes pour éviter les sécurités anti-bot
-            url_get_1 = (
-                    "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1"
-                    % home_2.headers["X-Flow-Id"]
-            )
-            session.headers["Accept"] = "*/*"
-            session.headers["x-xsrf-token"] = cookies_2["frsx"]
-            session.get(url_get_1, verify=False)
 
             # Mise dans le panier
             url_panier = "https://www.zalando.fr/api/pdp/cart"
@@ -284,13 +268,9 @@ class RechercheCommande(Thread):
                 bot_2_2 = "https://www.zalando.fr/resources/35692132da2028b315fc23b805e921"
                 bot_3_2 = "https://www.zalando.fr/api/cart/details"
                 bot_4_2 = "https://www.zalando.fr/resources/35692132da2028b315fc23b805e921"
-                bot_5_2 = "https://www.zalando.fr/api/rr/e"
                 url_panier_1 = "https://www.zalando.fr/cart/"
                 url_panier_2 = "https://www.zalando.fr/checkout/confirm"
                 url_panier_3 = "https://www.zalando.fr/checkout/address"
-                bot_6 = "https://www.zalando.fr/resources/35692132da2028b315fc23b805e921"
-                url_panier_4 = "https://www.zalando.fr/api/checkout/search-pickup-points-by-address"
-                url_panier_4bis = 'https://www.zalando.fr/api/checkout/validate-address'
                 data_bot2_2 = {
                     "sensor_data": "7a74G7m23Vrp0o5c9179211.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392145,8120368,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.253321588126,796889060184,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/myaccount-1,2,-94,-115,1,32,32,0,0,0,0,1,0,1593778120368,-999999,17049,0,0,2841,0,0,2,0,0,83B56B14F8791DE4459B2C8598D943FC~-1~YAAQDex7XFuSJxBzAQAAhxmUFARw88kisNpiFVwyQs7ReWEop16qPFMe+VyLWUTZrCy7SZ1/IeDafSHu/HwSxhuIH5iGZEC59iHXo+lhFihkHwcQUHKIe+IFNX9AqswJqkpjhRIqOqzEp8rzefrlVv/QZ8+TlE3agC6k7axpxToHECu4Uu+HS6sgG9SVQu/j6SkLmiQYHbLDoWkeWc//d6ukSGArsYcNEJTOilWs6UEd+JwOCeA2H1k+Ag+qYpTKXxlXW3fKPAwyTeCDng32+lX2lUbGLoZnWtK9Pj2lADYgVfMEVRSqJ23Qdb47qz8u+U4lRRJcY3kxsCio55JsKXjPn/0=~-1~-1~-1,32638,-1,-1,26018161,PiZtE,38925,90-1,2,-94,-106,0,0-1,2,-94,-119,-1-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,-1-1,2,-94,-80,94-1,2,-94,-116,219249894-1,2,-94,-118,82726-1,2,-94,-121,;3;-1;0"
                                    % session.headers["User-Agent"]
@@ -298,60 +278,6 @@ class RechercheCommande(Thread):
                 data_bot4_2 = {
                     "sensor_data": "7a74G7m23Vrp0o5c9179211.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392145,8120368,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.987229521493,796889060184,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-108,-1,2,-94,-110,0,1,5356,662,355;1,1,5357,662,355;2,1,5363,666,354;3,1,5364,666,354;4,1,5369,671,353;5,1,5370,671,353;6,1,5378,677,349;7,1,5379,677,349;8,1,5385,687,343;9,1,5386,687,343;10,1,5395,704,332;11,1,5395,704,332;12,1,5401,718,321;13,1,5402,718,321;14,1,5423,735,310;15,1,5427,762,290;16,1,5436,795,269;17,1,5442,817,256;18,1,5450,839,243;19,1,5451,839,243;20,1,5457,848,239;21,1,5458,848,239;22,1,5464,869,230;23,1,5465,869,230;24,1,5472,889,222;25,1,5472,889,222;26,1,5480,907,215;27,1,5481,907,215;28,1,5489,926,208;29,1,5489,926,208;30,1,5495,943,203;31,1,5496,943,203;32,1,5503,961,196;33,1,5504,961,196;34,1,5511,977,189;35,1,5522,992,183;36,1,5527,1008,176;37,1,5536,1022,169;38,1,5543,1033,162;39,1,5544,1033,162;40,1,5552,1045,155;41,1,5553,1045,155;42,1,5559,1056,148;43,1,5560,1056,148;44,1,5566,1066,142;45,1,5567,1066,142;46,1,5574,1074,135;47,1,5575,1074,135;48,1,5582,1083,129;49,1,5583,1083,129;50,1,5591,1090,123;51,1,5592,1090,123;52,1,5598,1098,117;53,1,5598,1098,117;54,1,5606,1104,112;55,1,5606,1104,112;56,1,5624,1111,106;57,1,5625,1117,102;58,1,5630,1123,98;59,1,5631,1123,98;60,1,5637,1126,96;61,1,5638,1126,96;62,1,5648,1130,92;63,1,5649,1130,92;64,1,5655,1135,89;65,1,5655,1135,89;66,1,5662,1140,87;67,1,5662,1140,87;68,1,5669,1143,85;69,1,5670,1143,85;70,1,5679,1146,83;71,1,5680,1146,83;72,1,5686,1149,81;73,1,5687,1149,81;74,1,5694,1151,80;75,1,5694,1151,80;76,1,5700,1154,78;77,1,5701,1154,78;78,1,5709,1157,77;79,1,5710,1157,77;80,1,5718,1159,75;81,1,5718,1159,75;82,1,5724,1162,74;83,1,5725,1162,74;84,1,5732,1164,72;85,1,5733,1164,72;86,1,5740,1167,70;87,1,5741,1167,70;88,1,5750,1169,69;89,1,5750,1169,69;90,1,5757,1171,67;91,1,5757,1171,67;92,1,5764,1174,66;93,1,5764,1174,66;94,1,5772,1176,64;95,1,5773,1176,64;96,1,5779,1179,63;97,1,5780,1179,63;98,1,5789,1181,61;99,1,5790,1181,61;205,3,6324,1256,56,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/myaccount-1,2,-94,-115,1,688232,32,0,0,0,688200,6324,0,1593778120368,110,17049,0,206,2841,1,0,6326,564474,0,83B56B14F8791DE4459B2C8598D943FC~-1~YAAQDex7XNWSJxBzAQAALCuUFARpiI+esYkf8lYdpjdLCeXpGHJ9+vnM6kEHHFvxY7T3yfNiygvtsQijxoB0yNuYl9wZotLwIwuoC9bI17FAhvUdRcyXL+l0Ge888pkyWFzJAH3M+C2Kp6Gd707Y65BbzbnblYpOVxKrIuiYQ77TdYjt9j85/zP5/tbklZ300b0M5/G4heKt5UOVncp1KtlqCNj9THUFEgo4ANkwaLOE1/K9PohfRbC90hyz7hzdxY3JGKGZuQ7uKN9p/ETblQXE3kwGtZDiPLgQ4nGGYzOT0iwZkVYPZOzRXBFruRu2U32RmNm4eOHksmzrFcYnCk212yM=~-1~-1~-1,32589,130,-829678606,26018161,PiZtE,72737,94-1,2,-94,-106,1,2-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,400,600,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,219249894-1,2,-94,-118,178607-1,2,-94,-121,;3;4;0"
                                    % session.headers["User-Agent"]
-                }
-                data_bot5_2 = {
-                    "event": "event_tracking",
-                    "eventCategory": "cart",
-                    "eventAction": "view",
-                    "eventLabel": "overlay.opened by hover",
-                    "flowId": accueil.headers["X-Zalando-Child-Request-Id"],
-                    "host": "www.zalando.fr",
-                    "pathname": "/myaccount",
-                    "referrer": "https://www.zalando.fr/login/?view=login",
-                    "accept_language": "fr-FR",
-                    "timestamp": "",
-                }
-                data_bot5bis_2 = {
-                    "event": "event_tracking",
-                    "eventCategory": "header",
-                    "eventAction": "click",
-                    "eventLabel": "cart",
-                    "flowId": accueil.headers["X-Zalando-Child-Request-Id"],
-                    "host": "www.zalando.fr",
-                    "pathname": "/myaccount",
-                    "referrer": "https://www.zalando.fr/login/?view=login",
-                    "accept_language": "fr-FR",
-                    "timestamp": "",
-                }
-                data_bot6_2 = {
-                    "sensor_data": "7a74G7m23Vrp0o5c9179231.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392147,6416884,1440,900,1440,900,1440,338,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.772422311386,796893208442,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1,32,32,0,0,0,0,818,0,1593786416884,25,17049,0,0,2841,0,0,819,0,0,6E7A8BB6ED1A8AB786D6512DC1ED4DB1~-1~YAAQNOx7XOEjEQ1zAQAA7L4SFQTDTAWYNVhRFWiIO+dsppVcEdLR8OJRi7qC9jIKE/1/yVQ8wwFceE79rVsV16vQTlhCjf6m3sJxsVFse1aLT8Yv483jeNiR/2r4xL9+9tp6dlT/UkgJ6G3LfubwSQFH5GdebR0fyceZWp6OQgmhi04d2gKJQSlBsjppZM5wME1IGtdl3qKsjsjZ2ldmGdUX4ElaslapCGdZy06b5toxd1dcPEVCdsbyhBXgjixLYPWH8h0790FxzL57Q5zQgWjavp8z48Y8xzcc8tH5gaRZNTzWZn6RRHh+tOdfwtmx23p/FogeywZifk8efVVAcZ11UMw=~-1~-1~-1,32721,333,-388728882,26018161,PiZtE,50292,83-1,2,-94,-106,9,1-1,2,-94,-119,0,200,0,0,200,0,0,200,800,2600,200,2400,2200,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,7796514045-1,2,-94,-118,82939-1,2,-94,-121,;2;4;0"
-                                   % session.headers["User-Agent"]
-                }
-                checkout_2 = {
-                    "address": {
-                        "id": compte[5],
-                        "salutation": "Mr",
-                        "first_name": compte[2],
-                        "last_name": compte[3],
-                        "zip": compte[9],
-                        "city": compte[10],
-                        "country_code": "FR",
-                        "street": compte[6] + " " + compte[7],
-                        "additional": compte[8]
-                    }
-                }
-                checkout_2_2 = {
-                    'address': {
-                        'address': {
-                            'city': profil[7],
-                            'salutation': 'Mr',
-                            'first_name': profil[0],
-                            'last_name': profil[1],
-                            'country_code': 'FR',
-                            'street': profil[3] + " " + profil[4],
-                            'zip': profil[6]
-                        }
-                    }
                 }
                 session.headers["Accept"] = "*/*"
                 session.headers["Referer"] = "https://www.zalando.fr/myaccount"
@@ -367,8 +293,6 @@ class RechercheCommande(Thread):
                 session.headers["Referer"] = "https://www.zalando.fr/myaccount"
                 session.headers["Origin"] = "https://www.zalando.fr"
                 session.post(bot_4_2, json=data_bot4_2, verify=False)
-                session.post(bot_5_2, json=data_bot5_2, verify=False)
-                session.post(bot_5_2, json=data_bot5bis_2, verify=False)
                 del session.headers["Origin"]
                 del session.headers["Content-Type"]
                 session.headers[
@@ -378,22 +302,18 @@ class RechercheCommande(Thread):
                 session.headers["Referer"] = "https://www.zalando.fr/cart"
                 session.get(url_panier_2, verify=False)
                 session.get(url_panier_3, verify=False)
-                session.headers["Accept"] = "*/*"
-                session.headers["Content-Type"] = "text/plain;charset=UTF-8"
-                session.headers["Origin"] = "https://www.zalando.fr"
-                session.headers[
-                    "Referer"
-                ] = "https://www.zalando.fr/checkout/address"
-                session.post(bot_6, json=data_bot6_2, verify=False)
 
                 if self.Mode == 'Quick':
-                    del session.headers["Content-Type"]
                     session.headers["Accept"] = "application/json"
+                    session.headers["Origin"] = "https://www.zalando.fr"
                     session.headers["x-zalando-footer-mode"] = "desktop"
                     session.headers["x-zalando-checkout-app"] = "web"
                     session.headers["x-xsrf-token"] = cookies_2["frsx"]
+                    session.headers[
+                        "Referer"
+                    ] = "https://www.zalando.fr/checkout/address"
+
                     session.headers["x-zalando-header-mode"] = "desktop"
-                    session.post(url_panier_4, json=checkout_2, verify=False)
 
                     # Adresse de livraison
                     url_checkout_1 = (
@@ -445,20 +365,22 @@ class RechercheCommande(Thread):
                     session.get(url_pay_ini, verify=False, allow_redirects=False)
 
                 else:
-                    session.headers["Content-Type"] = 'application/json'
-                    session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
-                    session.headers["Accept"] = "application/json"
-                    session.headers["x-zalando-footer-mode"] = "desktop"
-                    session.headers["x-zalando-checkout-app"] = "web"
-                    session.headers["x-xsrf-token"] = cookies_2["frsx"]
-                    session.headers["x-zalando-header-mode"] = "desktop"
-                    session.headers["Origin"] = "https://www.zalando.fr"
-                    session.post(url_panier_4bis, json=checkout_2_2, verify=False)
-
-                    # Adresse de livraison
-                    url_checkout_1 = (
-                        "https://www.zalando.fr/api/checkout/create-or-update-address"
-                    )
+                    # Addresse de livraison
+                    url_adresse = 'https://www.zalando.fr/api/checkout/validate-address'
+                    url_panier_4 = 'https://www.zalando.fr/api/checkout/create-or-update-address'
+                    checkout_2_2 = {
+                        'address': {
+                            'address': {
+                                'city': profil[7],
+                                'salutation': 'Mr',
+                                'first_name': profil[0],
+                                'last_name': profil[1],
+                                'country_code': 'FR',
+                                'street': profil[3] + " " + profil[4],
+                                'zip': profil[6]
+                            }
+                        }
+                    }
                     data_panier4 = {
                         'address': {
                             'city': profil[7],
@@ -493,32 +415,48 @@ class RechercheCommande(Thread):
                             'status': 'https://docs.riskmgmt.zalan.do/address/correct',
                             'blacklisted': 'false'
                         },
-                        'isDefaultShipping': 'true'
+                        'isDefaultShipping': 'true',
+                        'isDefaultBilling': 'true'
+
                     }
-                    url_bot_1_2 = "https://www.zalando.fr/resources/ef7c5d53c5rn2028b315fc23b805e921"
-                    url_checkout_2_2 = "https://www.zalando.fr/api/checkout/next-step"
-                    bot = {
-                        "sensor_data": "7a74G7m23Vrp0o5c9171191.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392312,6415437,1440,900,1440,900,1440,862,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.988027485494,797228207718.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,-1,2,-94,-102,0,-1,0,0,-1,-1,1;-1,2,-94,-108,0,1,18586,-2,0,0,-1;1,3,18591,-2,0,0,-1;2,2,18729,-2,0,0,-1;3,1,18959,-2,0,0,-1;4,3,18960,-2,0,0,-1;5,2,19023,-2,0,0,-1;6,1,19050,-2,0,0,-1;7,3,19050,-2,0,0,-1;8,2,19169,-2,0,0,-1;9,1,19277,-2,0,0,-1;10,3,19278,-2,0,0,-1;11,2,19391,-2,0,0,-1;12,1,19403,-2,0,0,-1;13,3,19404,-2,0,0,-1;14,2,19471,-2,0,0,-1;15,1,19504,-2,0,0,-1;16,3,19504,-2,0,0,-1;17,2,19618,-2,0,0,-1;18,1,21080,-2,0,0,3665;19,3,21081,-2,0,0,3665;20,2,21191,-2,0,0,3665;21,1,21266,-2,0,0,3665;22,3,21266,-2,0,0,3665;23,2,21327,-2,0,0,3665;24,1,21333,-2,0,0,3665;25,3,21334,-2,0,0,3665;26,2,21429,-2,0,0,3665;27,1,21553,-2,0,0,3665;28,3,21553,-2,0,0,3665;29,2,21625,-2,0,0,3665;30,1,21646,-2,0,0,3665;31,3,21646,-2,0,0,3665;32,2,21743,-2,0,0,3665;33,1,21743,-2,0,0,3665;34,3,21744,-2,0,0,3665;35,2,21811,-2,0,0,3665;36,1,24907,16,0,8,3549;37,1,25452,-2,0,8,3549;38,3,25453,-2,0,8,3549;39,2,25517,-2,0,8,3549;40,2,25569,16,0,0,3549;41,1,25659,-2,0,0,3549;42,3,25660,-2,0,0,3549;43,2,25698,-2,0,0,3549;44,1,25734,-2,0,0,3549;45,3,25735,-2,0,0,3549;46,2,25802,-2,0,0,3549;47,1,26110,8,0,0,3549;48,2,26190,8,0,0,3549;49,1,26251,8,0,0,3549;50,2,26340,8,0,0,3549;51,1,26910,-2,0,0,3549;52,3,26910,-2,0,0,3549;53,2,27017,-2,0,0,3549;54,1,27066,-2,0,0,3549;55,3,27067,-2,0,0,3549;56,1,27129,-2,0,0,3549;57,3,27130,-2,0,0,3549;58,2,27158,-2,0,0,3549;59,2,27202,-2,0,0,3549;60,1,27352,-2,0,0,3549;61,3,27352,-2,0,0,3549;62,2,27416,-2,0,0,3549;63,1,27441,-2,0,0,3549;64,3,27441,-2,0,0,3549;65,2,27514,-2,0,0,3549;66,1,27755,-2,0,0,3549;67,3,27756,-2,0,0,3549;68,2,27893,-2,0,0,3549;69,1,29444,16,0,8,1450;70,1,29769,-2,0,8,1450;71,3,29769,-2,0,8,1450;72,2,29821,-2,0,8,1450;73,2,29979,16,0,0,1450;74,1,30046,-2,0,0,1450;75,3,30046,-2,0,0,1450;76,2,30096,-2,0,0,1450;77,1,30207,-2,0,0,1450;78,3,30207,-2,0,0,1450;79,2,30310,-2,0,0,1450;80,1,30367,-2,0,0,1450;81,3,30367,-2,0,0,1450;82,2,30421,-2,0,0,1450;83,1,30476,-2,0,0,1450;84,3,30477,-2,0,0,1450;85,2,30585,-2,0,0,1450;86,1,30599,-2,0,0,1450;87,3,30599,-2,0,0,1450;88,2,30642,-2,0,0,1450;89,1,30716,-2,0,0,1450;90,3,30716,-2,0,0,1450;91,2,30817,-2,0,0,1450;92,1,30834,-2,0,0,1450;93,3,30834,-2,0,0,1450;94,2,30885,-2,0,0,1450;95,1,31017,-2,0,0,1450;96,3,31018,-2,0,0,1450;97,2,31073,-2,0,0,1450;98,1,31328,-2,0,0,1450;99,3,31329,-2,0,0,1450;100,2,31418,-2,0,0,1450;101,1,31427,-2,0,0,1450;102,3,31427,-2,0,0,1450;103,2,31498,-2,0,0,1450;104,1,31566,-2,0,0,1450;105,3,31566,-2,0,0,1450;106,2,31632,-2,0,0,1450;107,1,31651,-2,0,0,1450;108,3,31652,-2,0,0,1450;109,2,31713,-2,0,0,1450;110,1,31842,-2,0,0,1450;111,3,31842,-2,0,0,1450;112,2,31910,-2,0,0,1450;113,1,32567,-2,0,0,1450;114,3,32568,-2,0,0,1450;115,1,32704,-2,0,0,1450;116,3,32704,-2,0,0,1450;117,2,32733,-2,0,0,1450;118,2,32752,-2,0,0,1450;119,1,32861,-2,0,0,1450;120,3,32861,-2,0,0,1450;121,2,32953,-2,0,0,1450;122,1,33106,-2,0,0,1450;123,3,33108,-2,0,0,1450;124,2,33165,-2,0,0,1450;125,1,33215,-2,0,0,1450;126,3,33215,-2,0,0,1450;127,2,33306,-2,0,0,1450;128,1,33411,-2,0,0,1450;129,3,33411,-2,0,0,1450;130,2,33523,-2,0,0,1450;131,1,33548,-2,0,0,1450;132,3,33548,-2,0,0,1450;133,2,33604,-2,0,0,1450;134,1,33693,-2,0,0,1450;135,3,33693,-2,0,0,1450;136,1,33720,-2,0,0,1450;137,3,33721,-2,0,0,1450;138,2,33745,-2,0,0,1450;139,2,33849,-2,0,0,1450;140,1,34229,8,0,0,1450;141,2,34316,8,0,0,1450;142,1,34402,8,0,0,1450;143,2,34480,8,0,0,1450;144,1,34542,-2,0,0,1450;145,3,34543,-2,0,0,1450;146,2,34656,-2,0,0,1450;147,1,34724,-2,0,0,1450;148,3,34725,-2,0,0,1450;149,2,34827,-2,0,0,1450;-1,2,-94,-110,0,1,489,512,88;1,1,514,507,107;2,1,531,480,120;3,1,579,437,133;4,1,590,301,161;5,1,615,291,163;6,1,726,231,174;7,1,2167,20,206;8,1,2287,20,206;9,1,2290,20,205;10,1,2299,18,204;11,1,2322,16,202;12,1,2325,15,202;13,1,2333,15,201;14,1,2342,14,201;15,1,2350,14,201;16,1,2357,14,201;17,1,2373,14,201;18,1,2383,13,201;19,1,2505,14,201;20,1,2511,19,203;21,1,2519,24,205;22,1,2528,33,208;23,1,2536,53,215;24,1,2543,72,219;25,1,2550,92,225;26,1,2558,117,233;27,1,2567,146,240;28,1,2577,177,248;29,1,2584,209,257;30,1,2592,241,268;31,1,2599,269,276;32,1,2608,282,280;33,1,2616,307,288;34,1,2624,330,295;35,1,2632,337,298;36,1,2641,349,302;37,1,2649,360,306;38,1,2657,365,309;39,1,2664,370,311;40,1,2673,372,312;41,1,2681,373,313;42,1,2689,374,313;43,1,2696,374,314;44,1,2704,375,314;45,1,2711,375,315;46,1,2719,375,316;47,1,2728,375,317;48,1,2736,375,318;49,1,2744,375,320;50,1,2751,375,322;51,1,2760,375,323;52,1,2770,375,326;53,1,2777,374,329;54,1,2786,373,331;55,1,2794,372,334;56,1,2803,371,337;57,1,2811,370,340;58,1,2817,369,344;59,1,2826,368,348;60,1,2836,367,352;61,1,2843,365,359;62,1,2851,365,361;63,1,2859,363,370;64,1,2868,362,376;65,1,2874,362,379;66,1,2881,361,384;67,1,2889,360,390;68,1,2897,359,394;69,1,2906,359,398;70,1,2914,359,402;71,1,2922,359,404;72,1,2930,359,406;73,1,2939,359,407;74,1,2946,359,409;75,1,2954,359,410;76,1,2962,359,410;77,1,2970,359,411;78,1,2978,359,411;79,1,2986,359,411;80,1,2994,359,411;81,1,3003,359,412;82,1,3037,359,411;83,1,3043,358,408;84,1,3053,356,401;85,1,3060,353,393;86,1,3068,349,373;87,1,3077,345,353;88,1,3084,342,328;89,1,3092,341,315;90,1,3103,337,290;91,1,3109,337,270;92,1,3117,337,251;93,1,3125,337,245;94,1,3134,337,232;95,1,3141,337,222;96,1,3149,337,215;97,1,3158,337,210;98,1,3167,337,207;99,1,3176,337,206;188,3,4600,705,178,-1;189,4,4778,705,178,-1;190,2,4779,705,178,-1;926,3,10997,1024,595,-1;927,4,11136,1024,595,-1;928,2,11136,1024,595,-1;1183,3,13350,695,184,-1;1185,4,13477,695,184,-1;1186,2,13478,695,184,-1;1425,3,15371,544,609,-1;1426,4,15376,544,609,-1;1427,2,15376,544,609,-1;1581,3,16190,614,729,3665;1582,4,16318,614,729,3665;1583,2,16318,614,729,3665;1649,3,17348,576,633,3111;1650,4,17463,576,633,3111;1651,2,17463,576,633,3111;1763,3,20233,596,734,3665;1764,4,20343,596,734,3665;1765,2,20344,596,734,3665;1770,3,20610,596,733,3665;1788,4,20868,287,733,-1;1892,3,23109,641,797,3549;2008,4,24826,661,819,3549;2009,2,24826,661,819,3549;2106,3,28468,786,886,1450;2107,4,28586,786,886,1450;2243,3,36040,687,1076,1115;2244,4,36137,687,1076,1115;2329,3,40420,784,1167,1373;2330,4,40551,784,1167,1373;2569,3,45692,816,1268,-1;2570,4,45823,816,1268,-1;2571,2,45823,816,1268,-1;3104,3,116827,706,169,-1;3105,4,116940,706,169,-1;3106,2,116940,706,169,-1;3590,3,121105,481,733,-1;3591,4,121187,481,733,-1;3592,2,121187,481,733,-1;3727,3,122784,621,785,-1;3728,4,122895,621,785,-1;3729,2,122896,621,785,-1;3797,3,123535,604,885,-1;3798,4,123605,604,885,-1;3799,2,123605,604,885,-1;3842,3,123956,576,859,3665;3861,4,124433,323,859,-1;3998,3,127292,765,954,3549;3999,4,127501,765,954,3549;4000,2,127502,765,954,3549;4031,3,128147,716,948,3549;4055,4,128561,134,945,-1;4209,3,132170,558,1034,1450;4210,4,132289,558,1034,1450;4302,3,137956,592,1215,1115;4303,4,138041,592,1215,1115;4365,3,140936,806,1277,-1;4367,4,141074,806,1277,-1;4368,2,141074,806,1277,-1;4460,3,143312,654,1307,1373;4461,4,143402,654,1307,1373;4600,3,148144,857,1379,0;4601,4,148255,857,1379,0;4602,2,148255,857,1379,0;4777,3,152810,875,330,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,2,1666;3,4614;0,50426;2,51057;1,114695;3,115274;-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,4519495,5554849,32,0,0,0,10074311,152810,0,1594456415437,18,17057,408,4778,2842,51,0,152811,9415062,0,A561EB43F0157134A279AD837D6863E4~-1~YAAQPux7XO3ucipzAQAAy2YEPQQtKNPBdtFtKQRinvjGRYmnk4lU7QDuxSG22/MKfOV77nzzt/TI6O4SPz9e0a4qWbz72HaZ9KHjSVNseoDGbHT3zGgX35MEuHVkJakIbSeEsW5PqOXTCh7UQpbJ7HvlOENdwjrZS58EArclcYe8ts0fn9PkC1GlqbvCujeP/gFKZXqLVwqLCx1Eb+leB5nCjpTX0xaZBztxSQ6V5MlTVtu3QWS/bjkQveWYkEvpjAj7KNPxntAGG3tNMFNSmAmNm5YUB1rEX8tspaglBMk19yRGvIviOxgU4YZzWq7G7unY+xnNObWyO8m4DTwydz/0cLQ=~-1~-1~-1,32985,74,-428370137,26018161,PiZtE,78637,43-1,2,-94,-106,1,27-1,2,-94,-119,200,0,0,0,0,0,0,0,0,0,0,200,200,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,96231399-1,2,-94,-118,432902-1,2,-94,-121,;2;3;0" %
-                                       session.headers["User-Agent"]
-                    }
-                    session.post(url_checkout_1, json=data_panier4, verify=False)
+                    session.headers["Content-Type"] = 'application/json'
+                    session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
+                    session.headers["Accept"] = "application/json"
+                    session.headers["x-zalando-footer-mode"] = "desktop"
+                    session.headers["x-zalando-checkout-app"] = "web"
+                    session.headers["x-xsrf-token"] = cookies_2["frsx"]
+                    session.headers["x-zalando-header-mode"] = "desktop"
+                    session.headers["Origin"] = "https://www.zalando.fr"
+                    session.post(url_adresse, json=checkout_2_2, verify=False)
+                    session.post(url_panier_4, json=data_panier4, verify=False)
+
+                    # Numero de telephone
+                    url_phone = 'https://www.zalando.fr/api/checkout/save-customer-phone-number'
+                    data_phone = {"phoneNumber": profil[2]}
+                    session.post(url_phone, json=data_phone, verify=False)
                     del session.headers["x-xsrf-token"]
                     del session.headers["x-zalando-header-mode"]
                     del session.headers["x-zalando-checkout-app"]
                     del session.headers["x-zalando-footer-mode"]
+
+                    # Next Step
+                    url_bot_1_2 = 'https://www.zalando.fr/resources/7be100d4c6rn2028b315fc23b805e921'
+                    url_checkout_2_2 = 'https://www.zalando.fr/api/checkout/next-step'
+                    bot = {
+                        'sensor_data': '7a74G7m23Vrp0o5c9183811.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392552,3616660,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.15037313375,797716808330,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3665,1;0,-1,0,0,-1,3549,1;0,-1,0,0,1450,1450,0;0,-1,0,0,-1,4421,0;0,-1,0,0,1115,1115,0;0,-1,0,0,1373,1373,0;-1,2,-94,-102,0,-1,0,0,-1,-1,1;-1,2,-94,-108,0,1,1806,16,0,8,1450;1,1,2126,-2,0,8,1450;2,3,2126,-2,0,8,1450;3,2,2190,-2,0,8,1450;4,2,2291,16,0,0,1450;5,1,2310,-2,0,0,1450;6,3,2310,-2,0,0,1450;7,2,2385,-2,0,0,1450;8,1,2459,-2,0,0,1450;9,3,2459,-2,0,0,1450;10,2,2610,-2,0,0,1450;11,1,2614,-2,0,0,1450;12,3,2615,-2,0,0,1450;13,2,2700,-2,0,0,1450;14,1,2761,-2,0,0,1450;15,3,2762,-2,0,0,1450;16,2,2842,-2,0,0,1450;17,1,2843,-2,0,0,1450;18,3,2843,-2,0,0,1450;19,2,2919,-2,0,0,1450;20,1,3079,-2,0,0,1450;21,3,3079,-2,0,0,1450;22,2,3186,-2,0,0,1450;23,1,3239,-2,0,0,1450;24,3,3240,-2,0,0,1450;25,2,3301,-2,0,0,1450;26,1,3386,-2,0,0,1450;27,3,3387,-2,0,0,1450;28,2,3474,-2,0,0,1450;29,1,3603,-2,0,0,1450;30,3,3603,-2,0,0,1450;31,2,3678,-2,0,0,1450;32,1,3724,-2,0,0,1450;33,3,3724,-2,0,0,1450;34,2,3803,-2,0,0,1450;35,1,3866,-2,0,0,1450;36,3,3867,-2,0,0,1450;37,2,3905,-2,0,0,1450;38,1,3980,-2,0,0,1450;39,3,3981,-2,0,0,1450;40,2,4072,-2,0,0,1450;41,1,4244,-2,0,0,1450;42,3,4256,-2,0,0,1450;43,2,4359,-2,0,0,1450;44,1,4495,-2,0,0,1450;45,3,4495,-2,0,0,1450;46,1,4590,-2,0,0,1450;47,3,4590,-2,0,0,1450;48,2,4619,-2,0,0,1450;49,2,4677,-2,0,0,1450;50,1,5247,-2,0,0,1450;51,3,5248,-2,0,0,1450;52,2,5324,-2,0,0,1450;53,1,5486,-2,0,0,1450;54,3,5487,-2,0,0,1450;55,2,5570,-2,0,0,1450;56,1,5578,-2,0,0,1450;57,3,5579,-2,0,0,1450;58,2,5666,-2,0,0,1450;59,1,5760,-2,0,0,1450;60,3,5761,-2,0,0,1450;61,2,5845,-2,0,0,1450;62,1,5854,-2,0,0,1450;63,3,5854,-2,0,0,1450;64,2,5937,-2,0,0,1450;65,1,5956,-2,0,0,1450;66,3,5956,-2,0,0,1450;67,2,6068,-2,0,0,1450;68,1,6142,-2,0,0,1450;69,3,6143,-2,0,0,1450;70,2,6237,-2,0,0,1450;71,1,6347,-2,0,0,1450;72,3,6347,-2,0,0,1450;73,2,6451,-2,0,0,1450;74,1,7755,16,0,8,1115;75,1,8313,-2,0,8,1115;76,3,8313,-2,0,8,1115;77,2,8383,-2,0,8,1115;78,1,8461,-2,0,8,1115;79,3,8461,-2,0,8,1115;80,2,8524,-2,0,8,1115;81,1,8657,-2,0,8,1115;82,3,8657,-2,0,8,1115;83,2,8748,-2,0,8,1115;84,1,8829,-2,0,8,1115;85,3,8829,-2,0,8,1115;86,2,8931,-2,0,8,1115;87,2,9159,16,0,0,1115;88,1,10539,16,0,8,1115;89,1,10894,-2,0,8,1115;90,3,10895,-2,0,8,1115;91,2,10951,-2,0,8,1115;92,1,11329,8,0,8,1115;93,2,11426,8,0,8,1115;94,1,11857,-2,0,8,1115;95,3,11857,-2,0,8,1115;96,2,11901,-2,0,8,1115;97,2,12135,16,0,0,1115;98,1,14077,16,0,8,1373;99,1,14599,-2,0,8,1373;100,3,14600,-2,0,8,1373;101,2,14674,-2,0,8,1373;102,2,14736,16,0,0,1373;103,1,14777,-2,0,0,1373;104,3,14778,-2,0,0,1373;105,1,14874,-2,0,0,1373;106,3,14875,-2,0,0,1373;107,2,14904,-2,0,0,1373;108,2,14933,-2,0,0,1373;109,1,15046,-2,0,0,1373;110,3,15046,-2,0,0,1373;111,2,15117,-2,0,0,1373;112,1,15207,-2,0,0,1373;113,3,15207,-2,0,0,1373;114,2,15264,-2,0,0,1373;115,1,15398,-2,0,0,1373;116,3,15398,-2,0,0,1373;117,2,15461,-2,0,0,1373;118,1,15822,8,0,0,1373;119,2,15905,8,0,0,1373;120,1,15974,8,0,0,1373;121,2,16053,8,0,0,1373;122,1,16366,-2,0,0,1373;123,3,16366,-2,0,0,1373;124,2,16441,-2,0,0,1373;125,1,16482,-2,0,0,1373;126,3,16482,-2,0,0,1373;127,2,16580,-2,0,0,1373;128,1,16592,-2,0,0,1373;129,3,16593,-2,0,0,1373;130,2,16667,-2,0,0,1373;131,1,16753,-2,0,0,1373;132,3,16753,-2,0,0,1373;133,2,16980,-2,0,0,1373;134,1,17063,-2,0,0,1373;135,3,17063,-2,0,0,1373;136,2,17126,-2,0,0,1373;137,1,17191,-2,0,0,1373;138,3,17192,-2,0,0,1373;139,2,17294,-2,0,0,1373;140,1,17301,-2,0,0,1373;141,3,17301,-2,0,0,1373;142,2,17371,-2,0,0,1373;143,1,36470,16,0,8,-1;144,1,36934,-2,0,8,-1;145,3,36935,-2,0,8,-1;146,2,36999,-2,0,8,-1;147,1,37254,-2,0,8,-1;148,3,37255,-2,0,8,-1;149,2,37301,-2,0,8,-1;-1,2,-94,-110,0,1,642,1025,416;1,1,682,1025,416;2,1,683,954,446;3,1,723,941,451;4,1,762,832,458;5,1,919,798,456;6,1,963,698,465;7,1,1314,677,467;8,1,1325,627,608;9,1,1326,627,608;10,1,1419,626,608;11,1,1424,626,608;12,1,1426,626,608;13,1,1537,626,609;14,1,1541,626,609;15,3,1621,626,609,1450;16,1,1729,626,609;17,4,1744,626,609,1450;18,1,1802,626,609;19,1,2291,626,609;20,1,7044,625,787;21,1,7045,625,787;22,1,7049,622,787;23,1,7050,622,787;24,1,7056,619,788;25,1,7057,619,788;26,1,7068,616,789;27,1,7070,616,789;28,1,7073,612,791;29,1,7074,612,791;30,1,7084,608,792;31,1,7085,608,792;32,1,7089,605,794;33,1,7090,605,794;34,1,7096,598,796;35,1,7097,598,796;36,1,7105,593,799;37,1,7107,593,799;38,1,7117,589,800;39,1,7118,589,800;40,1,7121,585,802;41,1,7121,585,802;42,1,7129,581,804;43,1,7130,581,804;44,1,7137,578,806;45,1,7137,578,806;46,1,7145,574,809;47,1,7146,574,809;48,1,7153,570,814;49,1,7153,570,814;50,1,7163,569,815;51,1,7164,569,815;52,1,7169,568,818;53,1,7170,568,818;54,1,7179,567,821;55,1,7180,567,821;56,1,7185,566,823;57,1,7186,566,823;58,1,7193,565,824;59,1,7194,565,824;60,1,7202,565,825;61,1,7203,565,825;62,1,7211,565,825;63,1,7212,565,825;64,1,7218,565,825;65,1,7219,565,825;66,1,7236,564,825;67,1,7237,564,825;68,1,7244,564,825;69,1,7245,564,825;70,1,7277,564,825;71,1,7278,564,825;72,1,7372,564,825;73,1,7372,564,825;74,1,7380,564,824;75,1,7381,564,824;76,1,7387,564,821;77,1,7388,564,821;78,1,7395,563,820;79,1,7395,563,820;80,1,7404,563,818;81,1,7405,563,818;82,1,7412,563,816;83,1,7413,563,816;84,1,7419,562,815;85,1,7420,562,815;86,1,7428,562,814;87,1,7428,562,814;88,1,7436,562,813;89,1,7437,562,813;90,1,7445,562,813;91,1,7445,562,813;92,1,7452,562,812;93,1,7452,562,812;94,1,7460,562,812;95,1,7461,562,812;96,1,7470,562,811;97,1,7471,562,811;98,1,7479,562,811;99,1,7479,562,811;100,1,7494,562,811;101,1,7496,562,811;108,3,7534,562,810,1115;110,4,7652,562,810,1115;113,3,9303,562,810,1115;121,4,9401,535,810,1115;122,2,9401,535,810,1115;246,3,10257,419,801,1115;247,4,10353,419,801,1115;248,2,10353,419,801,1115;297,3,12864,477,869,1373;298,4,12929,477,869,1373;327,3,13449,548,873,1373;328,4,13603,548,873,1373;329,2,13603,548,873,1373;330,3,14010,548,873,1373;331,4,14017,548,873,1373;332,2,14017,548,873,1373;401,3,20535,667,967,0;402,4,20637,667,967,0;403,2,20637,667,967,0;519,4,29259,1255,368,-1;717,3,35782,402,426,-1;718,4,35927,402,426,-1;719,2,35928,402,426,-1;745,3,36249,404,432,-1;747,4,36367,404,432,-1;748,2,36367,404,432,-1;967,3,42305,965,260,0;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,2,13301;3,13451;0,18122;2,18347;1,19575;3,20125;2,28594;3,29163;-1,2,-94,-112,https://www.zalando.fr/checkout/address-1,2,-94,-115,1722474,1342876,32,0,0,0,3065317,42305,0,1595433616660,15,17067,175,968,2844,22,0,42307,2667949,0,79F5DDBDB01E6F260FCA83916C07C04B~-1~YAAQfsYcuGA7DVpzAQAAO5NBdwQZdVRg2FjI0qcV0Q/xMJwbpUuafeY/lRPefForqQ10jpdeTcgwi94B/qkWKOBLvWzAGnjWvsz12FE6xZEAH0r04gZtQonI89mfSm33K+mW7Qp1py92Oa6g5Z29clnlcE7G+jLEGK1l9hMhk/0MAGI9Ipe8UH3GzMc+w+mobrYZ9NibnDYcH5QIXj4bfjotDm/iAejYv5c+jcFR5NaQu9o92OMLGkWsZhO2CNXdBSaAv3jSwhr9RXFjxUPOvEUuDS/k9EsGzKsrn2W74rnBrNHCgGaJvhPbpGq53/J2oRlC7bAmfzbOnmnvIJv9jynpwiY=~-1~-1~-1,32617,6,-1634669391,26018161,PiZtE,25060,78-1,2,-94,-106,1,12-1,2,-94,-119,200,0,0,0,0,0,0,0,0,0,0,200,400,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,10849923-1,2,-94,-118,385921-1,2,-94,-121,;2;2;0' % session.headers['User-Agent']
+                    }
                     session.headers["Referer"] = 'https://www.zalando.fr/checkout/address'
                     session.headers["Origin"] = 'https://www.zalando.fr'
                     session.headers["Content-Type"] = 'text/plain;charset=UTF-8'
                     session.headers["Accept"] = "*/*"
                     session.post(url_bot_1_2, json=bot, verify=False)
                     session.headers["Accept"] = "application/json"
+                    session.headers["Content-Type"] = "application/json"
                     session.headers["x-zalando-footer-mode"] = "desktop"
                     session.headers["x-zalando-checkout-app"] = "web"
                     session.headers["x-xsrf-token"] = cookies_2["frsx"]
                     session.headers["x-zalando-header-mode"] = "desktop"
-                    reponse_livraison = session.get(url_checkout_2_2, verify=False)
-                    pay_ini = json.loads(reponse_livraison.text)
-                    url_pay_ini = str(pay_ini["url"])
+                    session.get(url_checkout_2_2, verify=False)
                     del session.headers["x-zalando-footer-mode"]
                     del session.headers["x-zalando-checkout-app"]
                     del session.headers["x-xsrf-token"]
@@ -527,7 +465,6 @@ class RechercheCommande(Thread):
                         "Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                     session.headers["Host"] = "checkout.payment.zalando.com"
                     session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
-                    session.get(url_pay_ini, verify=False, allow_redirects=False)
 
                 # Paiement Partie 1
                 url_pay = "https://checkout.payment.zalando.com/selection"
@@ -829,6 +766,7 @@ def latence(start):
 RSAPubKey = "<RSAKeyValue><Modulus>zGKjhD1u4eZQg+U2oZgX8inZ1SLvb83jD+oKD20GplwpYcqquQZMAPokGXTs8FMD5X2sc6FtiNKg/wcapvkuyS9KRTauaoQib/B2SW7e9b4zkfpg3hJHW8zm9CZ3F2xbH5E8aXOlm0Knu9lOxjE+e7IogTQGk5RvyO4TO6QRO71bc9dW9h44KWdzku6lcF1VBHM646E6F10ziq7beGhmyLt/dbz88Yt9VP5CKBRH+/QDafbV+KD86WFTQ69p/j+k/h1QF2LYY2tVOhz9TL0iF9zpb8e4mR/vL1RGU3T3ztS21AwGwyCI2j1xc8KvWsUWnPgfDsIr4SRi6EH0d5joxQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
 auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ=="
 
+
 # -------------------------------------------------------------------------------------------------------------------------------------#
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
@@ -976,7 +914,7 @@ def VerificationProxys():
 
 
 # Création des comptes à partir des informations saisies dans AccountGenerator.csv
-def CreationComptes(Liste_comptegenerator, liste_proxys):
+def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
     # Comptage du nombre de comptes présents dans la base de données
     nombrecompte = len(Liste_comptegenerator)
 
@@ -990,14 +928,21 @@ def CreationComptes(Liste_comptegenerator, liste_proxys):
                 {"User-Agent": generate_user_agent(os=("mac", "linux"))}
             )
 
-            proxy = random.choice(liste_proxys)
-
-            # Réglage du proxy
-            session.proxies = {"http": "http://%s" % proxy}
-
-            # Connexion à la page d'accueil de Zalando
-            url_home = "https://www.zalando.fr"
-            home = session.get(url_home, verify=False)
+            while True:
+                # Réglage du proxy
+                proxy = random.choice(liste_proxys)
+                session.proxies = {"http": "http://%s" % proxy}
+                # Connexion à la page d'accueil de Zalando
+                url_home = "https://www.zalando.fr"
+                session.headers[
+                    "Accept"
+                ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                session.headers['User-Agent'] = generate_user_agent()
+                session.headers["Accept-Language"] = "fr-fr"
+                session.headers["Accept-Encoding"] = "gzip, deflate, br"
+                home = session.get(url_home, verify=False)
+                if session.cookies != '<RequestsCookieJar[]>':
+                    break
 
             # Récupération des cookies de la session
             cookies = session.cookies.get_dict()
@@ -1054,221 +999,39 @@ def CreationComptes(Liste_comptegenerator, liste_proxys):
             }
             session.get(url_get2, verify=False)
             session.headers["Origin"] = "https://www.zalando.fr"
-            session.post(url_post2, json=register, verify=False)
+            inscription = session.post(url_post2, json=register, verify=False)
 
             # Message de confirmation pour chaque compte créé
-            print(
-                "Le compte de", Liste_comptegenerator[compte][0], "a bien été créé !"
-            )
+            if inscription.status_code == 201:
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                      Style.RESET_ALL + colored(
+                          "Account of %s was successfully created !", "green") % Liste_comptegenerator[compte][0])
 
         # Fermeture de la session
         session.close()
 
-
-def Configuration(Liste_comptegenerator, liste_proxys, list):
-    # Comptage du nombre de compte présents dans la base de données
-    nombrecompte = len(Liste_comptegenerator)
-
-    # Création d'un compte pour chaque objet "Compte" présent dans la base de données
-    for compte in range(1, nombrecompte):
-        with requests.Session() as session:
-            # Réglage des paramètres de la session
-            session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
-            headers = {
-                "Host": "www.zalando.fr",
-                "User-Agent": generate_user_agent(os=("mac", "linux")),
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                "Accept-Language": "fr-fr",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive",
-                "Upgrade-Insecure-Requests": "1",
-            }
-            session.headers.update(headers)
-
-            # Réglage du proxy
-            proxy = random.choice(liste_proxys)
-            session.proxies = {"http": "http://%s" % proxy}
-
-            # Connexion à la page d'accueil de Zalando
-            url_home = "https://www.zalando.fr"
-            home = session.get(url_home, verify=False)
-
-            # Récupération des cookies de la session
-            cookies = session.cookies.get_dict()
-
-            # Connexion à la page de connexion
-            url_get = "https://www.zalando.fr/login/?view=login"
-            del session.headers["Upgrade-Insecure-Requests"]
-            session.get(url_get, verify=False)
-
-            # Envoie de requetes pour éviter les sécurités anti-bot
-            url_get_1 = (
-                    "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=1"
-                    % home.headers["X-Flow-Id"]
-            )
-            session.get(url_get_1, verify=False)
-
-            # Envoie de requetes pour éviter les sécurités anti-bot
-            url_get_2 = (
-                    "https://www.zalando.fr/api/rr/pr/sajax?flowId=%s&try=3"
-                    % home.headers["X-Flow-Id"]
-            )
-            session.headers["x-xsrf-token"] = cookies["frsx"]
-            session.get(url_get_2, verify=False)
-
-            # Envoie de requetes pour éviter les sécurités anti-bot
-            url_post1 = "https://www.zalando.fr/resources/1f2f569be9201d42d0a3ba96882c7b"
-            sensor_data = {
-                "sensor_data": "7a74G7m23Vrp0o5c9175981.59-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,391850,1658105,1440,814,1440,900,1440,862,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.294628793147,796290829052.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1103,1103,0;1,-1,0,0,1466,1466,0;-1,2,-94,-102,0,-1,0,0,1103,1103,0;1,-1,0,0,1466,1466,0;-1,2,-94,-108,-1,2,-94,-110,0,1,617,939,3;1,1,622,939,3;2,1,624,946,6;3,1,633,955,10;4,1,635,955,10;5,1,639,965,15;6,1,639,965,15;7,1,647,976,19;8,1,648,976,19;9,1,657,991,24;10,1,657,991,24;11,1,663,1008,28;12,1,665,1008,28;13,1,672,1025,33;14,1,674,1025,33;15,1,679,1056,40;16,1,680,1056,40;17,1,688,1076,44;18,1,689,1076,44;19,1,696,1087,46;20,1,697,1087,46;21,1,703,1109,51;22,1,703,1109,51;23,1,712,1129,55;24,1,713,1129,55;25,1,720,1148,59;26,1,722,1148,59;27,1,727,1166,66;28,1,728,1166,66;29,1,736,1180,71;30,1,736,1180,71;31,1,744,1196,77;32,1,744,1196,77;33,1,753,1212,85;34,1,754,1212,85;35,1,760,1226,94;36,1,760,1226,94;37,1,769,1236,102;38,1,770,1236,102;39,1,775,1249,112;40,1,776,1249,112;41,1,787,1258,121;42,1,787,1258,121;43,1,791,1265,130;44,1,792,1265,130;45,1,802,1273,138;46,1,802,1273,138;47,1,808,1279,147;48,1,809,1279,147;49,1,818,1283,154;50,1,819,1283,154;51,1,825,1284,157;52,1,826,1284,157;53,1,832,1290,168;54,1,835,1290,168;55,1,840,1291,176;56,1,841,1291,176;57,1,850,1292,183;58,1,861,1293,190;59,1,864,1293,198;60,1,865,1293,198;61,1,873,1293,206;62,1,873,1293,206;63,1,882,1293,213;64,1,883,1293,213;65,1,889,1290,220;66,1,892,1290,220;67,1,897,1284,227;68,1,898,1284,227;69,1,908,1270,241;70,1,915,1255,250;71,1,918,1255,250;72,1,921,1239,258;73,1,922,1239,258;74,1,929,1216,267;75,1,929,1216,267;76,1,937,1190,274;77,1,938,1190,274;78,1,946,1162,282;79,1,947,1162,282;80,1,953,1130,287;81,1,954,1130,287;82,1,962,1096,293;83,1,962,1096,293;84,1,970,1061,296;85,1,970,1061,296;86,1,978,1022,298;87,1,979,1022,298;88,1,986,987,300;89,1,986,987,300;90,1,994,948,302;91,1,994,948,302;92,1,1005,917,304;93,1,1012,904,304;94,1,1013,904,304;95,1,1019,876,304;96,1,1020,876,304;97,1,1026,853,304;98,1,1026,853,304;99,1,1034,847,304;217,3,2758,739,188,1103;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,329;-1,2,-94,-112,https://www.zalando.fr/login/?view=login-1,2,-94,-115,1,220704,32,0,0,0,220672,2758,0,1592581658105,16,17036,0,218,2839,1,0,2759,84978,0,544D198E0F1B1CB2C191909E5A431D4A~-1~YAAQI5HdWON0Wa1yAQAAIJhDzQSs2DaHi3VWlNasxDo6Ll1h+oPs9Arg4f8DmMXtm7anSErvR5n9n2pO+UMTG/IVcwHpfi9Wi/ZDhjSRktF/01XyTRMeCqjaeI0/prETWeQeJkJTEUT7q7Lp9d7aH30hB2IihOsBdiBvSwqh9UbB/o6n5EgkZgrD6PRQwpDic6VG2QZ9k5czxOMXhm2LdiLG+/uKxYYkLkarftjuMKCgYsG+w4No1YL0WTXRpGFiEoZrP1PWYltbpu2Q2NBlWPFovn4VW0knih51voTZCUXpt52d7hsTVn2TdnQglcPVYqHyg6Goubm3of/HY6EI/ryzWoo=~-1~-1~-1,32678,285,1682362911,26018161,NVVN,124,-1-1,2,-94,-106,1,2-1,2,-94,-119,200,2200,0,0,0,0,0,0,0,200,0,3000,2600,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,44769069-1,2,-94,-118,176741-1,2,-94,-121,;1;4;0" %
-                               session.headers["User-Agent"]
-            }
-            sensor_data_bis = {
-                "sensor_data": "7a74G7m23Vrp0o5c9175981.59-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,391850,1658105,1440,814,1440,900,1440,862,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.347127751173,796290829052.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1103,1103,0;1,-1,0,0,1466,1466,0;-1,2,-94,-102,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,1;-1,2,-94,-108,0,1,6662,undefined,0,0,1103,0;1,2,6677,undefined,0,0,1103,0;2,1,6716,undefined,0,0,1103,0;3,2,6726,undefined,0,0,1103,0;4,1,7287,13,0,0,1466;-1,2,-94,-110,0,1,617,939,3;1,1,622,939,3;2,1,624,946,6;3,1,633,955,10;4,1,635,955,10;5,1,639,965,15;6,1,639,965,15;7,1,647,976,19;8,1,648,976,19;9,1,657,991,24;10,1,657,991,24;11,1,663,1008,28;12,1,665,1008,28;13,1,672,1025,33;14,1,674,1025,33;15,1,679,1056,40;16,1,680,1056,40;17,1,688,1076,44;18,1,689,1076,44;19,1,696,1087,46;20,1,697,1087,46;21,1,703,1109,51;22,1,703,1109,51;23,1,712,1129,55;24,1,713,1129,55;25,1,720,1148,59;26,1,722,1148,59;27,1,727,1166,66;28,1,728,1166,66;29,1,736,1180,71;30,1,736,1180,71;31,1,744,1196,77;32,1,744,1196,77;33,1,753,1212,85;34,1,754,1212,85;35,1,760,1226,94;36,1,760,1226,94;37,1,769,1236,102;38,1,770,1236,102;39,1,775,1249,112;40,1,776,1249,112;41,1,787,1258,121;42,1,787,1258,121;43,1,791,1265,130;44,1,792,1265,130;45,1,802,1273,138;46,1,802,1273,138;47,1,808,1279,147;48,1,809,1279,147;49,1,818,1283,154;50,1,819,1283,154;51,1,825,1284,157;52,1,826,1284,157;53,1,832,1290,168;54,1,835,1290,168;55,1,840,1291,176;56,1,841,1291,176;57,1,850,1292,183;58,1,861,1293,190;59,1,864,1293,198;60,1,865,1293,198;61,1,873,1293,206;62,1,873,1293,206;63,1,882,1293,213;64,1,883,1293,213;65,1,889,1290,220;66,1,892,1290,220;67,1,897,1284,227;68,1,898,1284,227;69,1,908,1270,241;70,1,915,1255,250;71,1,918,1255,250;72,1,921,1239,258;73,1,922,1239,258;74,1,929,1216,267;75,1,929,1216,267;76,1,937,1190,274;77,1,938,1190,274;78,1,946,1162,282;79,1,947,1162,282;80,1,953,1130,287;81,1,954,1130,287;82,1,962,1096,293;83,1,962,1096,293;84,1,970,1061,296;85,1,970,1061,296;86,1,978,1022,298;87,1,979,1022,298;88,1,986,987,300;89,1,986,987,300;90,1,994,948,302;91,1,994,948,302;92,1,1005,917,304;93,1,1012,904,304;94,1,1013,904,304;95,1,1019,876,304;96,1,1020,876,304;97,1,1026,853,304;98,1,1026,853,304;99,1,1034,847,304;217,3,2758,739,188,1103;218,4,2893,739,188,1103;219,2,2893,739,188,1103;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,329;2,4473;3,6695;-1,2,-94,-112,https://www.zalando.fr/login/?view=login-1,2,-94,-115,NaN,228787,32,0,0,0,NaN,7287,0,1592581658105,16,17036,5,234,2839,2,0,7289,124832,0,544D198E0F1B1CB2C191909E5A431D4A~-1~YAAQI5HdWB11Wa1yAQAA5qBDzQSG6Pv/OSeYlJZ+5TdSTmLptNh6airlP5V/lfl0qZibNHdiWQexNK07iCtntsNCWGQHPYxIdWr4OhMwJ0i9iCooHr4ymTZvJOiehLUCEf20hGguVIpe5vO+tl8HNMUY7PGyvGkSCQeUF3LvyMptTNSG8CSY0BBnfap9mu2tyNqJrjG8Xea/jsk0hclFwXoOFGYut6G8PG3iNaLmer5R0671/1KuX41tQnpCg/f9510oCGeGVN2f1b3jSey1Ob7DjYTE+aUd5c5tuJsTW5eeK7Ce+eI43fC+QwqaWJz5TYZnz0IAjAGkEtDAFH4keWDUEZQ=~-1~-1~-1,32009,285,1682362911,26018161,NVVN,124,-1-1,2,-94,-106,3,3-1,2,-94,-119,200,0,0,0,0,0,0,0,0,0,0,600,200,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,44769069-1,2,-94,-118,188004-1,2,-94,-121,;2;4;0" %
-                               session.headers["User-Agent"]
-            }
-            session.headers["Content-Type"] = "text/plain;charset=UTF-8"
-            session.headers["Accept"] = "*/*"
-            del session.headers["x-xsrf-token"]
-            session.post(url_post1, json=sensor_data, verify=False)
-            session.post(url_post1, json=sensor_data_bis, verify=False)
-
-            # Connexion au compte Zalando
-            url_connexion_get = "https://www.zalando.fr/api/reef/login/schema"
-            url_connexion_post2 = "https://www.zalando.fr/api/reef/login"
-            identifiants = {
-                "username": Liste_comptegenerator[compte][0],
-                "password": Liste_comptegenerator[compte][1],
-                "wnaMode": "shop",
-            }
-            session.headers["Accept"] = "application/json"
-            session.headers["x-zalando-request-uri"] = "/login/?view=login"
-            session.headers["x-zalando-render-page-uri"] = "/login/?view=login"
-            session.headers["x-xsrf-token"] = cookies["frsx"]
-            session.headers["x-flow-id"] = home.headers["X-Flow-Id"]
-            session.headers["x-zalando-client-id"] = cookies[
-                "Zalando-Client-Id"
-            ]
-            session.headers["Content-Type"] = "application/json"
-            session.get(url_connexion_get, verify=False)
-            session.headers["Origin"] = "https://www.zalando.fr"
-            session.post(url_connexion_post2, json=identifiants, verify=False)
-
-            # Affichage du profil
-            url_profil = "https://www.zalando.fr/myaccount"
-            session.get(url_profil, verify=False)
-
-            # Configuration du profil : Ajout d'un numéro de téléphone
-            url_informations_get = "https://www.zalando.fr/myaccount/details"
-            url_informations_post = (
-                "https://www.zalando.fr/api/user-account-details/details"
-            )
-            informations = {
-                "first_name": Liste_comptegenerator[compte][2],
-                "last_name": Liste_comptegenerator[compte][3],
-                "fashion_category": [],
-                "birth_date": None,
-                "phone": Liste_comptegenerator[compte][4]
-            }
-            session.get(url_informations_get, verify=False)
-            session.post(url_informations_post, json=informations, verify=False)
-
-            # Configuration du profil : Ajout d'une adresse
-            url_profil_get = "https://www.zalando.fr/myaccount/addresses"
-            url_profil_post = (
-                "https://www.zalando.fr/api/user-account-address/addresses"
-            )
-            adresse = {
-                "type": "HomeAddress",
-                "city": Liste_comptegenerator[compte][9],
-                "countryCode": "FR",
-                "firstname": Liste_comptegenerator[compte][2],
-                "lastname": Liste_comptegenerator[compte][3],
-                "street": Liste_comptegenerator[compte][5] + " " + Liste_comptegenerator[compte][6],
-                "additional": Liste_comptegenerator[compte][7],
-                "gender": "MALE",
-                "defaultBilling": True,
-                "defaultShipping": True,
-                "zip": Liste_comptegenerator[compte][8]
-            }
-            session.get(url_profil_get, verify=False)
-            reponse = session.post(url_profil_post, json=adresse, verify=False)
-
-            # Récupération de l'id de d'adresse
-            objet = json.loads(reponse.text)
-            id_adresse = objet[0]["id"]
-            Liste_comptegenerator[compte].insert(5, str(id_adresse))
-
-        # Fermeture de la session
-        session.close()
-
-        # Message de confimation pour chaque compte configuré
-        print(
-            "Le compte de", Liste_comptegenerator[compte][0], "a bien été configuré !"
-        )
-
-        # Insertion des comptes actualisés dans la base de données
-        comptelist = []
-        for b in range(1, len(Liste_comptegenerator)):
-            comptelist.append(Liste_comptegenerator[b])
-        with open("../Data/%s" % list, "a") as f:
-            for compte_1 in comptelist:
-                f.write(compte_1[0])
-                f.write(";")
-                f.write(compte_1[1])
-                f.write(";")
-                f.write(compte_1[2])
-                f.write(";")
-                f.write(compte_1[3])
-                f.write(";")
-                f.write(compte_1[4])
-                f.write(";")
-                f.write(compte_1[5])
-                f.write(";")
-                f.write(compte_1[6])
-                f.write(";")
-                f.write(compte_1[7])
-                f.write(";")
-                f.write(compte_1[8])
-                f.write(";")
-                f.write(compte_1[9])
-                f.write(";")
-                f.write(compte_1[10])
-                f.write(";")
-                f.write(compte_1[11])
-            f.write('\n')
-        f.close()
-
-        # Rénitialisation du fichier AccountGenerator.csv
-        comptelist2 = ['Email', 'Password', 'Firstname', 'Lastname', 'Phone', 'House Number', 'Street',
-                       'Additional Address', 'Postcode', 'City', 'Country']
-        with open("../Data/AccountGenerator.csv", "w") as f:
-            f.write(comptelist2[0])
+    # Insertion des comptes actualisés dans la base de données
+    comptelist = []
+    for b in range(1, len(Liste_comptegenerator)):
+        comptelist.append(Liste_comptegenerator[b])
+    with open("../Data/%s" % liste, "a") as f:
+        for compte_1 in comptelist:
+            f.write(compte_1[0])
             f.write(";")
-            f.write(comptelist2[1])
-            f.write(";")
-            f.write(comptelist2[2])
-            f.write(";")
-            f.write(comptelist2[3])
-            f.write(";")
-            f.write(comptelist2[4])
-            f.write(";")
-            f.write(comptelist2[5])
-            f.write(";")
-            f.write(comptelist2[6])
-            f.write(";")
-            f.write(comptelist2[7])
-            f.write(";")
-            f.write(comptelist2[8])
-            f.write(";")
-            f.write(comptelist2[9])
-            f.write(";")
-            f.write(comptelist2[10])
-        f.close()
+            f.write(compte_1[1])
+        f.write('\n')
+    f.close()
 
+    # Rénitialisation du fichier AccountGenerator.csv
+    comptelist2 = ['Email', 'Password']
+    with open("../Data/AccountGenerator.csv", "w") as f:
+        f.write(comptelist2[0])
+        f.write(";")
+        f.write(comptelist2[1])
+    f.close()
 
 
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
-
 def fonction_Zalando():
     while True:
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
@@ -1276,7 +1039,9 @@ def fonction_Zalando():
         liste_proxys = proxy()
         Liste_comptegenerator = listecomptegenerator()
         Liste_compte1 = compte1()
+        Liste_compte1 = random.shuffle(Liste_compte1)
         Liste_compte2 = compte2()
+        Liste_compte2 = random.shuffle(Liste_compte2)
         List_profile1 = profile1()
         List_profile2 = profile2()
         Liste_tache = tache()
@@ -2591,7 +2356,9 @@ def fonction_Zalando():
                                               Task).start()
 
                         while True:
-                            if threading.active_count() == 0:
+                            nombre_thread = threading.active_count()
+                            nombre_tache = len(Liste_tache) - 1
+                            if threading.active_count() == nombre_thread - nombre_tache:
                                 FinDeTache()
                                 break
 
@@ -2802,12 +2569,10 @@ def fonction_Zalando():
             choix_2 = input("\nChoice :")
             if choix_2 == "1":
                 liste = 'Accounts/Accounts_List1.csv'
-                CreationComptes(Liste_comptegenerator, liste_proxys)
-                Configuration(Liste_comptegenerator, liste_proxys, liste)
+                CreationComptes(Liste_comptegenerator, liste_proxys, liste)
             if choix_2 == "2":
                 liste = 'Accounts/Accounts_List2.csv'
-                CreationComptes(Liste_comptegenerator, liste_proxys)
-                Configuration(Liste_comptegenerator, liste_proxys, liste)
+                CreationComptes(Liste_comptegenerator, liste_proxys, liste)
 
         if choix == '4':
             VerificationProxys()
@@ -2828,6 +2593,7 @@ def main():
 
         if choix_depart == "1":
             fonction_Zalando()
+
 
 # --------------------------------------------------------------------------------------------------------------------#
 
