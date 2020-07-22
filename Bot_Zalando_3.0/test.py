@@ -1,10 +1,13 @@
-import random
+import requests
+from bs4 import BeautifulSoup
+from user_agent import generate_user_agent
 
-Liste_compte = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# Choix au hasard d'un compte
-random.shuffle(Liste_compte)
-for Task in range(1, 5):
-    print(Task)
-    print(Liste_compte[Task])
-
+with requests.Session() as session:
+    headers = {
+        "User-Agent": generate_user_agent()
+    }
+    url = 'https://temp-mail.org/fr/'
+    requete = requests.get(url, headers=headers)
+    soup_2 = BeautifulSoup(requete.content, "html.parser")
+    print(soup_2)
