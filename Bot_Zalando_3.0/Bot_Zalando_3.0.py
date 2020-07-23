@@ -225,7 +225,7 @@ class RechercheCommande(Thread):
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "There is a problem with this account. Stop the program and try later !", "red"))
-                    exit()
+                    fonction_Zalando()
 
                 del session.headers["x-xsrf-token"]
                 del session.headers["x-zalando-client-id"]
@@ -650,8 +650,12 @@ class RechercheCommande(Thread):
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "Successfully checked out !", "green"))
-                        # Rajouter les notifications à print
-                        # Envoyer le message de confirmation sur le webhook discord de l'utilisateur
+                        else:
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                                      "There is a problem with the checkout ! Check your details and try later !",
+                                      "red"))
+                            fonction_Zalando()
 
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
@@ -708,6 +712,12 @@ class RechercheCommande(Thread):
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "Successfully checked out !", "green"))
+                        else:
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                                      "There is a problem with the checkout ! Check your details and try later !",
+                                      "red"))
+                            fonction_Zalando()
                         json_reponse = json.loads(reponse_checkout.text)
                         url_paypal = str(json_reponse["url"])
             session.close()
@@ -912,8 +922,8 @@ def VerificationLicense():
     with open("../Data/License.txt", "r") as f:
         License = f.read()
         if License == "":
-            print("Enter your License key in file : License.txt\n")
-            time.sleep(5)
+            print(colored("Enter your License key in file : License.txt", "red"))
+            time.sleep(10)
             exit()
 
     result = Key.activate(token=auth,
@@ -924,12 +934,12 @@ def VerificationLicense():
 
     if result[0] is None or not Helpers.IsOnRightMachine(result[0]):
         print("ERREUR: {0}".format(result[1]))
-
-        print(colored("\nYour License is invalid.\n", "red"))
+        print(colored("Your license is invalid or you have an internet connection problem ! Check your details and try later !", "red"))
+        time.sleep(10)
         exit()
 
     else:
-        print(colored("Your license is valid.\n", "green"))
+        print(colored("Your license is valid !", "green"))
         pass
 
 
@@ -1075,7 +1085,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
     nombrecompte = len(Liste_comptegenerator)
 
     # Création d'un compte pour chaque objet "Compte" présent dans la base de données
-    for compte in range(1, nombrecompte):
+    for compte in range(0, nombrecompte):
         # Ouverture de la session
         with requests.Session() as session:
             # Réglage des paramètres de la session
@@ -1168,7 +1178,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 
     # Insertion des comptes actualisés dans la base de données
     comptelist = []
-    for b in range(1, len(Liste_comptegenerator)):
+    for b in range(0, len(Liste_comptegenerator)):
         comptelist.append(Liste_comptegenerator[b])
     with open("../Data/%s" % liste, "a") as f:
         for compte_1 in comptelist:
@@ -1336,6 +1346,10 @@ def fonction_Zalando():
                 Liste_compte = Liste_compte2
             if choix_4 == "3":
                 Liste_compte = Liste_compte3
+
+            if len(Liste_compte) < len(Liste_tache):
+                print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                fonction_Zalando()
 
             nombre_thread = threading.active_count()
             for x in range(0, len(Liste_tache)):
