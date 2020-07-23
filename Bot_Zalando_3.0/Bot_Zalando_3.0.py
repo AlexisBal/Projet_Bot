@@ -920,7 +920,7 @@ auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ==
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
 def VerificationLicense():
-    with open("../Data/License.txt", "r") as f:
+    with open("Data/License.txt", "r") as f:
         License = f.read()
         if License == "":
             print(colored("Enter your License key in file : License.txt", "red"))
@@ -948,7 +948,7 @@ def VerificationLicense():
 
 # Récupérations des proxies
 def proxy():
-    with open('../Data/Proxy.txt', 'r') as f:
+    with open('Data/Proxy.txt', 'r') as f:
         liste_proxys = []
         for ligne in f:
             if ligne.strip('\n') != '':
@@ -963,7 +963,7 @@ def proxy():
 
 # Création de la liste de compte "Liste_compte1"
 def compte1():
-    with open('../Data/Accounts/Accounts_List1.csv', 'r') as f:
+    with open('Data/Accounts/Accounts_List1.csv', 'r') as f:
         Liste_compte1 = []
         for ligne in f:
             compte_list1 = ligne.split(";")
@@ -975,7 +975,7 @@ def compte1():
 
 # Création de la liste de compte "Liste_compte2"
 def compte2():
-    with open('../Data/Accounts/Accounts_List2.csv', 'r') as f:
+    with open('Data/Accounts/Accounts_List2.csv', 'r') as f:
         Liste_compte2 = []
         for ligne in f:
             compte_list2 = ligne.split(";")
@@ -987,7 +987,7 @@ def compte2():
 
 # Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
-    with open('../Data/AccountGenerator.csv', 'r') as f:
+    with open('Data/AccountGenerator.csv', 'r') as f:
         Liste_comptegenerator = []
         for ligne in f:
             comptegenerator_list = ligne.split(";")
@@ -999,7 +999,7 @@ def listecomptegenerator():
 
 # Création de la liste de profiles "List_profile1"
 def profile1():
-    with open('../Data/Profiles/Profile1.csv', 'r') as f:
+    with open('Data/Profiles/Profile1.csv', 'r') as f:
         List_profile1 = []
         for ligne in f:
             profile_list1 = ligne.split(";")
@@ -1011,7 +1011,7 @@ def profile1():
 
 # Création de la liste de profiles "List_profile2"
 def profile2():
-    with open('../Data/Profiles/Profile2.csv', 'r') as f:
+    with open('Data/Profiles/Profile2.csv', 'r') as f:
         List_profile2 = []
         for ligne in f:
             profile_list2 = ligne.split(";")
@@ -1023,7 +1023,7 @@ def profile2():
 
 # Création de la liste "List_Quick_Task"
 def QuickTask():
-    with open('../Data/Tasks/Quick_Task.csv', 'r') as f:
+    with open('Data/Tasks/Quick_Task.csv', 'r') as f:
         List_Quick_Task = []
         for ligne in f:
             List_Quick_Task2 = ligne.split(";")
@@ -1035,7 +1035,7 @@ def QuickTask():
 
 # Création de la liste de tache "Liste_tache"
 def tache():
-    with open('../Data/Tasks/Task.csv', 'r') as f:
+    with open('Data/Tasks/Task.csv', 'r') as f:
         Liste_tache = []
         for ligne in f:
             liste_list = ligne.split(";")
@@ -1048,7 +1048,7 @@ def tache():
 def FinDeTache():
     # Rénitialisation du fichier Task.csv
     tasklist2 = ['Product Url', 'Size']
-    with open("../Data/Tasks/Task.csv", "w") as f:
+    with open("Data/Tasks/Task.csv", "w") as f:
         f.write(tasklist2[0])
         f.write(";")
         f.write(tasklist2[1])
@@ -1430,7 +1430,7 @@ def fonction_Zalando():
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     while True:
-        VerificationLicense()
+        #VerificationLicense()
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         print(colored("Welcome ! Initializing Scred AIO - User data loaded !\n", "green"))
