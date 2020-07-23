@@ -131,7 +131,7 @@ class RechercheCommande(Thread):
 
             # Choix au hasard d'un profil
             Liste_profil_bis = []
-            for y in range(1, len(self.Liste_profile)):
+            for y in range(0, len(self.Liste_profile)):
                 Liste_profil_bis.append([self.Liste_profile[y]])
             profil_2 = random.choice(Liste_profil_bis)
             profil = profil_2[0]
