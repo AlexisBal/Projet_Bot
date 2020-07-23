@@ -153,7 +153,7 @@ class RechercheCommande(Thread):
                     session.headers['User-Agent'] = generate_user_agent()
                     session.headers["Accept-Language"] = "fr-fr"
                     session.headers["Accept-Encoding"] = "gzip, deflate, br"
-                    home_2 = session.get(url_home, verify=False)
+                    session.get(url_home, verify=False)
                     if session.cookies != '<RequestsCookieJar[]>':
                         break
 
@@ -239,7 +239,7 @@ class RechercheCommande(Thread):
                 session.headers[
                     "Accept"
                 ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                accueil = session.get(url_compte, verify=False)
+                session.get(url_compte, verify=False)
 
                 # Connexion à la page du produit
                 session.headers[
@@ -275,9 +275,13 @@ class RechercheCommande(Thread):
                 session.headers['x-page-impression-id'] = impression
                 session.headers['x-xsrf-token'] = cookies_2["frsx"]
                 session.headers['x-zalando-intent-context'] = 'navigationTargetGroup=MEN'
-                session.post(url_panier, json=panier, verify=False)
+                repPanier = session.post(url_panier, json=panier, verify=False)
                 del session.headers['x-zalando-intent-context']
                 del session.headers['x-page-impression-id']
+                if self.Paiement == 'CB' and repPanier.status_code == 200:
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "Successfully added to cart - size %s" % self.taille_produit, "green"))
 
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
@@ -642,7 +646,11 @@ class RechercheCommande(Thread):
                         session.headers["x-xsrf-token"] = cookies_2["frsx"]
                         session.headers['Content-Type'] = 'application/json'
                         session.headers['x-zalando-header-mode'] = 'desktop'
-                        session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                        if reponse_checkout.status_code == 200:
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                                      "Successfully checked out !", "green"))
                         # Rajouter les notifications à print
                         # Envoyer le message de confirmation sur le webhook discord de l'utilisateur
 
@@ -697,12 +705,13 @@ class RechercheCommande(Thread):
                         session.headers['Content-Type'] = 'application/json'
                         session.headers['x-zalando-header-mode'] = 'desktop'
                         reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                        if reponse_checkout.status_code == 200:
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                                      "Successfully checked out !", "green"))
                         json_reponse = json.loads(reponse_checkout.text)
                         url_paypal = str(json_reponse["url"])
             session.close()
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
-                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                      "Successfully checked out !", "green"))
 
             # Notification Discord WebHook
             if self.Mode == 'Quick':
@@ -818,18 +827,17 @@ class RechercheCommande(Thread):
                 mode_1 = 'Credit Card - %s' % creditcard
                 tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
-                    f.write('\n')
-                    f.write(tasklist[0])
+                    f.write(tasklist[0].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[1])
+                    f.write(tasklist[1].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[2])
+                    f.write(tasklist[2].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[3])
+                    f.write(tasklist[3].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[4])
+                    f.write(tasklist[4].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[5])
+                    f.write(tasklist[5].strip('\n'))
                 f.close()
 
             if self.Paiement == 'CB':
@@ -840,18 +848,17 @@ class RechercheCommande(Thread):
                 mode_1 = 'Manual Checkout'
                 tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
-                    f.write('\n')
-                    f.write(tasklist[0])
+                    f.write(tasklist[0].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[1])
+                    f.write(tasklist[1].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[2])
+                    f.write(tasklist[2].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[3])
+                    f.write(tasklist[3].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[4])
+                    f.write(tasklist[4].strip('\n'))
                     f.write(";")
-                    f.write(tasklist[5])
+                    f.write(tasklist[5].strip('\n'))
                 f.close()
 
         except:
