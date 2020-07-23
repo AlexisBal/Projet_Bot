@@ -15,7 +15,6 @@ from termcolor import colored
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
-from password_generator import PasswordGenerator
 from bs4 import BeautifulSoup
 from licensing.models import *
 from licensing.methods import Key, Helpers
@@ -162,19 +161,12 @@ class RechercheCommande(Thread):
                 cookies_2 = session.cookies.get_dict()
                 del session.cookies['mpulseinject']
                 session.cookies['mpulseinject'] = 'false'
-                session.headers["Accept"] = "*/*"
-                session.headers["x-xsrf-token"] = cookies_2["frsx"]
-                url_div = "https://www.zalando.fr/api/navigation/banners?gender=unisex&membership=non-eligible&url=https%3A%2F%2Fwww.zalando.fr%2F"
-                url_div2 = "https://www.zalando.fr/api/navigation"
-                session.get(url_div, verify=False)
-                session.get(url_div2, verify=False)
-                session.headers[
-                    "Accept"
-                ] = "image/png,image/svg+xml,image/*;q=0.8,video/*;q=0.8,*/*;q=0.5"
-                del session.headers["x-xsrf-token"]
 
                 # Connexion à la page de connexion
                 url_connexion_1 = "https://www.zalando.fr/login/?view=login"
+                session.headers[
+                    "Accept"
+                ] = "image/png,image/svg+xml,image/*;q=0.8,video/*;q=0.8,*/*;q=0.5"
                 login = session.get(url_connexion_1, verify=False)
 
                 # Requetes anti-bot
@@ -225,10 +217,17 @@ class RechercheCommande(Thread):
                 session.get(url_connexion_2, verify=False)
                 session.headers["Origin"] = "https://www.zalando.fr"
                 session.headers["Content-Length"] = "76"
-                session.post(url_connexion_3, json=identifiants_2, verify=False)
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
-                      Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                          "Account succefully logged", "green"))
+                connex = session.post(url_connexion_3, json=identifiants_2, verify=False)
+                if connex.status_code == 201:
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "Account successfully logged", "green"))
+                else:
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "There is a problem with this account. Stop the program and try later !", "red"))
+                    exit()
+
                 del session.headers["x-xsrf-token"]
                 del session.headers["x-zalando-client-id"]
                 del session.headers["x-zalando-render-page-uri"]
@@ -249,10 +248,15 @@ class RechercheCommande(Thread):
                 session.headers["Accept-Language"] = "fr-fr"
                 session.headers["Accept-Encoding"] = "gzip, deflate, br"
                 page_produit = session.get(self.url_produit, verify=False)
-                
+                impression = page_produit.headers['x-page-impression-id']
 
                 # Mise dans le panier
+                url_bot_panier = 'https://www.zalando.fr/resources/7be100d4c6rn2028b315fc23b805e921'
                 url_panier = "https://www.zalando.fr/api/graphql/"
+                bot_panier = {
+                    'sensor_data': '7a74G7m23Vrp0o5c9183031.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392572,4143776,1440,900,1440,900,1440,353,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.896028632448,797757071888,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,926,-1,0;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,926,-1,0;-1,2,-94,-108,-1,2,-94,-110,0,1,47,981,8;1,1,6967,780,829;2,1,6976,1029,672;3,1,6979,1116,630;4,1,6995,1190,595;5,1,7005,1294,547;6,1,7016,1347,522;7,1,7027,1413,486;8,1,7227,1438,509;9,1,7373,1410,539;10,1,7390,1194,672;11,1,7669,1180,672;12,1,7724,1100,654;13,1,7749,1099,652;14,3,7954,1099,652,-1;15,4,8045,1099,652,-1;16,2,8045,1099,652,-1;17,1,8428,1099,862;18,1,9488,1099,862;19,1,9491,1098,863;20,1,9495,1098,865;21,1,9496,1098,865;22,1,9504,1097,865;23,1,9505,1097,865;24,1,9512,1096,866;25,1,9513,1096,866;26,1,9521,1095,867;27,1,9523,1095,867;28,1,9528,1094,868;29,1,9529,1094,868;30,1,9535,1094,869;31,1,9536,1094,869;32,1,9545,1092,870;33,1,9546,1092,870;34,1,9553,1091,871;35,1,9555,1091,871;36,1,9560,1090,873;37,1,9561,1090,873;38,1,9569,1087,875;39,1,9570,1087,875;40,1,9578,1085,877;41,1,9579,1085,877;42,1,9587,1081,880;43,1,9589,1081,880;44,1,9592,1080,880;45,1,9593,1080,880;46,1,9603,1073,885;47,1,9605,1073,885;48,1,9609,1069,888;49,1,9610,1069,888;50,1,9619,1063,892;51,1,9621,1063,892;52,1,9626,1056,896;53,1,9627,1056,896;54,1,9633,1048,901;55,1,9635,1048,901;56,1,9642,1041,904;57,1,9643,1041,904;58,1,9653,1034,909;59,1,9654,1034,909;60,1,9657,1026,913;61,1,9658,1026,913;62,1,9667,1023,914;63,1,9668,1023,914;64,1,9675,1016,917;65,1,9676,1016,917;66,1,9683,1012,918;67,1,9685,1012,918;68,1,9689,1006,920;69,1,9690,1006,920;70,1,9698,1002,920;71,1,9699,1002,920;72,1,9707,998,921;73,1,9708,998,921;74,1,9717,993,922;75,1,9719,993,922;76,1,9721,989,922;77,1,9722,989,922;78,1,9734,986,922;79,1,9735,986,922;80,1,9738,982,922;81,1,9739,982,922;82,1,9748,979,922;83,1,9750,979,922;84,1,9754,975,922;85,1,9755,975,922;86,1,9763,972,922;87,1,9764,972,922;88,1,9772,969,922;89,1,9773,969,922;90,1,9781,966,922;91,1,9783,966,922;92,1,9786,964,922;93,1,9787,964,922;94,1,9795,962,922;95,1,9796,962,922;96,1,9802,959,922;97,1,9803,959,922;98,1,9814,958,922;99,1,9816,958,922;100,1,9819,957,922;101,1,9828,955,922;102,1,9829,955,922;115,3,10159,953,923,-1;116,4,10252,953,923,-1;117,2,10252,953,923,-1;257,3,15150,967,660,-1;258,4,15279,967,660,-1;259,2,15279,967,660,-1;299,3,15937,948,935,-1;300,4,16087,948,935,-1;301,2,16088,948,935,-1;398,3,17326,924,653,-1;400,4,17453,924,653,-1;401,2,17454,924,653,-1;529,3,18354,895,813,-1;530,4,18490,895,813,-1;531,2,18490,895,813,-1;589,3,20264,936,732,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,7959;2,11828;3,15163;-1,2,-94,-112,https://www.zalando.fr/nike-sportswear-alpha-lite-baskets-basses-ni112o0am-c12.html-1,2,-94,-115,1,1434238,32,0,0,0,1434206,20264,0,1595514143776,29,17068,0,590,2844,13,0,20265,1199766,0,5A6236607E448865D7A432CE144FFDF5~-1~YAAQDOx7XNW7gy9zAQAA3AsOfAQdvNnRmPRtGD+Vbnvwj9sl5cWYzej2Z67I1GWl8oNQE+QRbxUAmccc7C4f/ocpHtggywIKYwIjTVW3cKwSMI7nafnSkUHDdovf3E7uuDE0tUx6r+Bedx2mXykaelOO5lU9iFXywnO62WqGyfMISIiJ4twTYgIajxKmwEd/yWHBWDun52B+NjTcH28QJb42WAFXK6uvxgasjoUkRdjY/iNI6/XFXhTydXPJ0hhCPgkciReOUiplcvVmVxJVln2wr7NoeVe11IiRaEKRkn5fp45VBOamY6JHMYvJb4BAe16bMfJqH2elZS9cQps8WVsjVTE=~-1~-1~-1,32986,147,1531999884,26018161,PiZtE,72271,62-1,2,-94,-106,1,8-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,200,200,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,62156235-1,2,-94,-118,209108-1,2,-94,-121,;2;3;0' %
+                                   session.headers['User-Agent']
+                }
                 panier = [{
                     "id": 'e7f9dfd05f6b992d05ec8d79803ce6a6bcfb0a10972d4d9731c6b94f6ec75033',
                     "variables": {
@@ -263,14 +267,23 @@ class RechercheCommande(Thread):
                     }
                 }]
                 session.headers["Accept"] = "*/*"
+                session.headers["Content-Type"] = "text/plain;charset=UTF-8"
+                session.headers['Origin'] = 'https://www.zalando.fr'
+                session.headers['Referer'] = self.url_produit
+                session.post(url_bot_panier, json=bot_panier, verify=False)
                 session.headers["Content-Type"] = "application/json"
+                session.headers['x-page-impression-id'] = impression
+                session.headers['x-xsrf-token'] = cookies_2["frsx"]
+                session.headers['x-zalando-intent-context'] = 'navigationTargetGroup=MEN'
                 session.post(url_panier, json=panier, verify=False)
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
-                      Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                          "Added to cart - size %s" % self.taille_produit, "yellow"))
+                del session.headers['x-zalando-intent-context']
+                del session.headers['x-page-impression-id']
 
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                              "Added to cart - size %s" % self.taille_produit, "yellow"))
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Payment Process", "yellow"))
@@ -281,7 +294,6 @@ class RechercheCommande(Thread):
                     bot_4_2 = "https://www.zalando.fr/resources/35692132da2028b315fc23b805e921"
                     url_panier_1 = "https://www.zalando.fr/cart/"
                     url_panier_2 = "https://www.zalando.fr/checkout/confirm"
-                    url_panier_3 = "https://www.zalando.fr/checkout/address"
                     data_bot2_2 = {
                         "sensor_data": "7a74G7m23Vrp0o5c9179211.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392145,8120368,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.253321588126,796889060184,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1075,-1,1;-1,2,-94,-108,-1,2,-94,-110,-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,https://www.zalando.fr/myaccount-1,2,-94,-115,1,32,32,0,0,0,0,1,0,1593778120368,-999999,17049,0,0,2841,0,0,2,0,0,83B56B14F8791DE4459B2C8598D943FC~-1~YAAQDex7XFuSJxBzAQAAhxmUFARw88kisNpiFVwyQs7ReWEop16qPFMe+VyLWUTZrCy7SZ1/IeDafSHu/HwSxhuIH5iGZEC59iHXo+lhFihkHwcQUHKIe+IFNX9AqswJqkpjhRIqOqzEp8rzefrlVv/QZ8+TlE3agC6k7axpxToHECu4Uu+HS6sgG9SVQu/j6SkLmiQYHbLDoWkeWc//d6ukSGArsYcNEJTOilWs6UEd+JwOCeA2H1k+Ag+qYpTKXxlXW3fKPAwyTeCDng32+lX2lUbGLoZnWtK9Pj2lADYgVfMEVRSqJ23Qdb47qz8u+U4lRRJcY3kxsCio55JsKXjPn/0=~-1~-1~-1,32638,-1,-1,26018161,PiZtE,38925,90-1,2,-94,-106,0,0-1,2,-94,-119,-1-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,-1-1,2,-94,-80,94-1,2,-94,-116,219249894-1,2,-94,-118,82726-1,2,-94,-121,;3;-1;0"
                                        % session.headers["User-Agent"]
@@ -312,7 +324,6 @@ class RechercheCommande(Thread):
                     session.get(url_panier_1, verify=False)
                     session.headers["Referer"] = "https://www.zalando.fr/cart"
                     session.get(url_panier_2, verify=False)
-                    session.get(url_panier_3, verify=False)
 
                     if self.Mode == 'Quick':
                         # Addresse de livraison
@@ -326,7 +337,8 @@ class RechercheCommande(Thread):
                                     'first_name': self.List_Quick_Task[2].strip('\n'),
                                     'last_name': self.List_Quick_Task[3].strip('\n'),
                                     'country_code': 'FR',
-                                    'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip('\n'),
+                                    'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip(
+                                        '\n'),
                                     'zip': self.List_Quick_Task[8].strip('\n')
                                 }
                             }
@@ -338,7 +350,8 @@ class RechercheCommande(Thread):
                                 'first_name': self.List_Quick_Task[2].strip('\n'),
                                 'last_name': self.List_Quick_Task[3].strip('\n'),
                                 'country_code': 'FR',
-                                'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip('\n'),
+                                'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip(
+                                    '\n'),
                                 'zip': self.List_Quick_Task[8].strip('\n')
                             },
                             'addressDestination': {
@@ -350,7 +363,8 @@ class RechercheCommande(Thread):
                                         'country_code': 'FR',
                                         'city': self.List_Quick_Task[9].strip('\n'),
                                         'zip': self.List_Quick_Task[8].strip('\n'),
-                                        'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip('\n'),
+                                        'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[
+                                            6].strip('\n'),
                                         'additional': self.List_Quick_Task[7].strip('\n')
                                     }
                                 },
@@ -510,7 +524,9 @@ class RechercheCommande(Thread):
                         session.headers["x-zalando-checkout-app"] = "web"
                         session.headers["x-xsrf-token"] = cookies_2["frsx"]
                         session.headers["x-zalando-header-mode"] = "desktop"
-                        session.get(url_checkout_2_2, verify=False)
+                        url_pay = session.get(url_checkout_2_2, verify=False)
+                        url_pay_2 = json.loads(url_pay.text)
+                        url_pay_3 = url_pay_2['url']
                         del session.headers["x-zalando-footer-mode"]
                         del session.headers["x-zalando-checkout-app"]
                         del session.headers["x-xsrf-token"]
@@ -521,7 +537,6 @@ class RechercheCommande(Thread):
                         session.headers["Referer"] = "https://www.zalando.fr/checkout/address"
 
                     # Paiement Partie 1
-                    url_pay = "https://checkout.payment.zalando.com/selection"
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     if self.Mode == 'Quick':
                         data_cb = {
@@ -548,7 +563,7 @@ class RechercheCommande(Thread):
                             },
                         }
 
-                    a_2 = session.get(url_pay, verify=False, allow_redirects=False)
+                    a_2 = session.get(url_pay_3, verify=False, allow_redirects=False)
 
                     # Paiement par carte bancaire
                     if self.Paiement != 'Paypal':
@@ -633,11 +648,6 @@ class RechercheCommande(Thread):
 
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
-                        session_id_2 = session.cookies["Session-ID"]
-                        url_pay_3 = (
-                                "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
-                                % session_id_2
-                        )
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
@@ -787,6 +797,27 @@ class RechercheCommande(Thread):
                 mode_1 = 'Paypal'
                 tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
+                    f.write(tasklist[0].strip('\n'))
+                    f.write(";")
+                    f.write(tasklist[1].strip('\n'))
+                    f.write(";")
+                    f.write(tasklist[2].strip('\n'))
+                    f.write(";")
+                    f.write(tasklist[3].strip('\n'))
+                    f.write(";")
+                    f.write(tasklist[4].strip('\n'))
+                    f.write(";")
+                    f.write(tasklist[5].strip('\n'))
+                f.close()
+
+            if self.Paiement == 'CB_Auto':
+                today = date.today()
+                now = datetime.now()
+                date = today.strftime("%b-%d-%Y")
+                heure = now.strftime("%H:%M:%S")
+                mode_1 = 'Credit Card - %s' % creditcard
+                tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
+                with open("../Data/Tasks/Task_History.csv", "a") as f:
                     f.write('\n')
                     f.write(tasklist[0])
                     f.write(";")
@@ -801,29 +832,6 @@ class RechercheCommande(Thread):
                     f.write(tasklist[5])
                 f.close()
 
-            if self.Paiement == 'CB_Auto':
-                today = date.today()
-                now = datetime.now()
-                date = today.strftime("%b-%d-%Y")
-                heure = now.strftime("%H:%M:%S")
-                mode_1 = 'Credit Card - %s' % creditcard
-                tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
-                with open("../Data/Tasks/Task_History.csv", "a") as f:
-                    for task_1 in tasklist:
-                        f.write(task_1[0])
-                        f.write(";")
-                        f.write(task_1[1])
-                        f.write(";")
-                        f.write(task_1[2])
-                        f.write(";")
-                        f.write(task_1[3])
-                        f.write(";")
-                        f.write(task_1[4])
-                        f.write(";")
-                        f.write(task_1[5])
-                    f.write('\n')
-                f.close()
-
             if self.Paiement == 'CB':
                 today = date.today()
                 now = datetime.now()
@@ -832,19 +840,18 @@ class RechercheCommande(Thread):
                 mode_1 = 'Manual Checkout'
                 tasklist = [date, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
-                    for task_1 in tasklist:
-                        f.write(task_1[0])
-                        f.write(";")
-                        f.write(task_1[1])
-                        f.write(";")
-                        f.write(task_1[2])
-                        f.write(";")
-                        f.write(task_1[3])
-                        f.write(";")
-                        f.write(task_1[4])
-                        f.write(";")
-                        f.write(task_1[5])
                     f.write('\n')
+                    f.write(tasklist[0])
+                    f.write(";")
+                    f.write(tasklist[1])
+                    f.write(";")
+                    f.write(tasklist[2])
+                    f.write(";")
+                    f.write(tasklist[3])
+                    f.write(";")
+                    f.write(tasklist[4])
+                    f.write(";")
+                    f.write(tasklist[5])
                 f.close()
 
         except:
@@ -2602,6 +2609,7 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte1
+                        nombre_thread = threading.active_count()
                         for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
@@ -2615,10 +2623,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-                        nombre_thread = threading.active_count()
-                        nombre_tache = len(Liste_tache) - 1
+                        time.sleep(1)
                         while True:
-                            if threading.active_count() == nombre_tache - nombre_thread:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
