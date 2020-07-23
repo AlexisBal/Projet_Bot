@@ -1,13 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 from user_agent import generate_user_agent
+import urllib3
 
 
-with requests.Session() as session:
-    headers = {
+urllib3.disable_warnings()
+headers = {
         "User-Agent": generate_user_agent()
     }
-    url = 'https://temp-mail.org/fr/'
-    requete = requests.get(url, headers=headers)
-    soup_2 = BeautifulSoup(requete.content, "html.parser")
-    print(soup_2)
+url = 'https://temp-mail.org/fr/'
+requete = requests.get(url, headers=headers, verify=False)
+soup_2 = BeautifulSoup(requete.text, "html.parser")
+print(soup_2)

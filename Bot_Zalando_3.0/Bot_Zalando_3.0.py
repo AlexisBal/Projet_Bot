@@ -1193,20 +1193,34 @@ def fonction_Zalando():
     while True:
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         init()
+        # Proxys
         liste_proxys = proxy()
-        List_Quick_Task = QuickTask()
+        # Accounts Generator
         Liste_comptegenerator = listecomptegenerator()
+        # Accounts
         Liste_compte1 = compte1()
         random.shuffle(Liste_compte1)
         Liste_compte2 = compte2()
         random.shuffle(Liste_compte2)
-        Liste_compte3 = Liste_compte1.append(Liste_compte2)
+        Liste_compte3 = []
+        for x in Liste_compte1:
+            Liste_compte3.append(x)
+        for y in Liste_compte2:
+            Liste_compte3.append(y)
         random.shuffle(Liste_compte3)
+        # Profiles
         List_profile1 = profile1()
         List_profile2 = profile2()
-        List_profile3 = List_profile2.append(List_profile1)
+        List_profile3 = []
+        for x in List_profile1:
+            List_profile3.append(x)
+        for y in List_profile2:
+            List_profile3.append(y)
         random.shuffle(List_profile3)
+        # Tasks
         Liste_tache = tache()
+        # Quick Tasks
+        List_Quick_Task = QuickTask()
 
         if Liste_compte1 == [['Email',
                               'Password\n']] and Liste_compte2 == [['Email',
