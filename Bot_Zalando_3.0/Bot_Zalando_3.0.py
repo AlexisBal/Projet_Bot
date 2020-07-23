@@ -795,14 +795,12 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Mode', value='Manual')
                 embed.add_embed_field(name='Checkout Speed', value='6.33')
                 embed.add_embed_field(name='Username',
-                                      value=compte[0].strip('\n'),
-                                      incline=False)
+                                      value=compte[0].strip('\n'))
                 embed.add_embed_field(name='Password',
-                                      value=compte[1].strip('\n'),
-                                      incline=False)
+                                      value=compte[1].strip('\n'))
                 embed.add_embed_field(name='Login Link',
                                       value='https://www.zalando.fr/welcomenoaccount/true',
-                                      incline=False)
+                                      inline=False)
                 webhook.add_embed(embed)
             reponse = webhook.execute()
 
@@ -826,6 +824,7 @@ class RechercheCommande(Thread):
                     f.write(tasklist[4].strip('\n'))
                     f.write(";")
                     f.write(tasklist[5].strip('\n'))
+                    f.write('\n')
                 f.close()
 
             if self.Paiement == 'CB_Auto':
@@ -847,6 +846,7 @@ class RechercheCommande(Thread):
                     f.write(tasklist[4].strip('\n'))
                     f.write(";")
                     f.write(tasklist[5].strip('\n'))
+                    f.write('\n')
                 f.close()
 
             if self.Paiement == 'CB':
@@ -868,6 +868,7 @@ class RechercheCommande(Thread):
                     f.write(tasklist[4].strip('\n'))
                     f.write(";")
                     f.write(tasklist[5].strip('\n'))
+                    f.write('\n')
                 f.close()
 
         except:
@@ -1204,12 +1205,24 @@ def fonction_Zalando():
         init()
         # Proxys
         liste_proxys = proxy()
+        if liste_proxys.count("\n") != 0:
+            for x in range(0, liste_proxys.count("\n")):
+                liste_proxys.remove('\n')
         # Accounts Generator
         Liste_comptegenerator = listecomptegenerator()
+        if Liste_comptegenerator.count("\n") != 0:
+            for x in range(0, Liste_comptegenerator.count("\n")):
+                Liste_comptegenerator.remove('\n')
         # Accounts
         Liste_compte1 = compte1()
+        if Liste_compte1.count('\n') != 0:
+            for x in range(0, Liste_compte1.count('\n')):
+                Liste_compte1.remove('\n')
         random.shuffle(Liste_compte1)
         Liste_compte2 = compte2()
+        if Liste_compte2.count('\n') != 0:
+            for x in range(0, Liste_compte2.count('\n')):
+                Liste_compte2.remove('\n')
         random.shuffle(Liste_compte2)
         Liste_compte3 = []
         for x in Liste_compte1:
@@ -1219,7 +1232,13 @@ def fonction_Zalando():
         random.shuffle(Liste_compte3)
         # Profiles
         List_profile1 = profile1()
+        if List_profile1.count('\n') != 0:
+            for x in range(0, List_profile1.count('\n')):
+                List_profile1.remove('\n')
         List_profile2 = profile2()
+        if List_profile2.count('\n') != 0:
+            for x in range(0, List_profile2.count('\n')):
+                List_profile2.remove('\n')
         List_profile3 = []
         for x in List_profile1:
             List_profile3.append(x)
@@ -1228,14 +1247,22 @@ def fonction_Zalando():
         random.shuffle(List_profile3)
         # Tasks
         Liste_tache = tache()
+        if Liste_tache.count(['\n']) != 0:
+            for x in range(0, Liste_tache.count(['\n'])):
+                Liste_tache.remove(['\n'])
         # Quick Tasks
         List_Quick_Task = QuickTask()
+        if List_Quick_Task.count('\n') != 0:
+            for x in range(0, List_Quick_Task.count(['\n'])):
+                List_Quick_Task.remove(['\n'])
 
         if Liste_compte1 == [['Email',
                               'Password\n']] and Liste_compte2 == [['Email',
                                                                     'Password\n']]:
             print(colored("You have not specified any accounts !", "yellow"))
             print(colored("You have to use the Account Generator.", "yellow"))
+            time.sleep(5)
+            main()
 
         if List_profile1 == [[
             'Firstname',
@@ -1269,6 +1296,8 @@ def fonction_Zalando():
                                                   'Webhook Url']:
             print(colored("You have not specified any profiles !", "red"))
             print(colored("You have to complete the Profiles files.", "red"))
+            time.sleep(5)
+            main()
 
         print("")
         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
@@ -1342,16 +1371,23 @@ def fonction_Zalando():
 
             if choix_4 == "1":
                 Liste_compte = Liste_compte1
+                if len(Liste_compte) < len(Liste_tache):
+                    time.sleep(5)
+                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    main()
             if choix_4 == "2":
                 Liste_compte = Liste_compte2
+                if len(Liste_compte) < len(Liste_tache):
+                    time.sleep(5)
+                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    main()
             if choix_4 == "3":
                 Liste_compte = Liste_compte3
+                if len(Liste_compte) < len(Liste_tache):
+                    time.sleep(5)
+                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    main()
 
-            if len(Liste_compte) < len(Liste_tache):
-                print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
-                fonction_Zalando()
-
-            nombre_thread = threading.active_count()
             for x in range(0, len(Liste_tache)):
                 url_produit = Liste_tache[x][0]
                 taille_produit = Liste_tache[x][1]
@@ -1367,7 +1403,7 @@ def fonction_Zalando():
                                   List_Quick_Task).start()
             time.sleep(1)
             while True:
-                if threading.active_count() == nombre_thread:
+                if threading.active_count() == 0:
                     FinDeTache()
                     break
 
