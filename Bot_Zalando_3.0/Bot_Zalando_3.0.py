@@ -1200,8 +1200,12 @@ def fonction_Zalando():
         random.shuffle(Liste_compte1)
         Liste_compte2 = compte2()
         random.shuffle(Liste_compte2)
+        Liste_compte3 = Liste_compte1.append(Liste_compte2)
+        random.shuffle(Liste_compte3)
         List_profile1 = profile1()
         List_profile2 = profile2()
+        List_profile3 = List_profile2.append(List_profile1)
+        random.shuffle(List_profile3)
         Liste_tache = tache()
 
         if Liste_compte1 == [['Email',
@@ -1280,7 +1284,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1293,11 +1298,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1306,7 +1309,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1319,11 +1323,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
-                        nombre_tache = len(Liste_tache) - 1
+                        time.sleep(1)
                         while True:
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1331,8 +1333,9 @@ def fonction_Zalando():
                         Paiement = 'CB_Auto'
                         Mode = 'Quick'
                         List_profile = List_profile1
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1345,11 +1348,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1366,7 +1367,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1379,11 +1381,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1392,7 +1392,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1405,11 +1406,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1417,8 +1416,9 @@ def fonction_Zalando():
                         Paiement = 'CB_Auto'
                         Mode = 'Quick'
                         List_profile = List_profile2
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1431,11 +1431,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1450,9 +1448,10 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'CB_Auto'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1465,20 +1464,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "2":
                         Paiement = 'CB_Auto'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1491,20 +1489,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "3":
                         Paiement = 'CB_Auto'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        List_profile = List_profile3
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1517,11 +1514,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1546,7 +1541,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1559,11 +1555,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1572,7 +1566,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1585,11 +1580,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1597,8 +1590,9 @@ def fonction_Zalando():
                         Paiement = 'CB'
                         Mode = 'Quick'
                         List_profile = List_profile1
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1611,11 +1605,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1632,7 +1624,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1645,11 +1638,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1658,7 +1649,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1671,11 +1663,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1683,8 +1673,9 @@ def fonction_Zalando():
                         Paiement = 'CB'
                         Mode = 'Quick'
                         List_profile = List_profile2
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1697,11 +1688,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1716,9 +1705,10 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'CB'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1731,20 +1721,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "2":
                         Paiement = 'CB'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1757,20 +1746,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "3":
                         Paiement = 'CB'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        List_profile = List_profile3
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1783,11 +1771,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1812,7 +1798,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1825,11 +1812,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1838,7 +1823,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1851,11 +1837,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1863,8 +1847,9 @@ def fonction_Zalando():
                         Paiement = 'Paypal'
                         Mode = 'Quick'
                         List_profile = List_profile1
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1877,11 +1862,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1898,7 +1881,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1911,11 +1895,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1924,7 +1906,8 @@ def fonction_Zalando():
                         Mode = 'Quick'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1937,11 +1920,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1949,8 +1930,9 @@ def fonction_Zalando():
                         Paiement = 'Paypal'
                         Mode = 'Quick'
                         List_profile = List_profile2
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1963,11 +1945,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -1982,9 +1962,10 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -1997,20 +1978,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2023,20 +2003,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Quick'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        List_profile = List_profile3
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2049,11 +2028,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2086,7 +2063,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2099,11 +2077,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2112,7 +2088,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2125,11 +2102,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2137,8 +2112,9 @@ def fonction_Zalando():
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         List_profile = List_profile1
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2151,11 +2127,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2172,7 +2146,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2185,10 +2160,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2197,7 +2171,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2210,11 +2185,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2222,8 +2195,9 @@ def fonction_Zalando():
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
                         List_profile = List_profile2
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2236,10 +2210,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2254,9 +2227,10 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2269,20 +2243,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "2":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2295,20 +2268,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "3":
                         Paiement = 'CB_Auto'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        List_profile = List_profile3
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2321,11 +2293,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2350,7 +2320,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2363,11 +2334,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2376,7 +2345,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2389,11 +2359,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2401,8 +2369,9 @@ def fonction_Zalando():
                         Paiement = 'CB'
                         Mode = 'Normal'
                         List_profile = List_profile1
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2415,11 +2384,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2436,7 +2403,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2449,11 +2417,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2462,7 +2428,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2475,11 +2442,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2487,8 +2452,9 @@ def fonction_Zalando():
                         Paiement = 'CB'
                         Mode = 'Normal'
                         List_profile = List_profile2
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2501,11 +2467,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2520,9 +2484,10 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'CB'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2535,20 +2500,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "2":
                         Paiement = 'CB'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2561,20 +2525,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "3":
                         Paiement = 'CB'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        List_profile = List_profile3
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2587,11 +2550,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2641,7 +2602,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile1
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2654,11 +2616,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2666,8 +2626,9 @@ def fonction_Zalando():
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         List_profile = List_profile1
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2680,11 +2641,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2701,7 +2660,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte1
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2714,11 +2674,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2727,7 +2685,8 @@ def fonction_Zalando():
                         Mode = 'Normal'
                         List_profile = List_profile2
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2740,10 +2699,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2751,8 +2709,9 @@ def fonction_Zalando():
                         Paiement = 'Paypal'
                         Mode = 'Normal'
                         List_profile = List_profile2
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2765,10 +2724,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
@@ -2783,9 +2741,10 @@ def fonction_Zalando():
                     if choix_4 == "1":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2798,20 +2757,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "2":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
+                        List_profile = List_profile3
                         Liste_compte = Liste_compte2
-                        for x in range(1, len(Liste_tache)):
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2824,20 +2782,19 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
                     if choix_4 == "3":
                         Paiement = 'Paypal'
                         Mode = 'Normal'
-                        List_profile = random.shuffle(List_profile2.append(List_profile1))
-                        Liste_compte = random.shuffle(Liste_compte1.append(Liste_compte2))
-                        for x in range(1, len(Liste_tache)):
+                        List_profile = List_profile3
+                        Liste_compte = Liste_compte3
+                        nombre_thread = threading.active_count()
+                        for x in range(0, len(Liste_tache)):
                             url_produit = Liste_tache[x][0]
                             taille_produit = Liste_tache[x][1]
                             Task = x
@@ -2850,11 +2807,9 @@ def fonction_Zalando():
                                               Mode,
                                               Task,
                                               List_Quick_Task).start()
-
-                        nombre_thread = threading.active_count()
+                        time.sleep(1)
                         while True:
-                            nombre_tache = len(Liste_tache) - 1
-                            if threading.active_count() == nombre_thread - nombre_tache:
+                            if threading.active_count() == nombre_thread:
                                 FinDeTache()
                                 break
 
