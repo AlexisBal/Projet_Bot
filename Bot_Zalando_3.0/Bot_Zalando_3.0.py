@@ -782,7 +782,7 @@ class RechercheCommande(Thread):
 
             if self.Paiement == 'CB':
                 # Titre
-                embed = DiscordEmbed(title='Successfully Added to cart !', color=1160473)
+                embed = DiscordEmbed(title='Successfully added to cart !', color=1160473)
                 # Pied de page
                 embed.set_footer(text='SCRED AIO')
                 embed.set_timestamp()
@@ -1312,7 +1312,6 @@ def fonction_Zalando():
             Mode = 'Quick'
             List_profile = List_profile1
             Liste_compte = Liste_compte1
-            nombre_thread = threading.active_count()
             for x in range(0, len(Liste_tache)):
                 url_produit = Liste_tache[x][0]
                 taille_produit = Liste_tache[x][1]
@@ -1328,7 +1327,7 @@ def fonction_Zalando():
                                   List_Quick_Task).start()
             time.sleep(1)
             while True:
-                if threading.active_count() == nombre_thread:
+                if threading.enumerate() == '[<_MainThread(MainThread, started 4604644800)>]':
                     FinDeTache()
                     break
 
@@ -1403,7 +1402,7 @@ def fonction_Zalando():
                                   List_Quick_Task).start()
             time.sleep(1)
             while True:
-                if threading.active_count() == 0:
+                if threading.enumerate() == '[<_MainThread(MainThread, started 4604644800)>]':
                     FinDeTache()
                     break
 
