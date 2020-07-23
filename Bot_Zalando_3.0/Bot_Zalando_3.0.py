@@ -248,12 +248,21 @@ class RechercheCommande(Thread):
                 ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                 session.headers["Accept-Language"] = "fr-fr"
                 session.headers["Accept-Encoding"] = "gzip, deflate, br"
-                session.get(self.url_produit, verify=False)
+                page_produit = session.get(self.url_produit, verify=False)
+                
 
                 # Mise dans le panier
-                url_panier = "https://www.zalando.fr/api/pdp/cart"
-                panier = {"simpleSku": sku, "anonymous": False}
-                session.headers["Accept"] = "application/json"
+                url_panier = "https://www.zalando.fr/api/graphql/"
+                panier = [{
+                    "id": 'e7f9dfd05f6b992d05ec8d79803ce6a6bcfb0a10972d4d9731c6b94f6ec75033',
+                    "variables": {
+                        "addToCartInput": {
+                            "productId": sku,
+                            "clientMutationId": "addToCartMutation"
+                        }
+                    }
+                }]
+                session.headers["Accept"] = "*/*"
                 session.headers["Content-Type"] = "application/json"
                 session.post(url_panier, json=panier, verify=False)
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
