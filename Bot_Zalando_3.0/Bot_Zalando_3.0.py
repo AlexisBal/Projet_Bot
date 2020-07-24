@@ -59,6 +59,57 @@ class RechercheCommande(Thread):
 
     def run(self):
         try:
+            # Choix du compte
+            Liste_Compte = self.Liste_compte
+            Task = self.Task
+            compte = Liste_Compte[Task]
+
+            # Choix au hasard d'un profil
+            profil = random.choice(self.Liste_profile)
+
+            # Reglage du pays
+            if self.Mode == 'Normal':
+                Pays = profil[8].upper()
+            else:
+                Pays = self.List_Quick_Task[9].upper()
+            if Pays == 'FR':
+                site = 'https://www.zalando.fr'
+            if Pays == 'CH':
+                site = 'https://fr.zalando.ch'
+            if Pays == 'BE':
+                site = 'https://fr.zalando.be'
+            if Pays == 'LU':
+                site = 'https://fr.zalando.be/?clu=1'
+            if Pays == 'DE':
+                site = 'https://www.zalando.de'
+            if Pays == 'AT':
+                site = 'https://www.zalando.at/'
+            if Pays == 'NL':
+                site = 'https://www.zalando.nl/'
+            if Pays == 'IT':
+                site = 'https://www.zalando.it/'
+            if Pays == 'UK':
+                site = 'https://www.zalando.co.uk/'
+            if Pays == 'ES':
+                site = 'https://www.zalando.es/'
+            if Pays == 'SE':
+                site = 'https://www.zalando.se/'
+            if Pays == 'DK':
+                site = 'https://www.zalando.dk/'
+            if Pays == 'NO':
+                site = 'https://www.zalando.no/'
+            if Pays == 'FI':
+                site = 'https://www.zalando.fi/'
+            if Pays == 'PL':
+                site = 'https://www.zalando.pl/'
+            else:
+                print(colored('Wrong country code !', 'red'))
+                print(colored('Country code accepted :', 'yellow'))
+                print(colored('FR, CH, BE, LU, DE, AT, NL, IT, UK, ES, SE, DK, NO, FI, PL',
+                              'yellow'))
+                time.sleep(8)
+                main()
+
             # Récupération du Sku
             while True:
                 headers = {
@@ -68,7 +119,7 @@ class RechercheCommande(Thread):
                 requete_1 = requests.get(url, headers=headers, verify=False, allow_redirects=False)
                 soup_1 = BeautifulSoup(requete_1.content, "html.parser")
                 reponse_1 = soup_1.find(type="application/json", class_="re-1-1")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                       Style.RESET_ALL + "> Task %s - " % self.Task + colored("Searching Product", "red"))
                 if reponse_1 is not None:
                     reponsebis_1 = reponse_1.contents
@@ -89,7 +140,7 @@ class RechercheCommande(Thread):
                         liste_sku.append(sku_list[n]['size'])
                     position_taille = liste_sku.index(self.taille_produit.strip('\n'))
                     sku = liste_sku[position_taille - 1]
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored("Product Found", "yellow"))
                     break
 
@@ -111,18 +162,10 @@ class RechercheCommande(Thread):
                     if stock_schema == 'http://schema.org/InStock':
                         break
                     else:
-                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                   "Product out of stock - Waiting for restock", "yellow"))
                         time.sleep(0.2)
-
-            # Choix du compte
-            Liste_Compte = self.Liste_compte
-            Task = self.Task
-            compte = Liste_Compte[Task]
-
-            # Choix au hasard d'un profil
-            profil = random.choice(self.Liste_profile)
 
             # Mise dans le panier du produit
             # Ouverture de la Session
@@ -135,7 +178,7 @@ class RechercheCommande(Thread):
                     proxy = random.choice(self.liste_proxys)
                     session.proxies = {"http": "http://%s" % proxy}
                     # Connexion à la page d'accueil de Zalando
-                    url_home = "https://www.zalando.fr"
+                    url_home = site
                     session.headers[
                         "Accept"
                     ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -211,11 +254,11 @@ class RechercheCommande(Thread):
                 session.headers["Content-Length"] = "76"
                 connex = session.post(url_connexion_3, json=identifiants_2, verify=False)
                 if connex.status_code == 201:
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Account successfully logged", "green"))
                 else:
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "There is a problem with this account. Stop the program and try later !", "red"))
                     fonction_Zalando()
@@ -273,16 +316,16 @@ class RechercheCommande(Thread):
                 if self.Paiement == 'CB' and repPanier.status_code == 200:
                     stop_1 = timeit.default_timer()
                     chronometre_1 = str(round(stop_1 - start_chrono, 5))
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Successfully added to cart - size %s" % self.taille_produit, "green"))
 
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Added to cart - size %s" % self.taille_produit, "yellow"))
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Payment Process", "yellow"))
 
@@ -644,11 +687,11 @@ class RechercheCommande(Thread):
                         if reponse_checkout.status_code == 200:
                             stop_2 = timeit.default_timer()
                             chronometre_2 = str(round(stop_2 - start_chrono, 5))
-                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "Successfully checked out !", "green"))
                         else:
-                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "There is a problem with the checkout ! Check your details and try later !",
                                       "red"))
@@ -708,11 +751,11 @@ class RechercheCommande(Thread):
                         if reponse_checkout.status_code == 200:
                             stop_3 = timeit.default_timer()
                             chronometre_3 = str(round(stop_3 - start_chrono, 5))
-                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "Successfully checked out !", "green"))
                         else:
-                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "There is a problem with the checkout ! Check your details and try later !",
                                       "red"))
@@ -986,7 +1029,7 @@ def compte2():
 
 # Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
-    with open('../Data/AccountGenerator.csv', 'r') as f:
+    with open('../Data/Accounts/AccountGenerator.csv', 'r') as f:
         Liste_comptegenerator = []
         for ligne in f:
             comptegenerator_list = ligne.split(";")
@@ -1169,7 +1212,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 
             # Message de confirmation pour chaque compte créé
             if inscription.status_code == 201:
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                       Style.RESET_ALL + colored(
                           "Account of %s was successfully created !", "green") % Liste_comptegenerator[compte][0])
 
@@ -1190,7 +1233,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 
     # Rénitialisation du fichier AccountGenerator.csv
     comptelist2 = ['Email', 'Password']
-    with open("../Data/AccountGenerator.csv", "w") as f:
+    with open("../Data/Accounts/AccountGenerator.csv", "w") as f:
         f.write(comptelist2[0])
         f.write(";")
         f.write(comptelist2[1])
@@ -1272,7 +1315,7 @@ def fonction_Zalando():
             'Additional Address',
             'Postcode',
             'City',
-            'Country',
+            'Country Code',
             'Name (DUPOND Tom)',
             'Card Number',
             'Exp Month (8)',
@@ -1286,7 +1329,7 @@ def fonction_Zalando():
                                                    'Additional Address',
                                                    'Postcode',
                                                    'City',
-                                                   'Country',
+                                                   'Country Code',
                                                    'Name (DUPOND Tom)',
                                                    'Card Number',
                                                    'Exp Month (8)',
@@ -1299,11 +1342,11 @@ def fonction_Zalando():
             main()
 
         print("")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 1. Quick Tasks")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 2. Optimised Tasks")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Generated Accounts")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 4. Proxy Check")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 5. Main Menu")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 1. Quick Tasks")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 2. Optimised Tasks")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 3. Generated Accounts")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 4. Proxy Check")
+        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 5. Main Menu")
 
         choix = input("\nChoice :")
         if choix == "1":
@@ -1344,11 +1387,11 @@ def fonction_Zalando():
 
         if choix == "2":
             Mode = 'Normal'
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 1. Credit Card Autocheckout")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 2. Credit Card Manual Checkout")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]", Style.RESET_ALL + "> 3. Paypal Manual Checkout")
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 3. Paypal Manual Checkout")
             choix_2 = input("\nChoice :")
 
             if choix_2 == "1":
@@ -1357,11 +1400,11 @@ def fonction_Zalando():
                 Paiement = 'CB'
             if choix_2 == "3":
                 Paiement = 'Paypal'
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 1. Profile 1")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 2. Profile 2")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 3. Select Multiple Profiles")
             choix_3 = input("\nChoice :")
 
@@ -1379,11 +1422,11 @@ def fonction_Zalando():
                     main()
             if choix_3 == "3":
                 List_profile = List_profile3
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 1. List 1")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 2. List 2")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 3. Select Multiple Lists")
             choix_4 = input("\nChoice :")
 
@@ -1439,9 +1482,9 @@ def fonction_Zalando():
             main()
 
         if choix == "3":
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 1. List 1")
-            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
+            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 2. List 2")
             choix_2 = input("\nChoice :")
             if choix_2 == "1":
