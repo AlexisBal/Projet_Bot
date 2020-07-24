@@ -288,7 +288,7 @@ class RechercheCommande(Thread):
                 impression = page_produit.headers['x-page-impression-id']
 
                 # Mise dans le panier
-                for quantite in range(0, self.quantite):
+                for quantite in range(0, int(self.quantite)):
                     url_bot_panier = '%s/resources/7be100d4c6rn2028b315fc23b805e921' % site
                     url_panier = "%s/api/graphql/" % site
                     bot_panier = {
@@ -322,12 +322,12 @@ class RechercheCommande(Thread):
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                   "Article %s successfully added to cart - size %s" % (quantite, self.taille_produit), "green"))
-
+                    if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal' and repPanier.status_code == 200:
+                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                              Style.RESET_ALL + "> Task %s - " % self.Task + colored(
+                                  "Article %s successfully added to cart - size %s" % (quantite, self.taille_produit), "yellow"))
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                              "Added to cart - size %s" % self.taille_produit, "yellow"))
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Payment Process", "yellow"))
@@ -799,14 +799,14 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Quantity', value=self.quantite)
-                embed.add_embed_field(name='Mode', value='Auto Checkout')
-                embed.add_embed_field(name='Checkout Speed', value=chronometre_2)
+                embed.add_embed_field(name='Mode', value='Auto Checkout', inline=False)
+                embed.add_embed_field(name='Checkout Speed', value=chronometre_2, inline=False)
                 embed.add_embed_field(name='Account',
                                       value=compte[0].strip('\n'),
-                                      incline=False)
+                                      inline=False)
                 embed.add_embed_field(name='Credit Card',
                                       value=creditcard,
-                                      incline=False)
+                                      inline=False)
                 webhook.add_embed(embed)
 
             if self.Paiement == 'Paypal':
@@ -826,7 +826,7 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_3)
                 embed.add_embed_field(name='Checkout Link',
                                       value=url_paypal,
-                                      incline=False)
+                                      inline=False)
                 webhook.add_embed(embed)
 
             if self.Paiement == 'CB':
@@ -842,7 +842,7 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Quantity', value=self.quantite)
-                embed.add_embed_field(name='Mode', value='Manual')
+                embed.add_embed_field(name='Mode', value='Manual', inline=False)
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_1)
                 embed.add_embed_field(name='Username',
                                       value=compte[0].strip('\n'))
@@ -861,7 +861,7 @@ class RechercheCommande(Thread):
                 jour = today.strftime("%b-%d-%Y")
                 heure = now.strftime("%H:%M:%S")
                 mode_1 = 'Paypal'
-                tasklist = [jour, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
+                tasklist = [jour, heure, self.url_produit, self.taille_produit, self.quantite, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
                     f.write(tasklist[0].strip('\n'))
                     f.write(";")
@@ -885,7 +885,7 @@ class RechercheCommande(Thread):
                 Jour = today.strftime("%b-%d-%Y")
                 heure = now.strftime("%H:%M:%S")
                 mode_1 = 'Credit Card - %s' % creditcard
-                tasklist = [Jour, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
+                tasklist = [Jour, heure, self.url_produit, self.taille_produit, self.quantite, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
                     f.write(tasklist[0].strip('\n'))
                     f.write(";")
@@ -909,7 +909,7 @@ class RechercheCommande(Thread):
                 jour = today.strftime("%b-%d-%Y")
                 heure = now.strftime("%H:%M:%S")
                 mode_1 = 'Manual Checkout'
-                tasklist = [jour, heure, self.url_produit, self.taille_produit, mode_1, compte[0]]
+                tasklist = [jour, heure, self.url_produit, self.taille_produit, self.quantite, mode_1, compte[0]]
                 with open("../Data/Tasks/Task_History.csv", "a") as f:
                     f.write(tasklist[0].strip('\n'))
                     f.write(";")
@@ -928,7 +928,7 @@ class RechercheCommande(Thread):
                 f.close()
 
         except:
-            pass
+            raise
 
 
 def titre():
