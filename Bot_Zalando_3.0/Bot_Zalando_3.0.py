@@ -1529,7 +1529,7 @@ def fonction_Zalando():
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     while True:
-        #VerificationLicense()
+        VerificationLicense()
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         print(colored("Welcome ! Initializing Scred AIO - User data loaded !\n", "green"))
