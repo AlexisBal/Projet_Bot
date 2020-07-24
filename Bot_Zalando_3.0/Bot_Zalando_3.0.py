@@ -715,7 +715,7 @@ class RechercheCommande(Thread):
                         url_pay_4 = "%s/checkout/payment-complete" % site
                         del session.headers["Content-Type"]
                         del session.headers["Origin"]
-                        session.headers["Host"] = site.strip('https:/')
+                        session.headers["Host"] = site.strip('https://')
                         session.headers[
                             "Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                         b = session.get(url_pay_4, verify=False)
@@ -914,7 +914,7 @@ class RechercheCommande(Thread):
                 f.close()
 
         except:
-            raise
+            pass
 
 
 def titre():
