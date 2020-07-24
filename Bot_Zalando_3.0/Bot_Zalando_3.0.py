@@ -1316,7 +1316,7 @@ def fonction_Zalando():
             if List_Quick_Task[0] == 3:
                 Liste_compte = Liste_compte3
 
-            List_profile = List_profile1
+            List_profile = List_Quick_Task
 
             thread_list = []
             for x in range(0, len(Liste_tache)):
@@ -1335,8 +1335,12 @@ def fonction_Zalando():
                 thread.start()
                 thread_list.append(thread)
 
+            time.sleep(4)
             for t in thread_list:
                 t.join()
+
+            FinDeTache()
+            main()
 
         if choix == "2":
             Mode = 'Normal'
@@ -1411,8 +1415,12 @@ def fonction_Zalando():
                 thread.start()
                 thread_list.append(thread)
 
+            time.sleep(4)
             for t in thread_list:
                 t.join()
+
+            FinDeTache()
+            main()
 
         if choix == "3":
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
