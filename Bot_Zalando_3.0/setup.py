@@ -3,13 +3,18 @@ from cx_Freeze import setup, Executable
 # Dependencies are automatically detected, but it might need
 # fine tuning.
 buildOptions = dict(
-    packages=["idna", "re", "urllib", "urllib.parse", "bs4", "user_agent", "time", "json", "requests", "password_generator", "urllib3", "requests.adapters", "requests.packages.urllib3.util.retry"]
+    packages=["idna", "json", "timeit", "re", "random",
+              "threading", "colorama", "termcolor",
+              "requests", "urllib3", "requests.adapters",
+              "requests.packages.urllib3.util.retry",
+              "user_agent", "bs4", "licensing.models",
+              "licensing.methods", "datetime", "discord_webhook"]
 )
 
 setup(
-    name="Recherche_Checkout_Produit",
-    version="2.0",
-    description="Recherche et commande du produit",
+    name="Bot Zalando",
+    version="0.0.3",
+    description="Recherche et commande de produit",
     options=dict(build_exe=buildOptions),
     executables=[Executable("Bot_Zalando_3.0.py")],
 )

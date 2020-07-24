@@ -4,7 +4,7 @@ import timeit
 import re
 import random
 from threading import Thread
-from colorama import Back, Fore, Style, deinit, init
+from colorama import Fore, Style, init
 
 import requests
 import urllib3
@@ -842,8 +842,8 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Quantity', value=self.quantite)
-                embed.add_embed_field(name='Mode', value='Manual', inline=False)
-                embed.add_embed_field(name='Checkout Speed', value=chronometre_1)
+                embed.add_embed_field(name='Mode', value='Manual')
+                embed.add_embed_field(name='Checkout Speed', value=chronometre_1, inline=False)
                 embed.add_embed_field(name='Username',
                                       value=compte[0].strip('\n'))
                 embed.add_embed_field(name='Password',
@@ -928,7 +928,7 @@ class RechercheCommande(Thread):
                 f.close()
 
         except:
-            raise
+            pass
 
 
 def titre():
