@@ -1367,9 +1367,17 @@ def fonction_Zalando():
 
             if choix_3 == "1":
                 List_profile = List_profile1
+                if len(List_profile) == 0:
+                    time.sleep(5)
+                    print(colored('Profile1.csv is empty !', 'red'))
+                    main()
             if choix_3 == "2":
                 List_profile = List_profile2
-            if choix_3 == "2":
+                if len(List_profile) == 0:
+                    time.sleep(5)
+                    print(colored('Profile2.csv is empty !', 'red'))
+                    main()
+            if choix_3 == "3":
                 List_profile = List_profile3
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                   Style.RESET_ALL + "> 1. List 1")
@@ -1385,11 +1393,19 @@ def fonction_Zalando():
                     time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
                     main()
+                if len(Liste_compte) == 0:
+                    time.sleep(5)
+                    print(colored('Accounts_List1.csv is empty !', 'red'))
+                    main()
             if choix_4 == "2":
                 Liste_compte = Liste_compte2
                 if len(Liste_compte) < len(Liste_tache):
                     time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    main()
+                if len(Liste_compte) == 0:
+                    time.sleep(5)
+                    print(colored('Accounts_List2.csv is empty !', 'red'))
                     main()
             if choix_4 == "3":
                 Liste_compte = Liste_compte3
