@@ -12,9 +12,9 @@ buildOptions = dict(
 )
 
 setup(
-    name="Bot Zalando",
+    name="Scred_AIO",
     version="0.0.3",
     description="Recherche et commande de produit",
     options=dict(build_exe=buildOptions),
-    executables=[Executable("Bot_Zalando_3.0.py")],
+    executables=[Executable("Scred_AIO.py")],
 )
