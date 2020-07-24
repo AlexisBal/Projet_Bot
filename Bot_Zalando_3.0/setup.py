@@ -12,9 +12,9 @@ buildOptions = dict(
 )
 
 setup(
-    name="Scred_AIO",
+    name="ScredAIO",
     version="0.0.3",
     description="Recherche et commande de produit",
     options=dict(build_exe=buildOptions),
-    executables=[Executable("Scred_AIO.py")],
+    executables=[Executable("ScredAIO.py")],
 )
