@@ -8,7 +8,6 @@ from colorama import Fore, Style, init
 
 import requests
 import urllib3
-from termcolor import colored
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from user_agent import generate_user_agent
@@ -106,10 +105,9 @@ class RechercheCommande(Thread):
 
             payslist = ['FR', 'CH', 'BE', 'LU', 'DE', 'AT', 'NL', 'IT', 'UK', 'ES', 'SE', 'DK', 'NO', 'FI', 'PL']
             if Pays not in payslist:
-                print(colored('Wrong country code !', 'red'))
-                print(colored('Country code accepted :', 'yellow'))
-                print(colored('FR, CH, BE, LU, DE, AT, NL, IT, UK, ES, SE, DK, NO, FI, PL',
-                              'yellow'))
+                print(Fore.RED + 'Wrong country code !')
+                print(Fore.YELLOW + 'Country code accepted :')
+                print(Fore.YELLOW + 'FR, CH, BE, LU, DE, AT, NL, IT, UK, ES, SE, DK, NO, FI, PL')
                 time.sleep(5)
                 main()
 
@@ -123,7 +121,7 @@ class RechercheCommande(Thread):
                 soup_1 = BeautifulSoup(requete_1.content, "html.parser")
                 reponse_1 = soup_1.find(type="application/json", class_="re-1-1")
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> Task %s - " % self.Task + colored("Searching Product", "red"))
+                      Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "Searching Product")
                 if reponse_1 is not None:
                     reponsebis_1 = reponse_1.contents
                     reponsebis2_1 = json.loads(reponsebis_1[0])
@@ -144,7 +142,7 @@ class RechercheCommande(Thread):
                     position_taille = liste_sku.index(self.taille_produit.strip('\n'))
                     sku = liste_sku[position_taille - 1]
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> Task %s - " % self.Task + colored("Product Found", "yellow"))
+                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Product Found")
                     break
 
             # Verification du stock
@@ -166,8 +164,8 @@ class RechercheCommande(Thread):
                         break
                     else:
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                  "Product out of stock - Waiting for restock", "yellow"))
+                              Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Product out of stock - "
+                                                                                           "Waiting for restock")
                         time.sleep(0.2)
 
             # Mise dans le panier du produit
@@ -257,12 +255,12 @@ class RechercheCommande(Thread):
                 connex = session.post(url_connexion_3, json=identifiants_2, verify=False)
                 if connex.status_code == 201:
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                              "Account successfully logged", "green"))
+                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.GREEN + "Account successfully logged")
                 else:
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                              "There is a problem with this account. Stop the program and try later !", "red"))
+                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with this "
+                                                                                    "account. Stop the program and "
+                                                                                    "try later !")
                     time.sleep(5)
                     main()
 
@@ -320,17 +318,18 @@ class RechercheCommande(Thread):
                         stop_1 = timeit.default_timer()
                         chronometre_1 = str(round(stop_1 - start_chrono, 5))
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                  "Article %s successfully added to cart - size %s" % (quantite, self.taille_produit), "green"))
+                              Style.RESET_ALL + "> Task %s - " % self.Task + Fore.GREEN + "Article %s successfully "
+                                                                                          "added to cart - size %s" % (
+                              quantite, self.taille_produit))
                     if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal' and repPanier.status_code == 200:
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                  "Article %s successfully added to cart - size %s" % (quantite, self.taille_produit), "yellow"))
+                              Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Article %s successfully "
+                                                                                           "added to cart - size %s" % (
+                              quantite, self.taille_produit))
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                              "Payment Process", "yellow"))
+                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Payment Process")
 
                     # Validation du panier et checkout
                     bot_2_2 = "%s/resources/35692132da2028b315fc23b805e921" % site
@@ -691,13 +690,11 @@ class RechercheCommande(Thread):
                             stop_2 = timeit.default_timer()
                             chronometre_2 = str(round(stop_2 - start_chrono, 5))
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                      "Successfully checked out !", "green"))
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + Fore.GREEN + "Successfully checked "
+                                                                                              "out !")
                         else:
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                      "There is a problem with the checkout ! Check your details and try later !",
-                                      "red"))
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with the checkout ! Check your details and try later !")
                             time.sleep(5)
                             main()
 
@@ -756,13 +753,12 @@ class RechercheCommande(Thread):
                             stop_3 = timeit.default_timer()
                             chronometre_3 = str(round(stop_3 - start_chrono, 5))
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                      "Successfully checked out !", "green"))
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + Fore.GREEN + "Successfully checked "
+                                                                                              "out !")
                         else:
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                                  Style.RESET_ALL + "> Task %s - " % self.Task + colored(
-                                      "There is a problem with the checkout ! Check your details and try later !",
-                                      "red"))
+                                  Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with "
+                                                                                            "the checkout ! Check your details and try later !")
                             time.sleep(5)
                             main()
                         json_reponse = json.loads(reponse_checkout.text)
@@ -932,11 +928,11 @@ class RechercheCommande(Thread):
 
 
 def titre():
-    print(colored("  ___                     _     __     ______    ___ ", "red"))
-    print(colored("/ ___|  ___ ___  ___   __| |   /  \   |_    _| /  _  \ ", "red"))
-    print(colored("\___ \ / __|  _|/ _ \ / _' |  / /\ \    |  |  |  / \  |", "red"))
-    print(colored(" ___) | (__| | |  __/| ( | | / /__\ \  _|  |_ |  \_/  |", "red"))
-    print(colored("|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/", "red"))
+    print(Fore.RED + "  ___                     _     __     ______    ___ ")
+    print(Fore.RED + "/ ___|  ___ ___  ___   __| |   /  \   |_    _| /  _  \ ")
+    print(Fore.RED + "\___ \ / __|  _|/ _ \ / _' |  / /\ \    |  |  |  / \  |")
+    print(Fore.RED + " ___) | (__| | |  __/| ( | | / /__\ \  _|  |_ |  \_/  |")
+    print(Fore.RED + "|____/ \___|_|  \___| \_.__|/_/    \_\|______| \_____/")
     print("\n")
 
 
@@ -961,7 +957,7 @@ def horloge():
 # Fonction latence
 def latence(start):
     stop = timeit.default_timer()
-    latence = Style.RESET_ALL + '[' + Fore.RED + str(round(stop-start,4)) + Style.RESET_ALL + ']'
+    latence = Style.RESET_ALL + '[' + Fore.RED + str(round(stop - start, 4)) + Style.RESET_ALL + ']'
     return latence
 
 
@@ -979,7 +975,7 @@ def VerificationLicense():
     with open("Data/License.txt", "r") as f:
         License = f.read()
         if License == "":
-            print(colored("Enter your License key in file : License.txt", "red"))
+            print(Fore.RED + "Enter your License key in file : License.txt")
             time.sleep(10)
             exit()
 
@@ -991,12 +987,13 @@ def VerificationLicense():
 
     if result[0] is None or not Helpers.IsOnRightMachine(result[0]):
         print("ERREUR: {0}".format(result[1]))
-        print(colored("Your license is invalid or you have an internet connection problem ! Check your details and try later !", "red"))
+        print(
+            Fore.RED + "Your license is invalid or you have an internet connection problem ! Check your details and try later !")
         time.sleep(10)
         exit()
 
     else:
-        print(colored("Your license is valid !", "green"))
+        print(Fore.RED + "Your license is valid !")
         pass
 
 
@@ -1011,8 +1008,8 @@ def proxy():
                 liste_proxys.append(ligne.strip('\n'))
 
         if not liste_proxys:
-            print(colored("You have not specified any proxies !", "red"))
-            print(colored("Enter the address of the proxy servers in the Proxy.txt file.", "red"))
+            print(Fore.RED + "You have not specified any proxies !")
+            print(Fore.RED + "Enter the address of the proxy servers in the Proxy.txt file.")
             time.sleep(5)
             main()
 
@@ -1133,11 +1130,11 @@ def VerificationProxys():
                 url_home = "https://www.zalando.fr"
                 session.get(url_home, verify=False)
                 # Test du proxy
-                print(colored('Proxy %s is OK !', 'green') % x)
+                print(Fore.GREEN + 'Proxy %s is OK !' % x)
             session.close()
         # Gestion des exceptions
         except:
-            print(colored("Proxy %s doesn't work !", "red") % x)
+            print(Fore.RED + "Proxy %s doesn't work !" % x)
 
 
 # Création des comptes à partir des informations saisies dans AccountGenerator.csv
@@ -1231,13 +1228,12 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
             # Message de confirmation pour chaque compte créé
             if inscription.status_code == 201:
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + colored(
-                          "Account of %s was successfully created !", "green") % Liste_comptegenerator[compte][0])
+                      Style.RESET_ALL + Fore.GREEN + "Account of %s was successfully created !" %
+                      Liste_comptegenerator[compte][0])
 
             else:
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + colored(
-                          "There is a problem with the register ! Try later.", "red"))
+                      Style.RESET_ALL + Fore.RED + "There is a problem with the register ! Try later.")
                 time.sleep(5)
                 main()
 
@@ -1324,13 +1320,13 @@ def fonction_Zalando():
                 List_Quick_Task.remove(['\n'])
         # Vérification Base de données
         if Liste_compte1 == [] and Liste_compte2 == []:
-            print(colored("You have not specified any accounts !", "yellow"))
-            print(colored("You have to use the Account Generator.", "yellow"))
+            print(Fore.RED + "You have not specified any accounts !")
+            print(Fore.RED + "You have to use the Account Generator.")
             time.sleep(5)
             main()
         if List_profile1 == [] and List_profile2 == []:
-            print(colored("You have not specified any profiles !", "red"))
-            print(colored("You have to complete the Profiles files.", "red"))
+            print(Fore.RED + "You have not specified any profiles !")
+            print(Fore.RED + "You have to complete the Profiles files.")
             time.sleep(5)
             main()
 
@@ -1344,11 +1340,11 @@ def fonction_Zalando():
         choix = input("\nChoice :")
         if choix == "1":
             if len(Liste_tache) == 0:
-                print(colored('The file Task.csv is empty !', 'red'))
+                print(Fore.RED + 'The file Task.csv is empty !')
                 time.sleep(5)
                 main()
             if len(List_Quick_Task) == 0:
-                print(colored('The file Quick_Task.csv is empty !', 'red'))
+                print(Fore.RED + 'The file Quick_Task.csv is empty !')
                 time.sleep(5)
                 main()
             Paiement = 'CB_Auto'
@@ -1356,21 +1352,21 @@ def fonction_Zalando():
             if List_Quick_Task[0] == 1:
                 Liste_compte = Liste_compte1
                 if len(Liste_compte) < len(Liste_tache):
-                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                     time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
-                    print(colored('The file Accounts_List1.csv is empty !', 'red'))
+                    print(Fore.RED + 'The file Accounts_List1.csv is empty !')
                     time.sleep(5)
                     main()
             if List_Quick_Task[0] == 2:
                 Liste_compte = Liste_compte2
                 if len(Liste_compte) < len(Liste_tache):
-                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                     time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
-                    print(colored('The file Accounts_List2.csv is empty !', 'red'))
+                    print(Fore.RED + 'The file Accounts_List2.csv is empty !')
                     time.sleep(5)
                     main()
             if List_Quick_Task[0] == 3:
@@ -1406,7 +1402,7 @@ def fonction_Zalando():
 
         if choix == "2":
             if len(Liste_tache) == 0:
-                print(colored('The file Task.csv is empty !', 'red'))
+                print(Fore.RED + 'The file Task.csv is empty !')
                 time.sleep(5)
                 main()
             Mode = 'Normal'
@@ -1434,13 +1430,13 @@ def fonction_Zalando():
             if choix_3 == "1":
                 List_profile = List_profile1
                 if len(List_profile) == 0:
-                    print(colored('The file Profile1.csv is empty !', 'red'))
+                    print(Fore.RED + 'The file Profile1.csv is empty !')
                     time.sleep(5)
                     main()
             if choix_3 == "2":
                 List_profile = List_profile2
                 if len(List_profile) == 0:
-                    print(colored('The file Profile2.csv is empty !', 'red'))
+                    print(Fore.RED + 'The file Profile2.csv is empty !')
                     time.sleep(5)
                     main()
             if choix_3 == "3":
@@ -1456,27 +1452,27 @@ def fonction_Zalando():
             if choix_4 == "1":
                 Liste_compte = Liste_compte1
                 if len(Liste_compte) < len(Liste_tache):
-                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                     time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
-                    print(colored('The file Accounts_List1.csv is empty !', 'red'))
+                    print(Fore.RED + 'The file Accounts_List1.csv is empty !')
                     time.sleep(5)
                     main()
             if choix_4 == "2":
                 Liste_compte = Liste_compte2
                 if len(Liste_compte) < len(Liste_tache):
-                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                     time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
-                    print(colored('The file Accounts_List2.csv is empty !', 'red'))
+                    print(Fore.RED + 'The file Accounts_List2.csv is empty !')
                     main()
                     time.sleep(5)
             if choix_4 == "3":
                 Liste_compte = Liste_compte3
                 if len(Liste_compte) < len(Liste_tache):
-                    print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                     time.sleep(5)
                     main()
 
@@ -1507,6 +1503,10 @@ def fonction_Zalando():
             main()
 
         if choix == "3":
+            if len(Liste_comptegenerator) == 0:
+                print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
+                time.sleep(5)
+                main()
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 1. List 1")
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
@@ -1529,17 +1529,18 @@ def fonction_Zalando():
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     while True:
-        VerificationLicense()
+        #VerificationLicense()
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
-        print(colored("Welcome ! Initializing Scred AIO - User data loaded !\n", "green"))
+        print(Fore.GREEN + "Welcome ! Initializing Scred AIO - User data loaded !\n")
         print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
         choix_depart = input("\nChoice :")
 
         if choix_depart == "1":
             fonction_Zalando()
 
+
 # --------------------------------------------------------------------------------------------------------------------#
 
-
+init()
 main()
