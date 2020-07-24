@@ -26,7 +26,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = None
+        self.timeout = 5
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -156,6 +156,9 @@ class RechercheCommande(Thread):
                     if session.cookies != '<RequestsCookieJar[]>':
                         break
 
+                # Lancement du chronomètre
+                start_chrono = timeit.default_timer()
+
                 # Récupération et modification des cookies de la session
                 cookies_2 = session.cookies.get_dict()
                 del session.cookies['mpulseinject']
@@ -278,9 +281,15 @@ class RechercheCommande(Thread):
                 del session.headers['x-zalando-intent-context']
                 del session.headers['x-page-impression-id']
                 if self.Paiement == 'CB' and repPanier.status_code == 200:
+                    stop_1 = timeit.default_timer()
+                    chronometre_1 = str(round(stop_1 - start_chrono, 5))
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Successfully added to cart - size %s" % self.taille_produit, "green"))
+
+                    # Verification fin de tache
+                    Avancement = 'FIN'
+                    return Avancement
 
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
@@ -647,6 +656,8 @@ class RechercheCommande(Thread):
                         session.headers['x-zalando-header-mode'] = 'desktop'
                         reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
                         if reponse_checkout.status_code == 200:
+                            stop_2 = timeit.default_timer()
+                            chronometre_2 = str(round(stop_2 - start_chrono, 5))
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "Successfully checked out !", "green"))
@@ -656,6 +667,10 @@ class RechercheCommande(Thread):
                                       "There is a problem with the checkout ! Check your details and try later !",
                                       "red"))
                             fonction_Zalando()
+
+                            # Verification fin de tache
+                            Avancement = 'FIN'
+                            return Avancement
 
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
@@ -709,6 +724,8 @@ class RechercheCommande(Thread):
                         session.headers['x-zalando-header-mode'] = 'desktop'
                         reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
                         if reponse_checkout.status_code == 200:
+                            stop_3 = timeit.default_timer()
+                            chronometre_3 = str(round(stop_3 - start_chrono, 5))
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                                       "Successfully checked out !", "green"))
@@ -720,6 +737,10 @@ class RechercheCommande(Thread):
                             fonction_Zalando()
                         json_reponse = json.loads(reponse_checkout.text)
                         url_paypal = str(json_reponse["url"])
+
+                        # Verification fin de tache
+                        Avancement = 'FIN'
+                        return Avancement
             session.close()
 
             # Notification Discord WebHook
@@ -752,7 +773,7 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Mode', value='Auto Checkout')
-                embed.add_embed_field(name='Checkout Speed', value='6.33')
+                embed.add_embed_field(name='Checkout Speed', value=chronometre_2)
                 embed.add_embed_field(name='Account',
                                       value=compte[0].strip('\n'),
                                       incline=False)
@@ -774,7 +795,7 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Mode', value='Manual')
-                embed.add_embed_field(name='Checkout Speed', value='6.33')
+                embed.add_embed_field(name='Checkout Speed', value=chronometre_3)
                 embed.add_embed_field(name='Checkout Link',
                                       value=url_paypal,
                                       incline=False)
@@ -793,7 +814,7 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Mode', value='Manual')
-                embed.add_embed_field(name='Checkout Speed', value='6.33')
+                embed.add_embed_field(name='Checkout Speed', value=chronometre_1)
                 embed.add_embed_field(name='Username',
                                       value=compte[0].strip('\n'))
                 embed.add_embed_field(name='Password',
@@ -920,7 +941,7 @@ auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ==
 
 # Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
 def VerificationLicense():
-    with open("Data/License.txt", "r") as f:
+    with open("../Data/License.txt", "r") as f:
         License = f.read()
         if License == "":
             print(colored("Enter your License key in file : License.txt", "red"))
@@ -948,7 +969,7 @@ def VerificationLicense():
 
 # Récupérations des proxies
 def proxy():
-    with open('Data/Proxy.txt', 'r') as f:
+    with open('../Data/Proxy.txt', 'r') as f:
         liste_proxys = []
         for ligne in f:
             if ligne.strip('\n') != '':
@@ -963,7 +984,7 @@ def proxy():
 
 # Création de la liste de compte "Liste_compte1"
 def compte1():
-    with open('Data/Accounts/Accounts_List1.csv', 'r') as f:
+    with open('../Data/Accounts/Accounts_List1.csv', 'r') as f:
         Liste_compte1 = []
         for ligne in f:
             compte_list1 = ligne.split(";")
@@ -975,7 +996,7 @@ def compte1():
 
 # Création de la liste de compte "Liste_compte2"
 def compte2():
-    with open('Data/Accounts/Accounts_List2.csv', 'r') as f:
+    with open('../Data/Accounts/Accounts_List2.csv', 'r') as f:
         Liste_compte2 = []
         for ligne in f:
             compte_list2 = ligne.split(";")
@@ -987,7 +1008,7 @@ def compte2():
 
 # Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
-    with open('Data/AccountGenerator.csv', 'r') as f:
+    with open('../Data/AccountGenerator.csv', 'r') as f:
         Liste_comptegenerator = []
         for ligne in f:
             comptegenerator_list = ligne.split(";")
@@ -999,7 +1020,7 @@ def listecomptegenerator():
 
 # Création de la liste de profiles "List_profile1"
 def profile1():
-    with open('Data/Profiles/Profile1.csv', 'r') as f:
+    with open('../Data/Profiles/Profile1.csv', 'r') as f:
         List_profile1 = []
         for ligne in f:
             profile_list1 = ligne.split(";")
@@ -1011,7 +1032,7 @@ def profile1():
 
 # Création de la liste de profiles "List_profile2"
 def profile2():
-    with open('Data/Profiles/Profile2.csv', 'r') as f:
+    with open('../Data/Profiles/Profile2.csv', 'r') as f:
         List_profile2 = []
         for ligne in f:
             profile_list2 = ligne.split(";")
@@ -1023,7 +1044,7 @@ def profile2():
 
 # Création de la liste "List_Quick_Task"
 def QuickTask():
-    with open('Data/Tasks/Quick_Task.csv', 'r') as f:
+    with open('../Data/Tasks/Quick_Task.csv', 'r') as f:
         List_Quick_Task = []
         for ligne in f:
             List_Quick_Task2 = ligne.split(";")
@@ -1035,7 +1056,7 @@ def QuickTask():
 
 # Création de la liste de tache "Liste_tache"
 def tache():
-    with open('Data/Tasks/Task.csv', 'r') as f:
+    with open('../Data/Tasks/Task.csv', 'r') as f:
         Liste_tache = []
         for ligne in f:
             liste_list = ligne.split(";")
@@ -1048,7 +1069,7 @@ def tache():
 def FinDeTache():
     # Rénitialisation du fichier Task.csv
     tasklist2 = ['Product Url', 'Size']
-    with open("Data/Tasks/Task.csv", "w") as f:
+    with open("../Data/Tasks/Task.csv", "w") as f:
         f.write(tasklist2[0])
         f.write(";")
         f.write(tasklist2[1])
@@ -1255,7 +1276,7 @@ def fonction_Zalando():
         if List_Quick_Task.count('\n') != 0:
             for x in range(0, List_Quick_Task.count(['\n'])):
                 List_Quick_Task.remove(['\n'])
-
+        # Vérification Base de données
         if Liste_compte1 == [['Email',
                               'Password\n']] and Liste_compte2 == [['Email',
                                                                     'Password\n']]:
@@ -1327,7 +1348,7 @@ def fonction_Zalando():
                                   List_Quick_Task).start()
             time.sleep(1)
             while True:
-                if threading.enumerate() == '[<_MainThread(MainThread, started 4604644800)>]':
+                if len(threading.enumerate()) == 1:
                     FinDeTache()
                     break
 
@@ -1391,18 +1412,22 @@ def fonction_Zalando():
                 url_produit = Liste_tache[x][0]
                 taille_produit = Liste_tache[x][1]
                 Task = x
-                RechercheCommande(liste_proxys,
-                                  List_profile,
-                                  Liste_compte,
-                                  url_produit,
-                                  taille_produit,
-                                  Paiement,
-                                  Mode,
-                                  Task,
-                                  List_Quick_Task).start()
-            time.sleep(1)
+                thread = RechercheCommande(liste_proxys,
+                                           List_profile,
+                                           Liste_compte,
+                                           url_produit,
+                                           taille_produit,
+                                           Paiement,
+                                           Mode,
+                                           Task,
+                                           List_Quick_Task)
+                thread.start()
+            Verification = []
             while True:
-                if threading.enumerate() == '[<_MainThread(MainThread, started 4604644800)>]':
+                print(Thread)
+                if Thread == 'FIN':
+                    Verification.append('FIN')
+                if Verification.count('FIN') == len(Liste_tache):
                     FinDeTache()
                     break
 

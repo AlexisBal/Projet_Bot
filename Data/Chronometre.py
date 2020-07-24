@@ -14,7 +14,7 @@ start_chrono = timeit.default_timer() #Lancement du chronomètre
 #Chronometre
 def chronometre(start_chrono):
     stop = timeit.default_timer()
-    chronometre =str(round(stop-start_chrono,4))
+    chronometre = str(round(stop-start_chrono, 5))
     return chronometre
 
 
