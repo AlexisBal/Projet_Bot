@@ -1333,24 +1333,25 @@ def fonction_Zalando():
             Mode = 'Quick'
             List_profile = List_profile1
             Liste_compte = Liste_compte1
+            thread_list = []
             for x in range(0, len(Liste_tache)):
                 url_produit = Liste_tache[x][0]
                 taille_produit = Liste_tache[x][1]
                 Task = x
-                RechercheCommande(liste_proxys,
-                                  List_profile,
-                                  Liste_compte,
-                                  url_produit,
-                                  taille_produit,
-                                  Paiement,
-                                  Mode,
-                                  Task,
-                                  List_Quick_Task).start()
-            time.sleep(1)
-            while True:
-                if len(threading.enumerate()) == 1:
-                    FinDeTache()
-                    break
+                thread = RechercheCommande(liste_proxys,
+                                           List_profile,
+                                           Liste_compte,
+                                           url_produit,
+                                           taille_produit,
+                                           Paiement,
+                                           Mode,
+                                           Task,
+                                           List_Quick_Task)
+                thread.start()
+                thread_list.append(thread)
+
+            for t in thread_list:
+                t.join()
 
         if choix == "2":
             Mode = 'Normal'
@@ -1408,6 +1409,7 @@ def fonction_Zalando():
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
                     main()
 
+            thread_list = []
             for x in range(0, len(Liste_tache)):
                 url_produit = Liste_tache[x][0]
                 taille_produit = Liste_tache[x][1]
@@ -1422,14 +1424,10 @@ def fonction_Zalando():
                                            Task,
                                            List_Quick_Task)
                 thread.start()
-            Verification = []
-            while True:
-                print(Thread)
-                if Thread == 'FIN':
-                    Verification.append('FIN')
-                if Verification.count('FIN') == len(Liste_tache):
-                    FinDeTache()
-                    break
+                thread_list.append(thread)
+
+            for t in thread_list:
+                t.join()
 
         if choix == "3":
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
