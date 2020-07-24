@@ -4,13 +4,10 @@ import timeit
 import re
 import random
 from threading import Thread
-import threading
 from colorama import Back, Fore, Style, deinit, init
 
 import requests
 import urllib3
-import urllib
-from urllib.parse import quote
 from termcolor import colored
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
@@ -120,19 +117,12 @@ class RechercheCommande(Thread):
                         time.sleep(0.2)
 
             # Choix du compte
-            if self.Mode != 'Quick':
-                Liste_Compte = self.Liste_compte
-                Task = self.Task
-                compte = Liste_Compte[Task]
-            else:
-                compte = [self.List_Quick_Task[0], self.List_Quick_Task[1]]
+            Liste_Compte = self.Liste_compte
+            Task = self.Task
+            compte = Liste_Compte[Task]
 
             # Choix au hasard d'un profil
-            Liste_profil_bis = []
-            for y in range(0, len(self.Liste_profile)):
-                Liste_profil_bis.append([self.Liste_profile[y]])
-            profil_2 = random.choice(Liste_profil_bis)
-            profil = profil_2[0]
+            profil = random.choice(self.Liste_profile)
 
             # Mise dans le panier du produit
             # Ouverture de la Session
@@ -287,10 +277,6 @@ class RechercheCommande(Thread):
                           Style.RESET_ALL + "> Task %s - " % self.Task + colored(
                               "Successfully added to cart - size %s" % self.taille_produit, "green"))
 
-                    # Verification fin de tache
-                    Avancement = 'FIN'
-                    return Avancement
-
                 # Credit Card Autocheckout
                 if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando FR]",
@@ -344,40 +330,40 @@ class RechercheCommande(Thread):
                         checkout_2_2 = {
                             'address': {
                                 'address': {
-                                    'city': self.List_Quick_Task[9].strip('\n'),
+                                    'city': self.List_Quick_Task[8].strip('\n'),
                                     'salutation': 'Mr',
-                                    'first_name': self.List_Quick_Task[2].strip('\n'),
-                                    'last_name': self.List_Quick_Task[3].strip('\n'),
+                                    'first_name': self.List_Quick_Task[1].strip('\n'),
+                                    'last_name': self.List_Quick_Task[2].strip('\n'),
                                     'country_code': 'FR',
-                                    'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip(
+                                    'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[5].strip(
                                         '\n'),
-                                    'zip': self.List_Quick_Task[8].strip('\n')
+                                    'zip': self.List_Quick_Task[7].strip('\n')
                                 }
                             }
                         }
                         data_panier4 = {
                             'address': {
-                                'city': self.List_Quick_Task[9].strip('\n'),
+                                'city': self.List_Quick_Task[8].strip('\n'),
                                 'salutation': 'Mr',
-                                'first_name': self.List_Quick_Task[2].strip('\n'),
-                                'last_name': self.List_Quick_Task[3].strip('\n'),
+                                'first_name': self.List_Quick_Task[1].strip('\n'),
+                                'last_name': self.List_Quick_Task[2].strip('\n'),
                                 'country_code': 'FR',
-                                'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[6].strip(
+                                'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[5].strip(
                                     '\n'),
-                                'zip': self.List_Quick_Task[8].strip('\n')
+                                'zip': self.List_Quick_Task[7].strip('\n')
                             },
                             'addressDestination': {
                                 'destination': {
                                     'address': {
                                         'salutation': 'Mr',
-                                        'first_name': self.List_Quick_Task[2].strip('\n'),
-                                        'last_name': self.List_Quick_Task[3].strip('\n'),
+                                        'first_name': self.List_Quick_Task[1].strip('\n'),
+                                        'last_name': self.List_Quick_Task[2].strip('\n'),
                                         'country_code': 'FR',
-                                        'city': self.List_Quick_Task[9].strip('\n'),
-                                        'zip': self.List_Quick_Task[8].strip('\n'),
-                                        'street': self.List_Quick_Task[5].strip('\n') + " " + self.List_Quick_Task[
-                                            6].strip('\n'),
-                                        'additional': self.List_Quick_Task[7].strip('\n')
+                                        'city': self.List_Quick_Task[8].strip('\n'),
+                                        'zip': self.List_Quick_Task[7].strip('\n'),
+                                        'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[
+                                            5].strip('\n'),
+                                        'additional': self.List_Quick_Task[6].strip('\n')
                                     }
                                 },
                                 'normalized_address': {
@@ -408,7 +394,7 @@ class RechercheCommande(Thread):
 
                         # Numero de telephone
                         url_phone = 'https://www.zalando.fr/api/checkout/save-customer-phone-number'
-                        data_phone = {"phoneNumber": self.List_Quick_Task[4].strip('\n')}
+                        data_phone = {"phoneNumber": self.List_Quick_Task[3].strip('\n')}
                         session.post(url_phone, json=data_phone, verify=False)
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
@@ -552,11 +538,11 @@ class RechercheCommande(Thread):
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     if self.Mode == 'Quick':
                         data_cb = {
-                            "card_holder": self.List_Quick_Task[11].strip('\n'),
-                            "pan": self.List_Quick_Task[12].strip('\n'),
-                            "cvv": self.List_Quick_Task[15].strip('\n'),
-                            "expiry_month": self.List_Quick_Task[13].strip('\n'),
-                            "expiry_year": self.List_Quick_Task[14].strip('\n'),
+                            "card_holder": self.List_Quick_Task[10].strip('\n'),
+                            "pan": self.List_Quick_Task[11].strip('\n'),
+                            "cvv": self.List_Quick_Task[14].strip('\n'),
+                            "expiry_month": self.List_Quick_Task[12].strip('\n'),
+                            "expiry_year": self.List_Quick_Task[13].strip('\n'),
                             "options": {
                                 "selected": [],
                                 "not_selected": ["store_for_reuse"],
@@ -668,10 +654,6 @@ class RechercheCommande(Thread):
                                       "red"))
                             fonction_Zalando()
 
-                            # Verification fin de tache
-                            Avancement = 'FIN'
-                            return Avancement
-
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
                         data_pay_3 = (
@@ -737,10 +719,6 @@ class RechercheCommande(Thread):
                             fonction_Zalando()
                         json_reponse = json.loads(reponse_checkout.text)
                         url_paypal = str(json_reponse["url"])
-
-                        # Verification fin de tache
-                        Avancement = 'FIN'
-                        return Avancement
             session.close()
 
             # Notification Discord WebHook
@@ -1331,8 +1309,15 @@ def fonction_Zalando():
         if choix == "1":
             Paiement = 'CB_Auto'
             Mode = 'Quick'
+            if List_Quick_Task[0] == 1:
+                Liste_compte = Liste_compte1
+            if List_Quick_Task[0] == 2:
+                Liste_compte = Liste_compte2
+            if List_Quick_Task[0] == 3:
+                Liste_compte = Liste_compte3
+
             List_profile = List_profile1
-            Liste_compte = Liste_compte1
+
             thread_list = []
             for x in range(0, len(Liste_tache)):
                 url_produit = Liste_tache[x][0]
