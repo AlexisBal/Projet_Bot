@@ -102,12 +102,14 @@ class RechercheCommande(Thread):
                 site = 'https://www.zalando.fi'
             if Pays == 'PL':
                 site = 'https://www.zalando.pl'
-            else:
+
+            payslist = ['FR', 'CH', 'BE', 'LU', 'DE', 'AT', 'NL', 'IT', 'UK', 'ES', 'SE', 'DK', 'NO', 'FI', 'PL']
+            if Pays not in payslist:
                 print(colored('Wrong country code !', 'red'))
                 print(colored('Country code accepted :', 'yellow'))
                 print(colored('FR, CH, BE, LU, DE, AT, NL, IT, UK, ES, SE, DK, NO, FI, PL',
                               'yellow'))
-                time.sleep(8)
+                time.sleep(5)
                 main()
 
             # Récupération du Sku
@@ -267,7 +269,6 @@ class RechercheCommande(Thread):
                 del session.headers["x-zalando-render-page-uri"]
                 del session.headers["x-zalando-request-uri"]
                 del session.headers["x-flow-id"]
-                del session.headers["Content-Length"]
                 del session.headers["Content-Type"]
                 del session.headers["Origin"]
                 session.headers[
@@ -376,7 +377,7 @@ class RechercheCommande(Thread):
                                     'salutation': 'Mr',
                                     'first_name': self.List_Quick_Task[1].strip('\n'),
                                     'last_name': self.List_Quick_Task[2].strip('\n'),
-                                    'country_code': self.List_Quick_Task[9].strip('\n'),
+                                    'country_code': Pays,
                                     'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[5].strip(
                                         '\n'),
                                     'zip': self.List_Quick_Task[7].strip('\n')
@@ -389,7 +390,7 @@ class RechercheCommande(Thread):
                                 'salutation': 'Mr',
                                 'first_name': self.List_Quick_Task[1].strip('\n'),
                                 'last_name': self.List_Quick_Task[2].strip('\n'),
-                                'country_code': self.List_Quick_Task[9].strip('\n'),
+                                'country_code': Pays,
                                 'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[5].strip(
                                     '\n'),
                                 'zip': self.List_Quick_Task[7].strip('\n')
@@ -400,7 +401,7 @@ class RechercheCommande(Thread):
                                         'salutation': 'Mr',
                                         'first_name': self.List_Quick_Task[1].strip('\n'),
                                         'last_name': self.List_Quick_Task[2].strip('\n'),
-                                        'country_code': self.List_Quick_Task[9].strip('\n'),
+                                        'country_code': Pays,
                                         'city': self.List_Quick_Task[8].strip('\n'),
                                         'zip': self.List_Quick_Task[7].strip('\n'),
                                         'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[
@@ -409,7 +410,7 @@ class RechercheCommande(Thread):
                                     }
                                 },
                                 'normalized_address': {
-                                    'country_code': self.List_Quick_Task[9].strip('\n'),
+                                    'country_code': Pays,
                                     'city': self.List_Quick_Task[9].strip('\n'),
                                     'zip': self.List_Quick_Task[8].strip('\n'),
                                     'street': self.List_Quick_Task[6].strip('\n'),
@@ -482,7 +483,7 @@ class RechercheCommande(Thread):
                                     'salutation': 'Mr',
                                     'first_name': profil[0].strip('\n'),
                                     'last_name': profil[1].strip('\n'),
-                                    'country_code': profil[9].strip('\n'),
+                                    'country_code': Pays,
                                     'street': profil[3].strip('\n') + " " + profil[4].strip('\n'),
                                     'zip': profil[6].strip('\n')
                                 }
@@ -494,7 +495,7 @@ class RechercheCommande(Thread):
                                 'salutation': 'Mr',
                                 'first_name': profil[0].strip('\n'),
                                 'last_name': profil[1].strip('\n'),
-                                'country_code': profil[9].strip('\n'),
+                                'country_code': Pays,
                                 'street': profil[3].strip('\n') + " " + profil[4].strip('\n'),
                                 'zip': profil[6].strip('\n')
                             },
@@ -504,7 +505,7 @@ class RechercheCommande(Thread):
                                         'salutation': 'Mr',
                                         'first_name': profil[0].strip('\n'),
                                         'last_name': profil[1].strip('\n'),
-                                        'country_code': profil[9].strip('\n'),
+                                        'country_code': Pays,
                                         'city': profil[7].strip('\n'),
                                         'zip': profil[6].strip('\n'),
                                         'street': profil[3].strip('\n') + " " + profil[4].strip('\n'),
@@ -512,7 +513,7 @@ class RechercheCommande(Thread):
                                     }
                                 },
                                 'normalized_address': {
-                                    'country_code': profil[9].strip('\n'),
+                                    'country_code': Pays,
                                     'city': profil[7].strip('\n'),
                                     'zip': profil[6].strip('\n'),
                                     'street': profil[4].strip('\n'),
@@ -1215,6 +1216,13 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
                       Style.RESET_ALL + colored(
                           "Account of %s was successfully created !", "green") % Liste_comptegenerator[compte][0])
 
+            else:
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                      Style.RESET_ALL + colored(
+                          "There is a problem with the register ! Try later.", "red"))
+                time.sleep(5)
+                main()
+
         # Fermeture de la session
         session.close()
 
@@ -1349,31 +1357,35 @@ def fonction_Zalando():
 
         choix = input("\nChoice :")
         if choix == "1":
-            if len(List_Quick_Task) == 0:
+            if len(Liste_tache) == 0:
+                print(colored('The file Task.csv is empty !', 'red'))
                 time.sleep(5)
-                print(colored('Quick_Task.csv is empty !', 'red'))
+                main()
+            if len(List_Quick_Task) == 0:
+                print(colored('The file Quick_Task.csv is empty !', 'red'))
+                time.sleep(5)
                 main()
             Paiement = 'CB_Auto'
             Mode = 'Quick'
             if List_Quick_Task[0] == 1:
                 Liste_compte = Liste_compte1
                 if len(Liste_compte) < len(Liste_tache):
-                    time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
+                    print(colored('The file Accounts_List1.csv is empty !', 'red'))
                     time.sleep(5)
-                    print(colored('Accounts_List1.csv is empty !', 'red'))
                     main()
             if List_Quick_Task[0] == 2:
                 Liste_compte = Liste_compte2
                 if len(Liste_compte) < len(Liste_tache):
-                    time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
+                    print(colored('The file Accounts_List2.csv is empty !', 'red'))
                     time.sleep(5)
-                    print(colored('Accounts_List2.csv is empty !', 'red'))
                     main()
             if List_Quick_Task[0] == 3:
                 Liste_compte = Liste_compte3
@@ -1405,6 +1417,10 @@ def fonction_Zalando():
             main()
 
         if choix == "2":
+            if len(Liste_tache) == 0:
+                print(colored('The file Task.csv is empty !', 'red'))
+                time.sleep(5)
+                main()
             Mode = 'Normal'
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                   Style.RESET_ALL + "> 1. Credit Card Autocheckout")
@@ -1430,14 +1446,14 @@ def fonction_Zalando():
             if choix_3 == "1":
                 List_profile = List_profile1
                 if len(List_profile) == 0:
+                    print(colored('The file Profile1.csv is empty !', 'red'))
                     time.sleep(5)
-                    print(colored('Profile1.csv is empty !', 'red'))
                     main()
             if choix_3 == "2":
                 List_profile = List_profile2
                 if len(List_profile) == 0:
+                    print(colored('The file Profile2.csv is empty !', 'red'))
                     time.sleep(5)
-                    print(colored('Profile2.csv is empty !', 'red'))
                     main()
             if choix_3 == "3":
                 List_profile = List_profile3
@@ -1452,29 +1468,30 @@ def fonction_Zalando():
             if choix_4 == "1":
                 Liste_compte = Liste_compte1
                 if len(Liste_compte) < len(Liste_tache):
-                    time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
+                    print(colored('The file Accounts_List1.csv is empty !', 'red'))
                     time.sleep(5)
-                    print(colored('Accounts_List1.csv is empty !', 'red'))
                     main()
             if choix_4 == "2":
                 Liste_compte = Liste_compte2
                 if len(Liste_compte) < len(Liste_tache):
-                    time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    time.sleep(5)
                     main()
                 if len(Liste_compte) == 0:
-                    time.sleep(5)
-                    print(colored('Accounts_List2.csv is empty !', 'red'))
+                    print(colored('The file Accounts_List2.csv is empty !', 'red'))
                     main()
+                    time.sleep(5)
             if choix_4 == "3":
                 Liste_compte = Liste_compte3
                 if len(Liste_compte) < len(Liste_tache):
-                    time.sleep(5)
                     print(colored('You must have a greater number of accounts than the number of tasks !', 'red'))
+                    time.sleep(5)
                     main()
+
 
             thread_list = []
             for x in range(0, len(Liste_tache)):
