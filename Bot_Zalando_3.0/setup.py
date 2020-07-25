@@ -8,7 +8,8 @@ buildOptions = dict(
               "requests", "urllib3", "requests.adapters",
               "requests.packages.urllib3.util.retry",
               "user_agent", "bs4", "licensing.models",
-              "licensing.methods", "datetime", "discord_webhook"]
+              "licensing.methods", "datetime", "discord_webhook"
+              "pypresence"]
 )
 
 setup(

@@ -17,6 +17,7 @@ from licensing.methods import Key, Helpers
 from datetime import datetime
 from datetime import date
 from discord_webhook import DiscordWebhook, DiscordEmbed
+from pypresence import Presence
 
 
 # Réglage des "Timeouts"
@@ -113,37 +114,44 @@ class RechercheCommande(Thread):
 
             # Récupération du Sku
             while True:
-                headers = {
-                    "User-Agent": generate_user_agent()
-                }
-                url = self.url_produit
-                requete_1 = requests.get(url, headers=headers, verify=False, allow_redirects=False)
-                soup_1 = BeautifulSoup(requete_1.content, "html.parser")
-                reponse_1 = soup_1.find(type="application/json", class_="re-1-1")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "Searching Product")
-                if reponse_1 is not None:
-                    reponsebis_1 = reponse_1.contents
-                    reponsebis2_1 = json.loads(reponsebis_1[0])
-                    id_produit = reponsebis2_1['enrichedEntity']['id']
-                    sku_list = reponsebis2_1['graphqlCache'][
-                        '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
-                        'data']['product']['simples']
-                    link_photo = reponsebis2_1['graphqlCache'][
-                        '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
-                        'data']['product']['galleryThumbnails'][0]['uri']
-                    name_product = reponsebis2_1['graphqlCache'][
-                        '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
-                        'data']['product']['name']
-                    liste_sku = []
-                    for n in range(0, len(sku_list)):
-                        liste_sku.append(sku_list[n]['sku'])
-                        liste_sku.append(sku_list[n]['size'])
-                    position_taille = liste_sku.index(self.taille_produit.strip('\n'))
-                    sku = liste_sku[position_taille - 1]
+                try:
+                    headers = {
+                        "User-Agent": generate_user_agent()
+                    }
+                    url = self.url_produit
+                    requete_1 = requests.get(url, headers=headers, verify=False, allow_redirects=False)
+                    soup_1 = BeautifulSoup(requete_1.content, "html.parser")
+                    reponse_1 = soup_1.find(type="application/json", class_="re-1-1")
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Product Found")
-                    break
+                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "Searching Product")
+                    if reponse_1 is not None:
+                        reponsebis_1 = reponse_1.contents
+                        reponsebis2_1 = json.loads(reponsebis_1[0])
+                        id_produit = reponsebis2_1['enrichedEntity']['id']
+                        sku_list = reponsebis2_1['graphqlCache'][
+                            '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
+                            'data']['product']['simples']
+                        link_photo = reponsebis2_1['graphqlCache'][
+                            '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
+                            'data']['product']['galleryThumbnails'][0]['uri']
+                        name_product = reponsebis2_1['graphqlCache'][
+                            '{"id":"060d7dee025024237a02b73f6e4436f4e57fdffb20016dc5fa67e817b5a2d682","variables":{"id":"%s"}}' % id_produit][
+                            'data']['product']['name']
+                        liste_sku = []
+                        for n in range(0, len(sku_list)):
+                            liste_sku.append(sku_list[n]['sku'])
+                            liste_sku.append(sku_list[n]['size'])
+                        position_taille = liste_sku.index(self.taille_produit.strip('\n'))
+                        sku = liste_sku[position_taille - 1]
+                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                              Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Product Found")
+                        break
+
+                except:
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                          Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + 'There is a problem with the Sku !')
+                    time.sleep(5)
+                    main()
 
             # Verification du stock
             while True:
@@ -195,8 +203,6 @@ class RechercheCommande(Thread):
 
                 # Récupération et modification des cookies de la session
                 cookies_2 = session.cookies.get_dict()
-                del session.cookies['mpulseinject']
-                session.cookies['mpulseinject'] = 'false'
 
                 # Connexion à la page de connexion
                 url_connexion_1 = "%s/login/?view=login" % site
@@ -476,8 +482,12 @@ class RechercheCommande(Thread):
 
                     else:
                         # Addresse de livraison
+                        botvalidurl = '%s/resources/7be100d4c6rn2028b315fc23b805e921' % site
                         url_adresse = '%s/api/checkout/validate-address' % site
                         url_panier_4 = '%s/api/checkout/create-or-update-address' % site
+                        botvalidbis = {
+                            'sensor_data': '7a74G7m23Vrp0o5c9184401.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392605,7351935,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.441784385220,797823675967,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3665,1;0,-1,0,0,-1,3549,1;0,-1,0,0,1450,1450,0;0,-1,0,0,-1,4421,0;0,-1,0,0,1115,1115,0;0,-1,0,0,1373,1373,0;-1,2,-94,-102,0,-1,0,0,-1,-1,0;-1,2,-94,-108,0,1,3198,16,0,8,1450;1,1,3685,-2,0,8,1450;2,3,3686,-2,0,8,1450;3,2,3764,-2,0,8,1450;4,2,3805,16,0,0,1450;5,1,3921,-2,0,0,1450;6,3,3921,-2,0,0,1450;7,2,4011,-2,0,0,1450;8,1,4035,-2,0,0,1450;9,3,4035,-2,0,0,1450;10,2,4147,-2,0,0,1450;11,1,4213,-2,0,0,1450;12,3,4213,-2,0,0,1450;13,2,4269,-2,0,0,1450;14,1,4349,-2,0,0,1450;15,3,4349,-2,0,0,1450;16,1,4449,-2,0,0,1450;17,3,4449,-2,0,0,1450;18,2,4552,-2,0,0,1450;19,2,4553,-2,0,0,1450;20,1,4820,8,0,0,1450;21,2,4921,8,0,0,1450;22,1,4993,8,0,0,1450;23,2,5080,8,0,0,1450;24,1,5136,8,0,0,1450;25,2,5243,8,0,0,1450;26,1,5635,-2,0,0,1450;27,3,5635,-2,0,0,1450;28,2,5713,-2,0,0,1450;29,1,5729,-2,0,0,1450;30,3,5730,-2,0,0,1450;31,2,5838,-2,0,0,1450;32,1,5840,-2,0,0,1450;33,3,5841,-2,0,0,1450;34,2,5913,-2,0,0,1450;35,1,5996,-2,0,0,1450;36,3,5996,-2,0,0,1450;37,2,6104,-2,0,0,1450;38,1,6290,-2,0,0,1450;39,3,6290,-2,0,0,1450;40,2,6374,-2,0,0,1450;41,1,6654,8,0,0,1450;42,2,6755,8,0,0,1450;43,1,7110,-2,0,0,1450;44,3,7110,-2,0,0,1450;45,2,7210,-2,0,0,1450;46,1,7301,-2,0,0,1450;47,3,7301,-2,0,0,1450;48,2,7394,-2,0,0,1450;49,1,8189,-2,0,0,1450;50,3,8189,-2,0,0,1450;51,2,8283,-2,0,0,1450;52,1,8338,-2,0,0,1450;53,3,8338,-2,0,0,1450;54,2,8459,-2,0,0,1450;55,1,8511,-2,0,0,1450;56,3,8511,-2,0,0,1450;57,2,8585,-2,0,0,1450;58,1,8644,-2,0,0,1450;59,3,8644,-2,0,0,1450;60,2,8749,-2,0,0,1450;61,1,8898,-2,0,0,1450;62,3,8899,-2,0,0,1450;63,2,9002,-2,0,0,1450;64,1,9231,-2,0,0,1450;65,3,9232,-2,0,0,1450;66,2,9409,-2,0,0,1450;67,1,9430,-2,0,0,1450;68,3,9430,-2,0,0,1450;69,2,9492,-2,0,0,1450;70,1,9669,-2,0,0,1450;71,3,9670,-2,0,0,1450;72,2,9709,-2,0,0,1450;73,1,9857,-2,0,0,1450;74,3,9857,-2,0,0,1450;75,2,9935,-2,0,0,1450;76,1,9969,-2,0,0,1450;77,3,9969,-2,0,0,1450;78,2,10074,-2,0,0,1450;79,1,10196,-2,0,0,1450;80,3,10196,-2,0,0,1450;81,2,10319,-2,0,0,1450;82,1,10360,-2,0,0,1450;83,3,10361,-2,0,0,1450;84,2,10436,-2,0,0,1450;85,1,10477,-2,0,0,1450;86,3,10477,-2,0,0,1450;87,2,10593,-2,0,0,1450;88,1,10676,-2,0,0,1450;89,3,10676,-2,0,0,1450;90,2,10793,-2,0,0,1450;91,1,10939,-2,0,0,1450;92,3,10939,-2,0,0,1450;93,2,11086,-2,0,0,1450;94,1,12481,16,0,8,1115;95,1,12889,-2,0,8,1115;96,3,12889,-2,0,8,1115;97,2,12926,-2,0,8,1115;98,1,13086,-2,0,8,1115;99,3,13086,-2,0,8,1115;100,2,13169,-2,0,8,1115;101,1,13288,-2,0,8,1115;102,3,13288,-2,0,8,1115;103,2,13372,-2,0,8,1115;104,1,13509,-2,0,8,1115;105,3,13509,-2,0,8,1115;106,2,13659,-2,0,8,1115;107,1,13765,-2,0,8,1115;108,3,13765,-2,0,8,1115;109,2,13874,-2,0,8,1115;110,2,14095,16,0,0,1115;111,1,15703,16,0,8,1373;112,1,16229,-2,0,8,1373;113,3,16229,-2,0,8,1373;114,2,16302,-2,0,8,1373;115,2,16314,16,0,0,1373;116,1,16376,-2,0,0,1373;117,3,16376,-2,0,0,1373;118,1,16505,-2,0,0,1373;119,3,16506,-2,0,0,1373;120,2,16532,-2,0,0,1373;121,2,16583,-2,0,0,1373;122,1,16627,-2,0,0,1373;123,3,16628,-2,0,0,1373;124,2,16724,-2,0,0,1373;125,1,16867,-2,0,0,1373;126,3,16868,-2,0,0,1373;127,2,16931,-2,0,0,1373;128,1,16999,-2,0,0,1373;129,3,16999,-2,0,0,1373;130,2,17111,-2,0,0,1373;131,1,17181,-2,0,0,1373;132,3,17182,-2,0,0,1373;133,2,17248,-2,0,0,1373;134,1,17298,-2,0,0,1373;135,3,17299,-2,0,0,1373;136,2,17422,-2,0,0,1373;137,1,17522,-2,0,0,1373;138,3,17523,-2,0,0,1373;139,2,17608,-2,0,0,1373;140,1,17617,-2,0,0,1373;141,3,17617,-2,0,0,1373;142,2,17719,-2,0,0,1373;143,1,17738,-2,0,0,1373;144,3,17739,-2,0,0,1373;145,2,17885,-2,0,0,1373;146,1,18308,8,0,0,1373;147,2,18396,8,0,0,1373;148,1,18474,8,0,0,1373;149,2,18554,8,0,0,1373;-1,2,-94,-110,0,1,31,907,182;1,1,49,924,196;2,1,51,951,213;3,1,86,965,220;4,1,103,1007,240;5,1,108,1044,255;6,1,118,1061,262;7,1,119,1061,262;8,1,128,1074,266;9,1,129,1074,266;10,1,141,1083,267;11,1,143,1083,267;12,1,151,1092,269;13,1,152,1092,269;14,1,162,1100,270;15,1,163,1100,270;16,1,176,1104,271;17,1,177,1104,271;18,1,185,1108,271;19,1,190,1108,271;20,1,196,1108,271;21,1,207,1108,271;22,1,257,1102,269;23,1,258,1102,269;24,1,272,1087,267;25,1,274,1061,262;26,1,285,1038,260;27,1,285,1038,260;28,1,297,1007,257;29,1,308,1007,257;30,1,310,982,256;31,1,320,968,256;32,1,323,968,256;33,1,330,949,257;34,1,332,949,257;35,1,341,935,259;36,1,342,935,259;37,1,354,927,261;38,1,356,927,261;39,1,364,924,263;40,1,364,924,263;41,1,375,920,267;42,1,376,920,267;43,1,387,917,271;44,1,391,917,271;45,1,398,916,276;46,1,398,916,276;47,1,494,915,286;48,1,514,934,365;49,1,626,934,369;50,1,705,886,420;51,1,731,832,452;52,1,786,808,464;53,1,962,800,467;54,1,999,793,444;55,1,1005,792,441;56,1,1406,578,386;57,1,1408,572,410;58,1,1479,571,412;59,1,1483,571,413;60,1,1651,571,413;61,1,1681,571,413;62,1,1694,571,414;63,1,1695,571,414;64,1,1702,571,415;65,1,1704,571,415;66,1,1714,571,416;67,1,1715,571,416;68,1,1727,571,417;69,1,1727,571,417;70,1,1736,570,420;71,1,1737,570,420;72,1,1749,569,424;73,1,1750,569,424;74,1,1759,568,429;75,1,1759,568,429;76,1,1770,566,435;77,1,1772,566,435;78,1,1786,563,445;79,1,1789,563,445;80,1,1792,560,455;81,1,1794,560,455;82,1,1806,556,464;83,1,1807,556,464;84,1,1819,551,478;85,1,1823,551,478;86,1,1826,547,492;87,1,1829,547,492;88,1,1838,544,502;89,1,1839,544,502;90,1,1851,541,513;91,1,1852,541,513;92,1,1860,539,523;93,1,1861,539,523;94,1,1872,538,530;95,1,1873,538,530;96,1,1887,538,537;97,1,1888,538,537;98,1,1893,538,542;99,1,1896,538,542;210,3,2940,543,614,1450;212,4,3043,544,614,1450;446,3,12201,469,795,1115;447,4,12308,469,795,1115;619,3,15427,891,869,1373;620,4,15572,891,869,1373;817,3,20729,794,981,-1;818,4,20808,794,981,-1;819,2,20809,794,981,-1;1097,3,25381,472,449,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,%s/checkout/address-1,2,-94,-115,1804030,386330,32,0,0,0,2190327,25381,0,1595647351934,16,17069,161,1098,2844,9,0,25382,1828242,0,EFDE55E3CB9D90A4821B78F3B53D16D1~-1~YAAQfiMVAkVo+39zAQAA4a3+gwSdqttmjbWTIbAoANCTf1tZKaWebTb3TiHq2l1yC1CRz0UEarlE9lLJRbb/zE6dRNWgeaX6GiJhw/+JXY4XLX4fKccnMovtS/or0St+iYkXRo/dngvoTsYTzUX+3beyIZLt3nCLgx6ocrdnYagWcf35iCcLgp+u3/NXJ3rB23CHMYa1MJrfrVyTF+A1IUOB1N5JXuMTVFSZe/hezZ0wcKs+jlSu+Q6/FZFMsDsFUOekOkhZRHqouHWjL18OTSa3ZQWpHk6qwX6cjftCDdYAsgrDSobwdNed2Fb8u97CxYofXjuftDHVOY+dTapR/sMwiUA=~-1~-1~-1,32777,184,-1829503388,26018161,PiZtE,42007,69-1,2,-94,-106,1,6-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,400,200,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,22055865-1,2,-94,-118,358982-1,2,-94,-121,;2;8;0' % (session.headers['User-Agent'], site)
+                        }
                         checkout_2_2 = {
                             'address': {
                                 'address': {
@@ -539,19 +549,17 @@ class RechercheCommande(Thread):
                         session.headers["Origin"] = site
                         session.post(url_adresse, json=checkout_2_2, verify=False)
                         session.post(url_panier_4, json=data_panier4, verify=False)
-
-                        # Numero de telephone
-                        url_phone = '%s/api/checkout/save-customer-phone-number' % site
-                        data_phone = {"phoneNumber": profil[2].strip('\n')}
-                        session.post(url_phone, json=data_phone, verify=False)
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
                         del session.headers["x-zalando-checkout-app"]
                         del session.headers["x-zalando-footer-mode"]
+                        session.headers["Referer"] = '%s/checkout/address' % site
+                        session.headers["Origin"] = site
+                        session.headers["Content-Type"] = 'text/plain;charset=UTF-8'
+                        session.headers["Accept"] = "*/*"
+                        session.post(botvalidurl, json=botvalidbis, verify=False)
 
-                        # Next Step
                         url_bot_1_2 = '%s/resources/7be100d4c6rn2028b315fc23b805e921' % site
-                        url_checkout_2_2 = '%s/api/checkout/next-step' % site
                         bot = {
                             'sensor_data': '7a74G7m23Vrp0o5c9183811.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392552,3616660,1440,900,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.15037313375,797716808330,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3665,1;0,-1,0,0,-1,3549,1;0,-1,0,0,1450,1450,0;0,-1,0,0,-1,4421,0;0,-1,0,0,1115,1115,0;0,-1,0,0,1373,1373,0;-1,2,-94,-102,0,-1,0,0,-1,-1,1;-1,2,-94,-108,0,1,1806,16,0,8,1450;1,1,2126,-2,0,8,1450;2,3,2126,-2,0,8,1450;3,2,2190,-2,0,8,1450;4,2,2291,16,0,0,1450;5,1,2310,-2,0,0,1450;6,3,2310,-2,0,0,1450;7,2,2385,-2,0,0,1450;8,1,2459,-2,0,0,1450;9,3,2459,-2,0,0,1450;10,2,2610,-2,0,0,1450;11,1,2614,-2,0,0,1450;12,3,2615,-2,0,0,1450;13,2,2700,-2,0,0,1450;14,1,2761,-2,0,0,1450;15,3,2762,-2,0,0,1450;16,2,2842,-2,0,0,1450;17,1,2843,-2,0,0,1450;18,3,2843,-2,0,0,1450;19,2,2919,-2,0,0,1450;20,1,3079,-2,0,0,1450;21,3,3079,-2,0,0,1450;22,2,3186,-2,0,0,1450;23,1,3239,-2,0,0,1450;24,3,3240,-2,0,0,1450;25,2,3301,-2,0,0,1450;26,1,3386,-2,0,0,1450;27,3,3387,-2,0,0,1450;28,2,3474,-2,0,0,1450;29,1,3603,-2,0,0,1450;30,3,3603,-2,0,0,1450;31,2,3678,-2,0,0,1450;32,1,3724,-2,0,0,1450;33,3,3724,-2,0,0,1450;34,2,3803,-2,0,0,1450;35,1,3866,-2,0,0,1450;36,3,3867,-2,0,0,1450;37,2,3905,-2,0,0,1450;38,1,3980,-2,0,0,1450;39,3,3981,-2,0,0,1450;40,2,4072,-2,0,0,1450;41,1,4244,-2,0,0,1450;42,3,4256,-2,0,0,1450;43,2,4359,-2,0,0,1450;44,1,4495,-2,0,0,1450;45,3,4495,-2,0,0,1450;46,1,4590,-2,0,0,1450;47,3,4590,-2,0,0,1450;48,2,4619,-2,0,0,1450;49,2,4677,-2,0,0,1450;50,1,5247,-2,0,0,1450;51,3,5248,-2,0,0,1450;52,2,5324,-2,0,0,1450;53,1,5486,-2,0,0,1450;54,3,5487,-2,0,0,1450;55,2,5570,-2,0,0,1450;56,1,5578,-2,0,0,1450;57,3,5579,-2,0,0,1450;58,2,5666,-2,0,0,1450;59,1,5760,-2,0,0,1450;60,3,5761,-2,0,0,1450;61,2,5845,-2,0,0,1450;62,1,5854,-2,0,0,1450;63,3,5854,-2,0,0,1450;64,2,5937,-2,0,0,1450;65,1,5956,-2,0,0,1450;66,3,5956,-2,0,0,1450;67,2,6068,-2,0,0,1450;68,1,6142,-2,0,0,1450;69,3,6143,-2,0,0,1450;70,2,6237,-2,0,0,1450;71,1,6347,-2,0,0,1450;72,3,6347,-2,0,0,1450;73,2,6451,-2,0,0,1450;74,1,7755,16,0,8,1115;75,1,8313,-2,0,8,1115;76,3,8313,-2,0,8,1115;77,2,8383,-2,0,8,1115;78,1,8461,-2,0,8,1115;79,3,8461,-2,0,8,1115;80,2,8524,-2,0,8,1115;81,1,8657,-2,0,8,1115;82,3,8657,-2,0,8,1115;83,2,8748,-2,0,8,1115;84,1,8829,-2,0,8,1115;85,3,8829,-2,0,8,1115;86,2,8931,-2,0,8,1115;87,2,9159,16,0,0,1115;88,1,10539,16,0,8,1115;89,1,10894,-2,0,8,1115;90,3,10895,-2,0,8,1115;91,2,10951,-2,0,8,1115;92,1,11329,8,0,8,1115;93,2,11426,8,0,8,1115;94,1,11857,-2,0,8,1115;95,3,11857,-2,0,8,1115;96,2,11901,-2,0,8,1115;97,2,12135,16,0,0,1115;98,1,14077,16,0,8,1373;99,1,14599,-2,0,8,1373;100,3,14600,-2,0,8,1373;101,2,14674,-2,0,8,1373;102,2,14736,16,0,0,1373;103,1,14777,-2,0,0,1373;104,3,14778,-2,0,0,1373;105,1,14874,-2,0,0,1373;106,3,14875,-2,0,0,1373;107,2,14904,-2,0,0,1373;108,2,14933,-2,0,0,1373;109,1,15046,-2,0,0,1373;110,3,15046,-2,0,0,1373;111,2,15117,-2,0,0,1373;112,1,15207,-2,0,0,1373;113,3,15207,-2,0,0,1373;114,2,15264,-2,0,0,1373;115,1,15398,-2,0,0,1373;116,3,15398,-2,0,0,1373;117,2,15461,-2,0,0,1373;118,1,15822,8,0,0,1373;119,2,15905,8,0,0,1373;120,1,15974,8,0,0,1373;121,2,16053,8,0,0,1373;122,1,16366,-2,0,0,1373;123,3,16366,-2,0,0,1373;124,2,16441,-2,0,0,1373;125,1,16482,-2,0,0,1373;126,3,16482,-2,0,0,1373;127,2,16580,-2,0,0,1373;128,1,16592,-2,0,0,1373;129,3,16593,-2,0,0,1373;130,2,16667,-2,0,0,1373;131,1,16753,-2,0,0,1373;132,3,16753,-2,0,0,1373;133,2,16980,-2,0,0,1373;134,1,17063,-2,0,0,1373;135,3,17063,-2,0,0,1373;136,2,17126,-2,0,0,1373;137,1,17191,-2,0,0,1373;138,3,17192,-2,0,0,1373;139,2,17294,-2,0,0,1373;140,1,17301,-2,0,0,1373;141,3,17301,-2,0,0,1373;142,2,17371,-2,0,0,1373;143,1,36470,16,0,8,-1;144,1,36934,-2,0,8,-1;145,3,36935,-2,0,8,-1;146,2,36999,-2,0,8,-1;147,1,37254,-2,0,8,-1;148,3,37255,-2,0,8,-1;149,2,37301,-2,0,8,-1;-1,2,-94,-110,0,1,642,1025,416;1,1,682,1025,416;2,1,683,954,446;3,1,723,941,451;4,1,762,832,458;5,1,919,798,456;6,1,963,698,465;7,1,1314,677,467;8,1,1325,627,608;9,1,1326,627,608;10,1,1419,626,608;11,1,1424,626,608;12,1,1426,626,608;13,1,1537,626,609;14,1,1541,626,609;15,3,1621,626,609,1450;16,1,1729,626,609;17,4,1744,626,609,1450;18,1,1802,626,609;19,1,2291,626,609;20,1,7044,625,787;21,1,7045,625,787;22,1,7049,622,787;23,1,7050,622,787;24,1,7056,619,788;25,1,7057,619,788;26,1,7068,616,789;27,1,7070,616,789;28,1,7073,612,791;29,1,7074,612,791;30,1,7084,608,792;31,1,7085,608,792;32,1,7089,605,794;33,1,7090,605,794;34,1,7096,598,796;35,1,7097,598,796;36,1,7105,593,799;37,1,7107,593,799;38,1,7117,589,800;39,1,7118,589,800;40,1,7121,585,802;41,1,7121,585,802;42,1,7129,581,804;43,1,7130,581,804;44,1,7137,578,806;45,1,7137,578,806;46,1,7145,574,809;47,1,7146,574,809;48,1,7153,570,814;49,1,7153,570,814;50,1,7163,569,815;51,1,7164,569,815;52,1,7169,568,818;53,1,7170,568,818;54,1,7179,567,821;55,1,7180,567,821;56,1,7185,566,823;57,1,7186,566,823;58,1,7193,565,824;59,1,7194,565,824;60,1,7202,565,825;61,1,7203,565,825;62,1,7211,565,825;63,1,7212,565,825;64,1,7218,565,825;65,1,7219,565,825;66,1,7236,564,825;67,1,7237,564,825;68,1,7244,564,825;69,1,7245,564,825;70,1,7277,564,825;71,1,7278,564,825;72,1,7372,564,825;73,1,7372,564,825;74,1,7380,564,824;75,1,7381,564,824;76,1,7387,564,821;77,1,7388,564,821;78,1,7395,563,820;79,1,7395,563,820;80,1,7404,563,818;81,1,7405,563,818;82,1,7412,563,816;83,1,7413,563,816;84,1,7419,562,815;85,1,7420,562,815;86,1,7428,562,814;87,1,7428,562,814;88,1,7436,562,813;89,1,7437,562,813;90,1,7445,562,813;91,1,7445,562,813;92,1,7452,562,812;93,1,7452,562,812;94,1,7460,562,812;95,1,7461,562,812;96,1,7470,562,811;97,1,7471,562,811;98,1,7479,562,811;99,1,7479,562,811;100,1,7494,562,811;101,1,7496,562,811;108,3,7534,562,810,1115;110,4,7652,562,810,1115;113,3,9303,562,810,1115;121,4,9401,535,810,1115;122,2,9401,535,810,1115;246,3,10257,419,801,1115;247,4,10353,419,801,1115;248,2,10353,419,801,1115;297,3,12864,477,869,1373;298,4,12929,477,869,1373;327,3,13449,548,873,1373;328,4,13603,548,873,1373;329,2,13603,548,873,1373;330,3,14010,548,873,1373;331,4,14017,548,873,1373;332,2,14017,548,873,1373;401,3,20535,667,967,0;402,4,20637,667,967,0;403,2,20637,667,967,0;519,4,29259,1255,368,-1;717,3,35782,402,426,-1;718,4,35927,402,426,-1;719,2,35928,402,426,-1;745,3,36249,404,432,-1;747,4,36367,404,432,-1;748,2,36367,404,432,-1;967,3,42305,965,260,0;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,2,13301;3,13451;0,18122;2,18347;1,19575;3,20125;2,28594;3,29163;-1,2,-94,-112,%s/checkout/address-1,2,-94,-115,1722474,1342876,32,0,0,0,3065317,42305,0,1595433616660,15,17067,175,968,2844,22,0,42307,2667949,0,79F5DDBDB01E6F260FCA83916C07C04B~-1~YAAQfsYcuGA7DVpzAQAAO5NBdwQZdVRg2FjI0qcV0Q/xMJwbpUuafeY/lRPefForqQ10jpdeTcgwi94B/qkWKOBLvWzAGnjWvsz12FE6xZEAH0r04gZtQonI89mfSm33K+mW7Qp1py92Oa6g5Z29clnlcE7G+jLEGK1l9hMhk/0MAGI9Ipe8UH3GzMc+w+mobrYZ9NibnDYcH5QIXj4bfjotDm/iAejYv5c+jcFR5NaQu9o92OMLGkWsZhO2CNXdBSaAv3jSwhr9RXFjxUPOvEUuDS/k9EsGzKsrn2W74rnBrNHCgGaJvhPbpGq53/J2oRlC7bAmfzbOnmnvIJv9jynpwiY=~-1~-1~-1,32617,6,-1634669391,26018161,PiZtE,25060,78-1,2,-94,-106,1,12-1,2,-94,-119,200,0,0,0,0,0,0,0,0,0,0,200,400,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,10849923-1,2,-94,-118,385921-1,2,-94,-121,;2;2;0' %
                                            (session.headers['User-Agent'], site)
@@ -561,12 +569,25 @@ class RechercheCommande(Thread):
                         session.headers["Content-Type"] = 'text/plain;charset=UTF-8'
                         session.headers["Accept"] = "*/*"
                         session.post(url_bot_1_2, json=bot, verify=False)
+
+                        # Numero de telephone
+                        url_phone = '%s/api/checkout/save-customer-phone-number' % site
+                        data_phone = {"phoneNumber": profil[2].strip('\n')}
+                        session.headers["Content-Type"] = 'application/json'
+                        session.headers["Referer"] = "%s/checkout/address" % site
                         session.headers["Accept"] = "application/json"
-                        session.headers["Content-Type"] = "application/json"
+                        session.headers["Origin"] = site
                         session.headers["x-zalando-footer-mode"] = "desktop"
                         session.headers["x-zalando-checkout-app"] = "web"
                         session.headers["x-xsrf-token"] = cookies_2["frsx"]
                         session.headers["x-zalando-header-mode"] = "desktop"
+                        session.post(url_phone, json=data_phone, verify=False)
+
+                        # Next Step
+                        url_checkout_2_2 = '%s/api/checkout/next-step' % site
+                        session.headers["Accept"] = "application/json"
+                        session.headers["Content-Type"] = "application/json"
+                        del session.headers["Origin"]
                         url_pay = session.get(url_checkout_2_2, verify=False)
                         url_pay_2 = json.loads(url_pay.text)
                         url_pay_3 = url_pay_2['url']
@@ -574,17 +595,18 @@ class RechercheCommande(Thread):
                         del session.headers["x-zalando-checkout-app"]
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
-                        session.headers[
-                            "Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                        session.headers["Host"] = "checkout.payment.zalando.com"
-                        session.headers["Referer"] = "%s/checkout/address" % site
 
                     # Paiement Partie 1
+                    url_select = 'https://checkout.payment.zalando.com/selection?show=true'
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     if self.Mode == 'Quick':
+                        numero = self.List_Quick_Task[11].strip('\n')
+                        numerobis = numero[0] + numero[1] + numero[2] + numero[3] + " " + numero[4] + numero[5] + \
+                                    numero[6] + numero[7] + " " + numero[8] + numero[9] + numero[10] + numero[
+                                        11] + " " + numero[12] + numero[13] + numero[14] + numero[15] + " "
                         data_cb = {
                             "card_holder": self.List_Quick_Task[10].strip('\n'),
-                            "pan": self.List_Quick_Task[11].strip('\n'),
+                            "pan": numerobis,
                             "cvv": self.List_Quick_Task[14].strip('\n'),
                             "expiry_month": self.List_Quick_Task[12].strip('\n'),
                             "expiry_year": self.List_Quick_Task[13].strip('\n'),
@@ -594,9 +616,13 @@ class RechercheCommande(Thread):
                             },
                         }
                     else:
+                        numero = profil[10].strip('\n')
+                        numerobis = numero[0] + numero[1] + numero[2] + numero[3] + " " + numero[4] + numero[5] + \
+                                    numero[6] + numero[7] + " " + numero[8] + numero[9] + numero[10] + numero[
+                                        11] + " " + numero[12] + numero[13] + numero[14] + numero[15] + " "
                         data_cb = {
                             "card_holder": profil[9].strip('\n'),
-                            "pan": profil[10].strip('\n'),
+                            "pan": numerobis,
                             "cvv": profil[13].strip('\n'),
                             "expiry_month": profil[11].strip('\n'),
                             "expiry_year": profil[12].strip('\n'),
@@ -606,12 +632,14 @@ class RechercheCommande(Thread):
                             },
                         }
 
-                    a_2 = session.get(url_pay_3, verify=False, allow_redirects=False)
+                    session.headers['Host'] = 'checkout.payment.zalando.com'
+                    session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                    session.get(url_pay_3, verify=False, allow_redirects=False)
 
                     # Paiement par carte bancaire
                     if self.Paiement != 'Paypal':
-                        session_id_2 = session.cookies["Session-ID"]
-                        soup_3 = BeautifulSoup(a_2.text, "html.parser")
+                        selecrequete = session.get(url_select, verify=False, allow_redirects=False)
+                        soup_3 = BeautifulSoup(selecrequete.text, "html.parser")
                         objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
                         token_ini = objet_token_ini.split("'")
                         token = token_ini[1]
@@ -619,7 +647,6 @@ class RechercheCommande(Thread):
                         session.headers["Origin"] = "https://card-entry-service.zalando-payments.com"
                         session.headers["Content-Type"] = "application/json"
                         session.headers["Host"] = "card-entry-service.zalando-payments.com"
-                        del session.cookies['mpulseinject']
                         session.headers["Authorization"] = "Bearer %s" % token
                         reponsepay = session.post(
                             url_pay_2, json=data_cb, verify=False, allow_redirects=False
@@ -627,10 +654,6 @@ class RechercheCommande(Thread):
                         reponsepaybis = json.loads(reponsepay.text)
 
                         # Paiement Partie 2
-                        url_pay_3 = (
-                                "https://checkout.payment.zalando.com/payment-method-selection-session/%s/selection?"
-                                % session_id_2
-                        )
                         data_pay_3 = (
                                 "payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s"
                                 % reponsepaybis["id"]
@@ -645,7 +668,7 @@ class RechercheCommande(Thread):
                             "Content-Type"
                         ] = "application/x-www-form-urlencoded"
                         session.headers["Host"] = "checkout.payment.zalando.com"
-                        session.post(url_pay_3, data=data_pay_3, verify=False)
+                        session.post(url_pay_3 + "?show=true", data=data_pay_3, verify=False)
 
                         # Paiement Partie 3
                         url_pay_4 = "%s/checkout/payment-complete" % site
@@ -791,17 +814,17 @@ class RechercheCommande(Thread):
                 # Photo du produit
                 embed.set_thumbnail(
                     url=link_photo)
-                embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+                embed.add_embed_field(name='Website', value=site.strip('http://'), inline=False)
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Quantity', value=self.quantite)
                 embed.add_embed_field(name='Mode', value='Auto Checkout', inline=False)
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_2, inline=False)
                 embed.add_embed_field(name='Account',
-                                      value=compte[0].strip('\n'),
+                                      value='|| %s ||' % compte[0].strip('\n'),
                                       inline=False)
                 embed.add_embed_field(name='Credit Card',
-                                      value=creditcard,
+                                      value='|| %s ||' % creditcard,
                                       inline=False)
                 webhook.add_embed(embed)
 
@@ -814,14 +837,14 @@ class RechercheCommande(Thread):
                 # Photo du produit
                 embed.set_thumbnail(
                     url=link_photo)
-                embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+                embed.add_embed_field(name='Website', value=site.strip('http://'), inline=False)
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Quantity', value=self.quantite)
                 embed.add_embed_field(name='Mode', value='Manual')
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_3)
                 embed.add_embed_field(name='Checkout Link',
-                                      value=url_paypal,
+                                      value='|| %s ||' % url_paypal,
                                       inline=False)
                 webhook.add_embed(embed)
 
@@ -834,18 +857,18 @@ class RechercheCommande(Thread):
                 # Photo du produit
                 embed.set_thumbnail(
                     url=link_photo)
-                embed.add_embed_field(name='Website', value='Zalando.fr', inline=False)
+                embed.add_embed_field(name='Website', value=site.strip('http://'), inline=False)
                 embed.add_embed_field(name='Product', value=name_product, inline=False)
                 embed.add_embed_field(name='Size', value=self.taille_produit)
                 embed.add_embed_field(name='Quantity', value=self.quantite)
                 embed.add_embed_field(name='Mode', value='Manual')
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_1, inline=False)
                 embed.add_embed_field(name='Username',
-                                      value=compte[0].strip('\n'))
+                                      value='|| %s ||' % compte[0].strip('\n'))
                 embed.add_embed_field(name='Password',
-                                      value=compte[1].strip('\n'))
+                                      value='|| %s ||' % compte[1].strip('\n'))
                 embed.add_embed_field(name='Login Link',
-                                      value='%s/welcomenoaccount/true' % site,
+                                      value='|| %s/welcomenoaccount/true ||' % site,
                                       inline=False)
                 webhook.add_embed(embed)
             reponse = webhook.execute()
@@ -1100,18 +1123,6 @@ def tache():
     return Liste_tache
 
 
-def FinDeTache():
-    # Rénitialisation du fichier Task.csv
-    tasklist2 = ['Product Url', 'Size', 'Quantity']
-    with open("Data/Tasks/Task.csv", "w") as f:
-        f.write(tasklist2[0])
-        f.write(";")
-        f.write(tasklist2[1])
-        f.write(";")
-        f.write(tasklist2[2])
-    f.close()
-
-
 def VerificationProxys():
     list_proxy = proxy()
     for x in list_proxy:
@@ -1135,6 +1146,12 @@ def VerificationProxys():
         # Gestion des exceptions
         except:
             print(Fore.RED + "Proxy %s doesn't work !" % x)
+
+
+def DiscordStatutStart():
+    client_id = "736398384226762763"
+    RPC = Presence(client_id)
+    RPC.connect()
 
 
 # Création des comptes à partir des informations saisies dans AccountGenerator.csv
@@ -1264,28 +1281,29 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 def fonction_Zalando():
     while True:
+        DiscordStatutStart()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         init()
         # Proxys
         liste_proxys = proxy()
-        if liste_proxys.count("\n") != 0:
-            for x in range(0, liste_proxys.count("\n")):
-                liste_proxys.remove('\n')
+        if liste_proxys.count(['\n']) != 0:
+            for x in range(0, liste_proxys.count(['\n'])):
+                liste_proxys.remove(['\n'])
         # Accounts Generator
         Liste_comptegenerator = listecomptegenerator()
-        if Liste_comptegenerator.count("\n") != 0:
-            for x in range(0, Liste_comptegenerator.count("\n")):
-                Liste_comptegenerator.remove('\n')
+        if Liste_comptegenerator.count(['\n']) != 0:
+            for x in range(0, Liste_comptegenerator.count(['\n'])):
+                Liste_comptegenerator.remove(['\n'])
         # Accounts
         Liste_compte1 = compte1()
-        if Liste_compte1.count('\n') != 0:
-            for x in range(0, Liste_compte1.count('\n')):
-                Liste_compte1.remove('\n')
+        if Liste_compte1.count(['\n']) != 0:
+            for x in range(0, Liste_compte1.count(['\n'])):
+                Liste_compte1.remove(['\n'])
         random.shuffle(Liste_compte1)
         Liste_compte2 = compte2()
-        if Liste_compte2.count('\n') != 0:
-            for x in range(0, Liste_compte2.count('\n')):
-                Liste_compte2.remove('\n')
+        if Liste_compte2.count(['\n']) != 0:
+            for x in range(0, Liste_compte2.count(['\n'])):
+                Liste_compte2.remove(['\n'])
         random.shuffle(Liste_compte2)
         Liste_compte3 = []
         for x in Liste_compte1:
@@ -1295,13 +1313,13 @@ def fonction_Zalando():
         random.shuffle(Liste_compte3)
         # Profiles
         List_profile1 = profile1()
-        if List_profile1.count('\n') != 0:
-            for x in range(0, List_profile1.count('\n')):
-                List_profile1.remove('\n')
+        if List_profile1.count(['\n']) != 0:
+            for x in range(0, List_profile1.count(['\n'])):
+                List_profile1.remove(['\n'])
         List_profile2 = profile2()
-        if List_profile2.count('\n') != 0:
-            for x in range(0, List_profile2.count('\n')):
-                List_profile2.remove('\n')
+        if List_profile2.count(['\n']) != 0:
+            for x in range(0, List_profile2.count(['\n'])):
+                List_profile2.remove(['\n'])
         List_profile3 = []
         for x in List_profile1:
             List_profile3.append(x)
@@ -1315,7 +1333,7 @@ def fonction_Zalando():
                 Liste_tache.remove(['\n'])
         # Quick Tasks
         List_Quick_Task = QuickTask()
-        if List_Quick_Task.count('\n') != 0:
+        if List_Quick_Task.count(['\n']) != 0:
             for x in range(0, List_Quick_Task.count(['\n'])):
                 List_Quick_Task.remove(['\n'])
         # Vérification Base de données
@@ -1397,7 +1415,6 @@ def fonction_Zalando():
             for t in thread_list:
                 t.join()
 
-            FinDeTache()
             main()
 
         if choix == "2":
@@ -1499,7 +1516,6 @@ def fonction_Zalando():
             for t in thread_list:
                 t.join()
 
-            FinDeTache()
             main()
 
         if choix == "3":
@@ -1529,6 +1545,7 @@ def fonction_Zalando():
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     while True:
+        DiscordStatutStart()
         #VerificationLicense()
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
