@@ -1569,4 +1569,5 @@ def main():
 
 
 init()
+VerificationLicense()
 main()
