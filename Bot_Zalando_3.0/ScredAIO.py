@@ -970,7 +970,7 @@ auth = "WyIyOTQ2NiIsInBGK1diMVN2TnhPd3ZZTnNxczNXd3MvZS8xT3hKK2RKZk9wbklBT1ciXQ==
 
 # -------------------------------------------------------------------------------------------------------------------------------------#
 
-# Fonction de vérification les liscences en ligne. (https://cryptolens.io/)
+# Fonction de vérification les licences en ligne. (https://cryptolens.io/)
 def VerificationLicense():
     with open("Data/License.txt", "r") as f:
         License = f.read()
@@ -1529,7 +1529,7 @@ def fonction_Zalando():
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     while True:
-        #VerificationLicense()
+        VerificationLicense()
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         print(Fore.GREEN + "Welcome ! Initializing Scred AIO - User data loaded !\n")
