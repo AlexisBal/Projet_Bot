@@ -949,7 +949,7 @@ class RechercheCommande(Thread):
                 f.close()
 
         except:
-            raise
+            pass
 
 
 def titre():
@@ -1287,6 +1287,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 def fonction_Zalando():
     while True:
+        DiscordStatutStart()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         init()
         # Proxys
@@ -1362,7 +1363,6 @@ def fonction_Zalando():
 
         choix = input("\nChoice :")
         while True:
-            DiscordStatutStart()
             if choix == "1":
                 if len(Liste_tache) == 0:
                     print(Fore.RED + 'The file Task.csv is empty !')
@@ -1569,5 +1569,4 @@ def main():
 
 
 init()
-VerificationLicense()
 main()

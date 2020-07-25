@@ -7,8 +7,7 @@ buildOptions = dict(
               "threading", "colorama", "termcolor",
               "requests", "urllib3", "requests.adapters",
               "requests.packages.urllib3.util.retry",
-              "user_agent", "bs4", "licensing.models",
-              "licensing.methods", "datetime", "discord_webhook",
+              "user_agent", "bs4", "datetime", "discord_webhook",
               "pypresence"]
 )
 
