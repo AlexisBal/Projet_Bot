@@ -1287,7 +1287,6 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 # -----------------------------------------------------Ici toutes les fonction nécessaires pour zalando------------------------#
 def fonction_Zalando():
     while True:
-        DiscordStatutStart()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         init()
         # Proxys
