@@ -220,10 +220,10 @@ class RechercheCommande(Thread):
                 while True:
                     # Réglage du proxy
                     proxy = random.choice(self.liste_proxys)
-                    if len(proxy) == 3:
+                    if len(proxy) == 4:
                         session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                     else:
-                        session.proxies = {"http": "http://%s" % proxy[0] + proxy[1]}
+                        session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
                     # Connexion à la page d'accueil de Zalando
                     headers = {
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -1110,7 +1110,7 @@ def VerificationProxys():
                     {"User-Agent": generate_user_agent(os=("mac", "linux"))}
                 )
                 # Réglage du proxy
-                if len(x) == 3:
+                if len(x) == 4:
                     session.proxies = {"http": "http://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
@@ -1128,7 +1128,7 @@ def VerificationProxys():
             session.close()
         # Gestion des exceptions
         except:
-            if len(x) == 3:
+            if len(x) == 4:
                 print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]), Style.RESET_ALL)
             else:
                 print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1]), Style.RESET_ALL)
@@ -1165,7 +1165,10 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
             while True:
                 # Réglage du proxy
                 proxy = random.choice(liste_proxys)
-                session.proxies = {"http": "http://%s" % proxy}
+                if len(proxy) == 4:
+                    session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                else:
+                    session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
                 # Connexion à la page d'accueil de Zalando
                 url_home = "https://www.zalando.fr"
                 session.headers[
