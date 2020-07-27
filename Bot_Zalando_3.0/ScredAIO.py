@@ -23,7 +23,7 @@ from pypresence import Presence
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 5
+        self.timeout = 4
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -37,7 +37,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=2, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -71,32 +71,38 @@ class RechercheCommande(Thread):
 
             # Identifiants
             if self.Mode == 'Quick':
-                numero = self.List_Quick_Task[11].strip('\n')
+                phone = self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"')
+                if phone[0] != '0':
+                    phone = '0' + phone
+                numero = self.List_Quick_Task[11].strip('\n').lstrip('"').rstrip('"')
                 numerobis = numero[0] + numero[1] + numero[2] + numero[3] + " " + numero[4] + numero[5] + \
                             numero[6] + numero[7] + " " + numero[8] + numero[9] + numero[10] + numero[
                                 11] + " " + numero[12] + numero[13] + numero[14] + numero[15] + " "
                 data_cb = {
-                    "card_holder": self.List_Quick_Task[10].strip('\n'),
+                    "card_holder": self.List_Quick_Task[10].strip('\n').lstrip('"').rstrip('"'),
                     "pan": numerobis,
-                    "cvv": self.List_Quick_Task[14].strip('\n'),
-                    "expiry_month": self.List_Quick_Task[12].strip('\n'),
-                    "expiry_year": self.List_Quick_Task[13].strip('\n'),
+                    "cvv": self.List_Quick_Task[14].strip('\n').lstrip('"').rstrip('"'),
+                    "expiry_month": self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"'),
+                    "expiry_year": self.List_Quick_Task[13].strip('\n').lstrip('"').rstrip('"'),
                     "options": {
                         "selected": [],
                         "not_selected": ["store_for_reuse"],
                     },
                 }
             else:
-                numero = profil[10].strip('\n')
+                phone = profil[2].strip('\n').lstrip('"').rstrip('"')
+                if phone[0] != '0':
+                    phone = '0' + phone
+                numero = profil[10].strip('\n').lstrip('"').rstrip('"')
                 numerobis = numero[0] + numero[1] + numero[2] + numero[3] + " " + numero[4] + numero[5] + \
                             numero[6] + numero[7] + " " + numero[8] + numero[9] + numero[10] + numero[
                                 11] + " " + numero[12] + numero[13] + numero[14] + numero[15] + " "
                 data_cb = {
-                    "card_holder": profil[9].strip('\n'),
+                    "card_holder": profil[9].strip('\n').lstrip('"').rstrip('"'),
                     "pan": numerobis,
-                    "cvv": profil[13].strip('\n'),
-                    "expiry_month": profil[11].strip('\n'),
-                    "expiry_year": profil[12].strip('\n'),
+                    "cvv": profil[13].strip('\n').lstrip('"').rstrip('"'),
+                    "expiry_month": profil[11].strip('\n').lstrip('"').rstrip('"'),
+                    "expiry_year": profil[12].strip('\n').lstrip('"').rstrip('"'),
                     "options": {
                         "selected": [],
                         "not_selected": ["store_for_reuse"],
@@ -105,9 +111,9 @@ class RechercheCommande(Thread):
 
             # Reglage du pays
             if self.Mode == 'Normal':
-                Pays = profil[8].upper()
+                Pays = profil[8].upper().lstrip('"').rstrip('"')
             else:
-                Pays = self.List_Quick_Task[9].upper()
+                Pays = self.List_Quick_Task[9].upper().lstrip('"').rstrip('"')
             if Pays == 'FR':
                 site = 'https://www.zalando.fr'
             if Pays == 'CH':
@@ -176,7 +182,7 @@ class RechercheCommande(Thread):
                         for n in range(0, len(sku_list)):
                             liste_sku.append(sku_list[n]['sku'])
                             liste_sku.append(sku_list[n]['size'])
-                        position_taille = liste_sku.index(self.taille_produit.strip('\n'))
+                        position_taille = liste_sku.index(self.taille_produit.strip('\n').lstrip('"').rstrip('"'))
                         sku = liste_sku[position_taille - 1]
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Product Found")
@@ -270,8 +276,8 @@ class RechercheCommande(Thread):
 
                 # Connexion au compte
                 identifiants_2 = {
-                    "username": compte[0].strip('\n'),
-                    "password": compte[1].strip('\n'),
+                    "username": compte[0].strip('\n').lstrip('"').rstrip('"'),
+                    "password": compte[1].strip('\n').lstrip('"').rstrip('"'),
                     "wnaMode": "shop",
                 }
                 url_connexion_2 = "%s/api/reef/login/schema" % site
@@ -388,49 +394,49 @@ class RechercheCommande(Thread):
                         checkout_2_2 = {
                             'address': {
                                 'address': {
-                                    'city': self.List_Quick_Task[8].strip('\n'),
+                                    'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
                                     'salutation': 'Mr',
-                                    'first_name': self.List_Quick_Task[1].strip('\n'),
-                                    'last_name': self.List_Quick_Task[2].strip('\n'),
+                                    'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
+                                    'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
                                     'country_code': Pays,
-                                    'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[5].strip(
-                                        '\n'),
-                                    'zip': self.List_Quick_Task[7].strip('\n')
+                                    'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " + self.List_Quick_Task[5].strip(
+                                        '\n').lstrip('"').rstrip('"'),
+                                    'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"')
                                 }
                             }
                         }
                         data_panier4 = {
                             'address': {
-                                'city': self.List_Quick_Task[8].strip('\n'),
+                                'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
                                 'salutation': 'Mr',
-                                'first_name': self.List_Quick_Task[1].strip('\n'),
-                                'last_name': self.List_Quick_Task[2].strip('\n'),
+                                'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
+                                'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
                                 'country_code': Pays,
-                                'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[5].strip(
-                                    '\n'),
-                                'zip': self.List_Quick_Task[7].strip('\n')
+                                'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " + self.List_Quick_Task[5].strip(
+                                    '\n').lstrip('"').rstrip('"'),
+                                'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"')
                             },
                             'addressDestination': {
                                 'destination': {
                                     'address': {
                                         'salutation': 'Mr',
-                                        'first_name': self.List_Quick_Task[1].strip('\n'),
-                                        'last_name': self.List_Quick_Task[2].strip('\n'),
+                                        'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
+                                        'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
                                         'country_code': Pays,
-                                        'city': self.List_Quick_Task[8].strip('\n'),
-                                        'zip': self.List_Quick_Task[7].strip('\n'),
-                                        'street': self.List_Quick_Task[4].strip('\n') + " " + self.List_Quick_Task[
-                                            5].strip('\n'),
-                                        'additional': self.List_Quick_Task[6].strip('\n')
+                                        'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
+                                        'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
+                                        'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " + self.List_Quick_Task[
+                                            5].strip('\n').lstrip('"').rstrip('"'),
+                                        'additional': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"')
                                     }
                                 },
                                 'normalized_address': {
                                     'country_code': Pays,
-                                    'city': self.List_Quick_Task[9].strip('\n'),
-                                    'zip': self.List_Quick_Task[8].strip('\n'),
-                                    'street': self.List_Quick_Task[6].strip('\n'),
-                                    "additional": self.List_Quick_Task[7].strip('\n'),
-                                    'house_number': self.List_Quick_Task[5].strip('\n')
+                                    'city': self.List_Quick_Task[9].strip('\n').lstrip('"').rstrip('"'),
+                                    'zip': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
+                                    'street': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"'),
+                                    "additional": self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
+                                    'house_number': self.List_Quick_Task[5].strip('\n').lstrip('"').rstrip('"')
                                 },
                                 'status': 'https://docs.riskmgmt.zalan.do/address/correct',
                                 'blacklisted': 'false'
@@ -454,7 +460,7 @@ class RechercheCommande(Thread):
 
                         # Numero de telephone
                         url_phone = '%s/api/checkout/save-customer-phone-number' % site
-                        data_phone = {"phoneNumber": self.List_Quick_Task[3].strip('\n')}
+                        data_phone = {"phoneNumber": phone}
                         session.post(url_phone, json=data_phone, verify=False)
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
@@ -507,46 +513,46 @@ class RechercheCommande(Thread):
                         checkout_2_2 = {
                             'address': {
                                 'address': {
-                                    'city': profil[7].strip('\n'),
+                                    'city': profil[7].strip('\n').lstrip('"').rstrip('"'),
                                     'salutation': 'Mr',
-                                    'first_name': profil[0].strip('\n'),
-                                    'last_name': profil[1].strip('\n'),
+                                    'first_name': profil[0].strip('\n').lstrip('"').rstrip('"'),
+                                    'last_name': profil[1].strip('\n').lstrip('"').rstrip('"'),
                                     'country_code': Pays,
-                                    'street': profil[3].strip('\n') + " " + profil[4].strip('\n'),
-                                    'zip': profil[6].strip('\n')
+                                    'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                    'zip': profil[6].strip('\n').lstrip('"').rstrip('"')
                                 }
                             }
                         }
                         data_panier4 = {
                             'address': {
-                                'city': profil[7].strip('\n'),
+                                'city': profil[7].strip('\n').lstrip('"').rstrip('"'),
                                 'salutation': 'Mr',
-                                'first_name': profil[0].strip('\n'),
-                                'last_name': profil[1].strip('\n'),
+                                'first_name': profil[0].strip('\n').lstrip('"').rstrip('"'),
+                                'last_name': profil[1].strip('\n').lstrip('"').rstrip('"'),
                                 'country_code': Pays,
-                                'street': profil[3].strip('\n') + " " + profil[4].strip('\n'),
-                                'zip': profil[6].strip('\n')
+                                'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                'zip': profil[6].strip('\n').lstrip('"').rstrip('"')
                             },
                             'addressDestination': {
                                 'destination': {
                                     'address': {
                                         'salutation': 'Mr',
-                                        'first_name': profil[0].strip('\n'),
-                                        'last_name': profil[1].strip('\n'),
+                                        'first_name': profil[0].strip('\n').lstrip('"').rstrip('"'),
+                                        'last_name': profil[1].strip('\n').lstrip('"').rstrip('"'),
                                         'country_code': Pays,
-                                        'city': profil[7].strip('\n'),
-                                        'zip': profil[6].strip('\n'),
-                                        'street': profil[3].strip('\n') + " " + profil[4].strip('\n'),
-                                        "additional": profil[5].strip('\n')
+                                        'city': profil[7].strip('\n').lstrip('"').rstrip('"'),
+                                        'zip': profil[6].strip('\n').lstrip('"').rstrip('"'),
+                                        'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                        "additional": profil[5].strip('\n').lstrip('"').rstrip('"')
                                     }
                                 },
                                 'normalized_address': {
                                     'country_code': Pays,
-                                    'city': profil[7].strip('\n'),
-                                    'zip': profil[6].strip('\n'),
-                                    'street': profil[4].strip('\n'),
-                                    "additional": profil[5].strip('\n'),
-                                    'house_number': profil[3].strip('\n')
+                                    'city': profil[7].strip('\n').lstrip('"').rstrip('"'),
+                                    'zip': profil[6].strip('\n').lstrip('"').rstrip('"'),
+                                    'street': profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                    "additional": profil[5].strip('\n').lstrip('"').rstrip('"'),
+                                    'house_number': profil[3].strip('\n').lstrip('"').rstrip('"')
                                 },
                                 'status': 'https://docs.riskmgmt.zalan.do/address/correct',
                                 'blacklisted': 'false'
@@ -582,7 +588,7 @@ class RechercheCommande(Thread):
 
                         # Numero de telephone
                         url_phone = '%s/api/checkout/save-customer-phone-number' % site
-                        data_phone = {"phoneNumber": profil[2].strip('\n')}
+                        data_phone = {"phoneNumber": phone}
                         session.headers.update({
                             "Referer": '%s/checkout/address' % site,
                             "Origin": site,
@@ -776,11 +782,11 @@ class RechercheCommande(Thread):
 
             # Notification Discord WebHook
             if self.Mode == 'Quick':
-                url_discord = self.List_Quick_Task[16].strip('\n')
-                creditcard = self.List_Quick_Task[12].strip('\n')
+                url_discord = self.List_Quick_Task[16].strip('\n').lstrip('"').rstrip('"')
+                creditcard = self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"')
             else:
-                url_discord = profil[14].strip('\n')
-                creditcard = profil[10].strip('\n')
+                url_discord = profil[14].strip('\n').lstrip('"').rstrip('"')
+                creditcard = profil[10].strip('\n').lstrip('"').rstrip('"')
             # Identifiants Discord Webhook
             webhook = DiscordWebhook(
                 url=url_discord,
@@ -807,7 +813,7 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Mode', value='Auto Checkout', inline=False)
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_2, inline=False)
                 embed.add_embed_field(name='Account',
-                                      value='|| %s ||' % compte[0].strip('\n'),
+                                      value='|| %s ||' % compte[0].strip('\n').lstrip('"').rstrip('"'),
                                       inline=False)
                 embed.add_embed_field(name='Credit Card',
                                       value='|| %s ||' % creditcard,
@@ -850,9 +856,9 @@ class RechercheCommande(Thread):
                 embed.add_embed_field(name='Mode', value='Manual')
                 embed.add_embed_field(name='Checkout Speed', value=chronometre_1, inline=False)
                 embed.add_embed_field(name='Username',
-                                      value='|| %s ||' % compte[0].strip('\n'))
+                                      value='|| %s ||' % compte[0].strip('\n').lstrip('"').rstrip('"'))
                 embed.add_embed_field(name='Password',
-                                      value='|| %s ||' % compte[1].strip('\n'))
+                                      value='|| %s ||' % compte[1].strip('\n').lstrip('"').rstrip('"'))
                 embed.add_embed_field(name='Login Link',
                                       value='|| %s/welcomenoaccount/true ||' % site,
                                       inline=False)
@@ -1378,9 +1384,9 @@ def fonction_Zalando():
                 thread_list = []
                 # Start Thread
                 for x in range(0, len(Liste_tache)):
-                    url_produit = Liste_tache[x][0]
-                    taille_produit = Liste_tache[x][1]
-                    quantite = Liste_tache[x][2]
+                    url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
+                    taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
+                    quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
                     Task = x
                     thread = RechercheCommande(liste_proxys,
                                                List_profile,
@@ -1482,9 +1488,9 @@ def fonction_Zalando():
                 thread_list = []
                 # Start Thread
                 for x in range(0, len(Liste_tache)):
-                    url_produit = Liste_tache[x][0]
-                    taille_produit = Liste_tache[x][1]
-                    quantite = Liste_tache[x][2]
+                    url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
+                    taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
+                    quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
                     Task = x
                     thread = RechercheCommande(liste_proxys,
                                                List_profile,
