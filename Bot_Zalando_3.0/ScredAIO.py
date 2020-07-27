@@ -891,7 +891,7 @@ class RechercheCommande(Thread):
                 heure = now.strftime("%H:%M:%S")
                 mode_1 = 'Paypal'
                 tasklist = [jour, heure, self.url_produit, self.taille_produit, self.quantite, mode_1, compte[0]]
-                with open("Data/Tasks/Task_History.csv", "a") as f:
+                with open("Zalando/Success recap/Success_Recap.csv", "a") as f:
                     f.write(tasklist[0].strip('\n'))
                     f.write(",")
                     f.write(tasklist[1].strip('\n'))
@@ -915,7 +915,7 @@ class RechercheCommande(Thread):
                 heure = now.strftime("%H:%M:%S")
                 mode_1 = 'Credit Card - %s' % creditcard
                 tasklist = [Jour, heure, self.url_produit, self.taille_produit, self.quantite, mode_1, compte[0]]
-                with open("Data/Tasks/Task_History.csv", "a") as f:
+                with open("Zalando/Success recap/Success_Recap.csv", "a") as f:
                     f.write(tasklist[0].strip('\n'))
                     f.write(",")
                     f.write(tasklist[1].strip('\n'))
@@ -939,7 +939,7 @@ class RechercheCommande(Thread):
                 heure = now.strftime("%H:%M:%S")
                 mode_1 = 'Manual Checkout'
                 tasklist = [jour, heure, self.url_produit, self.taille_produit, self.quantite, mode_1, compte[0]]
-                with open("Data/Tasks/Task_History.csv", "a") as f:
+                with open("Zalando/Success recap/Success_Recap.csv", "a") as f:
                     f.write(tasklist[0].strip('\n'))
                     f.write(",")
                     f.write(tasklist[1].strip('\n'))
