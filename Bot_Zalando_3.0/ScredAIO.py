@@ -220,7 +220,10 @@ class RechercheCommande(Thread):
                 while True:
                     # Réglage du proxy
                     proxy = random.choice(self.liste_proxys)
-                    session.proxies = {"http": "http://%s" % proxy}
+                    if len(proxy) == 3:
+                        session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                    else:
+                        session.proxies = {"http": "http://%s" % proxy[0] + proxy[1]}
                     # Connexion à la page d'accueil de Zalando
                     headers = {
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -1007,11 +1010,11 @@ def VerificationLicense():
 
 # Récupérations des proxies
 def proxy():
-    with open('Data/Proxy.txt', 'r') as f:
+    with open('Zalando/Tasks/Proxy.txt', 'r') as f:
         liste_proxys = []
         for ligne in f:
             if ligne.strip('\n') != '':
-                liste_proxys.append(ligne.strip('\n'))
+                liste_proxys.append(ligne.strip('\n').split(":"))
 
         if not liste_proxys:
             print(Fore.RED + "You have not specified any proxies !")
@@ -1024,7 +1027,7 @@ def proxy():
 
 # Création de la liste de compte "Liste_compte1"
 def compte1():
-    with open('Data/Accounts/Accounts_List1.csv', 'r') as f:
+    with open('Zalando/Accounts/Accounts_List1.csv', 'r') as f:
         Liste_compte1 = []
         for ligne in f:
             compte_list1 = ligne.split(",")
@@ -1036,7 +1039,7 @@ def compte1():
 
 # Création de la liste de compte "Liste_compte2"
 def compte2():
-    with open('Data/Accounts/Accounts_List2.csv', 'r') as f:
+    with open('Zalando/Accounts/Accounts_List2.csv', 'r') as f:
         Liste_compte2 = []
         for ligne in f:
             compte_list2 = ligne.split(",")
@@ -1048,7 +1051,7 @@ def compte2():
 
 # Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
-    with open('Data/Accounts/AccountGenerator.csv', 'r') as f:
+    with open('Zalando/Accounts/AccountGenerator.csv', 'r') as f:
         Liste_comptegenerator = []
         for ligne in f:
             comptegenerator_list = ligne.split(",")
@@ -1058,33 +1061,21 @@ def listecomptegenerator():
     return Liste_comptegenerator
 
 
-# Création de la liste de profiles "List_profile1"
-def profile1():
-    with open('Data/Profiles/Profile1.csv', 'r') as f:
-        List_profile1 = []
+# Création de la liste de profiles "List_profile"
+def profile():
+    with open('Zalando/Profiles/Profiles.csv', 'r') as f:
+        List_profile = []
         for ligne in f:
-            profile_list1 = ligne.split(",")
-            List_profile1.append(profile_list1)
-        List_profile1.pop(0)
+            profile_list = ligne.split(",")
+            List_profile.append(profile_list)
+        List_profile.pop(0)
     f.close()
-    return List_profile1
-
-
-# Création de la liste de profiles "List_profile2"
-def profile2():
-    with open('Data/Profiles/Profile2.csv', 'r') as f:
-        List_profile2 = []
-        for ligne in f:
-            profile_list2 = ligne.split(",")
-            List_profile2.append(profile_list2)
-        List_profile2.pop(0)
-    f.close()
-    return List_profile2
+    return List_profile
 
 
 # Création de la liste "List_Quick_Task"
 def QuickTask():
-    with open('Data/Tasks/Quick_Task.csv', 'r') as f:
+    with open('Zalando/Tasks/Quick_Task.csv', 'r') as f:
         List_Quick_Task = []
         for ligne in f:
             List_Quick_Task2 = ligne.split(",")
@@ -1096,7 +1087,7 @@ def QuickTask():
 
 # Création de la liste de tache "Liste_tache"
 def tache():
-    with open('Data/Tasks/Task.csv', 'r') as f:
+    with open('Zalando/Tasks/Task.csv', 'r') as f:
         Liste_tache = []
         for ligne in f:
             liste_list = ligne.split(",")
@@ -1119,7 +1110,10 @@ def VerificationProxys():
                     {"User-Agent": generate_user_agent(os=("mac", "linux"))}
                 )
                 # Réglage du proxy
-                session.proxies = {"http": "http://%s" % x}
+                if len(x) == 3:
+                    session.proxies = {"http": "http://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
+                else:
+                    session.proxies = {"http": "http://%s" % x[0] + x[1]}
                 # Connexion à la page d'accueil de Zalando
                 url_home = "https://www.zalando.fr"
                 session.get(url_home, verify=False)
@@ -1254,7 +1248,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
     with open("Data/%s" % liste, "a") as f:
         for compte_1 in comptelist:
             f.write(compte_1[0])
-            f.write(";")
+            f.write(",")
             f.write(compte_1[1])
         f.write('\n')
     f.close()
@@ -1263,7 +1257,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
     comptelist2 = ['Email', 'Password']
     with open("Data/Accounts/AccountGenerator.csv", "w") as f:
         f.write(comptelist2[0])
-        f.write(";")
+        f.write(",")
         f.write(comptelist2[1])
     f.close()
 
@@ -1301,20 +1295,10 @@ def fonction_Zalando():
             Liste_compte3.append(y)
         random.shuffle(Liste_compte3)
         # Profiles
-        List_profile1 = profile1()
-        if List_profile1.count(['\n']) != 0:
-            for x in range(0, List_profile1.count(['\n'])):
-                List_profile1.remove(['\n'])
-        List_profile2 = profile2()
-        if List_profile2.count(['\n']) != 0:
-            for x in range(0, List_profile2.count(['\n'])):
-                List_profile2.remove(['\n'])
-        List_profile3 = []
-        for x in List_profile1:
-            List_profile3.append(x)
-        for y in List_profile2:
-            List_profile3.append(y)
-        random.shuffle(List_profile3)
+        List_profile = profile()
+        if List_profile.count(['\n']) != 0:
+            for x in range(0, List_profile.count(['\n'])):
+                List_profile.remove(['\n'])
         # Tasks
         Liste_tache = tache()
         if Liste_tache.count(['\n']) != 0:
@@ -1331,7 +1315,7 @@ def fonction_Zalando():
             print(Fore.RED + "You have to use the Account Generator.")
             time.sleep(5)
             main()
-        if List_profile1 == [] and List_profile2 == []:
+        if not List_profile:
             print(Fore.RED + "You have not specified any profiles !")
             print(Fore.RED + "You have to complete the Profiles files.")
             time.sleep(5)
