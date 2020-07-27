@@ -1099,7 +1099,7 @@ def tache():
     with open('Data/Tasks/Task.csv', 'r') as f:
         Liste_tache = []
         for ligne in f:
-            liste_list = ligne.split(";")
+            liste_list = ligne.split(",")
             Liste_tache.append(liste_list)
         Liste_tache.pop(0)
     f.close()
