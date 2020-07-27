@@ -1112,17 +1112,26 @@ def VerificationProxys():
                 # Réglage du proxy
                 if len(x) == 3:
                     session.proxies = {"http": "http://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
+                    # Connexion à la page d'accueil de Zalando
+                    url_home = "https://www.zalando.fr"
+                    session.get(url_home, verify=False)
+                    # Test du proxy
+                    print(Fore.GREEN + 'Proxy %s is OK !' % x[0] + x[1] + x[2] + x[3], Style.RESET_ALL)
                 else:
                     session.proxies = {"http": "http://%s" % x[0] + x[1]}
-                # Connexion à la page d'accueil de Zalando
-                url_home = "https://www.zalando.fr"
-                session.get(url_home, verify=False)
-                # Test du proxy
-                print(Fore.GREEN + 'Proxy %s is OK !' % x)
+                    # Connexion à la page d'accueil de Zalando
+                    url_home = "https://www.zalando.fr"
+                    session.get(url_home, verify=False)
+                    # Test du proxy
+                    print(Fore.GREEN + 'Proxy %s is OK !' % x[0] + x[1], Style.RESET_ALL)
+
             session.close()
         # Gestion des exceptions
         except:
-            print(Fore.RED + "Proxy %s doesn't work !" % x)
+            if len(x) == 3:
+                print(Fore.RED + "Proxy %s doesn't work !" % x[0] + x[1] + x[2] + x[3], Style.RESET_ALL)
+            else:
+                print(Fore.RED + "Proxy %s doesn't work !" % x[0] + x[1], Style.RESET_ALL)
 
 
 def DiscordStatutStart():
