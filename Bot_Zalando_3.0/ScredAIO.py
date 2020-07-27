@@ -1267,7 +1267,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
 
     # Rénitialisation du fichier AccountGenerator.csv
     comptelist2 = ['Email', 'Password']
-    with open("Data/Accounts/AccountGenerator.csv", "w") as f:
+    with open("Zalando/Accounts/AccountGenerator.csv", "w") as f:
         f.write(comptelist2[0])
         f.write(",")
         f.write(comptelist2[1])
@@ -1422,10 +1422,10 @@ def fonction_Zalando():
                     Paiement = 'CB'
                 if choix_2 == "3":
                     Paiement = 'Paypal'
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 1. Profile 1")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 2. Profile 2")
+
+                for u in range(0, len(List_profile)):
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                          Style.RESET_ALL + "> 1. Profile %s" % u)
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                       Style.RESET_ALL + "> 3. Select Multiple Profiles")
                 choix_3 = input("\nChoice :")
