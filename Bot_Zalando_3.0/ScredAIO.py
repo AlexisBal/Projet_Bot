@@ -151,7 +151,7 @@ class RechercheCommande(Thread):
                 print(Fore.YELLOW + 'Country code accepted :')
                 print(Fore.YELLOW + 'FR, CH, BE, LU, DE, AT, NL, IT, UK, ES, SE, DK, NO, FI, PL')
                 time.sleep(5)
-                main()
+                fonction_Zalando()
 
             # Récupération du Sku
             while True:
@@ -192,7 +192,7 @@ class RechercheCommande(Thread):
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + 'There is a problem with the Sku !')
                     time.sleep(5)
-                    main()
+                    fonction_Zalando()
 
             # Verification du stock
             while True:
@@ -320,7 +320,7 @@ class RechercheCommande(Thread):
                                                                                     "account. Stop the program and "
                                                                                     "try later !")
                     time.sleep(5)
-                    main()
+                    fonction_Zalando()
 
                 del session.headers["x-xsrf-token"]
                 del session.headers["x-zalando-client-id"]
@@ -732,7 +732,7 @@ class RechercheCommande(Thread):
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with the checkout ! Check your details and try later !")
                             time.sleep(5)
-                            main()
+                            fonction_Zalando()
 
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
@@ -796,7 +796,7 @@ class RechercheCommande(Thread):
                                   Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with "
                                                                                             "the checkout ! Check your details and try later !")
                             time.sleep(5)
-                            main()
+                            fonction_Zalando()
                         json_reponse = json.loads(reponse_checkout.text)
                         url_paypal = str(json_reponse["url"])
             session.close()
@@ -1044,7 +1044,7 @@ def proxy():
             print(Fore.RED + "You have not specified any proxies !")
             print(Fore.RED + "Enter the address of the proxy servers in the Proxy.txt file.")
             time.sleep(5)
-            main()
+            fonction_Zalando()
 
         return liste_proxys
 
@@ -1274,7 +1274,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                       Style.RESET_ALL + Fore.RED + "There is a problem with the register ! Try later.")
                 time.sleep(5)
-                main()
+                fonction_Zalando()
 
         # Fermeture de la session
         session.close()
@@ -1353,12 +1353,12 @@ def fonction_Zalando():
             print(Fore.RED + "You have not specified any accounts !")
             print(Fore.RED + "You have to use the Account Generator.")
             time.sleep(5)
-            main()
+            fonction_Zalando()
         if not List_profile1:
             print(Fore.RED + "You have not specified any profiles !")
             print(Fore.RED + "You have to complete the Profiles files.")
             time.sleep(5)
-            main()
+            fonction_Zalando()
 
         while True:
             try:
@@ -1373,11 +1373,11 @@ def fonction_Zalando():
                     if len(Liste_tache) == 0:
                         print(Fore.RED + 'The file Task.csv is empty !')
                         time.sleep(5)
-                        main()
+                        fonction_Zalando()
                     if len(List_Quick_Task) == 0:
                         print(Fore.RED + 'The file Quick_Task.csv is empty !')
                         time.sleep(5)
-                        main()
+                        fonction_Zalando()
                     Paiement = 'CB_Auto'
                     Mode = 'Quick'
                     if List_Quick_Task[0] == 1:
@@ -1385,21 +1385,21 @@ def fonction_Zalando():
                         if len(Liste_compte) < len(Liste_tache):
                             print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                             time.sleep(5)
-                            main()
+                            fonction_Zalando()
                         if len(Liste_compte) == 0:
                             print(Fore.RED + 'The file Accounts_List1.csv is empty !')
                             time.sleep(5)
-                            main()
+                            fonction_Zalando()
                     if List_Quick_Task[0] == 2:
                         Liste_compte = Liste_compte2
                         if len(Liste_compte) < len(Liste_tache):
                             print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                             time.sleep(5)
-                            main()
+                            fonction_Zalando()
                         if len(Liste_compte) == 0:
                             print(Fore.RED + 'The file Accounts_List2.csv is empty !')
                             time.sleep(5)
-                            main()
+                            fonction_Zalando()
                     if List_Quick_Task[0] == 3:
                         Liste_compte = Liste_compte3
                     List_profile = List_Quick_Task
@@ -1433,7 +1433,7 @@ def fonction_Zalando():
                     if len(Liste_tache) == 0:
                         print(Fore.RED + 'The file Task.csv is empty !')
                         time.sleep(5)
-                        main()
+                        fonction_Zalando()
                     Mode = 'Normal'
 
                     while True:
@@ -1465,7 +1465,7 @@ def fonction_Zalando():
                                 if choix_3 > len(List_profile1):
                                     print(Fore.RED + 'The Profile%s is empty !' % choix_3)
                                     time.sleep(5)
-                                    main()
+                                    fonction_Zalando()
 
                                 for u in range(0, len(List_profile1)):
                                     if choix_3 == u:
@@ -1495,21 +1495,21 @@ def fonction_Zalando():
                                             print(
                                                 Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                                             time.sleep(5)
-                                            main()
+                                            fonction_Zalando()
                                         if len(Liste_compte) == 0:
                                             print(Fore.RED + 'The file Accounts_List1.csv is empty !')
                                             time.sleep(5)
-                                            main()
+                                            fonction_Zalando()
                                     if choix_4 == 2:
                                         Liste_compte = Liste_compte2
                                         if len(Liste_compte) < len(Liste_tache):
                                             print(
                                                 Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                                             time.sleep(5)
-                                            main()
+                                            fonction_Zalando()
                                         if len(Liste_compte) == 0:
                                             print(Fore.RED + 'The file Accounts_List2.csv is empty !')
-                                            main()
+                                            fonction_Zalando()
                                             time.sleep(5)
                                     if choix_4 == 3:
                                         Liste_compte = Liste_compte3
@@ -1517,7 +1517,7 @@ def fonction_Zalando():
                                             print(
                                                 Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                                             time.sleep(5)
-                                            main()
+                                            fonction_Zalando()
 
                                     thread_list = []
                                     # Start Thread
@@ -1551,20 +1551,22 @@ def fonction_Zalando():
                     if len(Liste_comptegenerator) == 0:
                         print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
                         time.sleep(5)
-                        main()
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> 1. List 1")
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> 2. List 2")
-                    choix_2 = int(input("\nChoice :"))
+                        fonction_Zalando()
                     while True:
-                        DiscordStatutStart()
-                        if choix_2 == 1:
-                            liste = 'Accounts/Accounts_List1.csv'
-                            CreationComptes(Liste_comptegenerator, liste_proxys, liste)
-                        if choix_2 == 2:
-                            liste = 'Accounts/Accounts_List2.csv'
-                            CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+                        try:
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                  Style.RESET_ALL + "> 1. List 1")
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                  Style.RESET_ALL + "> 2. List 2")
+                            choix_2 = int(input("\nChoice :"))
+                            if choix_2 == 1:
+                                liste = 'Accounts/Accounts_List1.csv'
+                                CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+                            if choix_2 == 2:
+                                liste = 'Accounts/Accounts_List2.csv'
+                                CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+                        except:
+                            pass
 
                 if choix == 4:
                     VerificationProxys()
