@@ -23,7 +23,7 @@ from pypresence import Presence
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 4
+        self.timeout = 5
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -37,7 +37,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=2, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -227,19 +227,33 @@ class RechercheCommande(Thread):
                     # Réglage du proxy
                     proxy = random.choice(self.liste_proxys)
                     if len(proxy) == 4:
-                        session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                        session.proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                     else:
-                        session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
+                        session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
                     # Connexion à la page d'accueil de Zalando
                     headers = {
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                         'User-Agent': generate_user_agent(),
                         "Accept-Language": "fr-fr",
                         "Accept-Encoding": "gzip, deflate, br",
+                        "Referer": "https://www.google.com"
                     }
+                    diversion = random.choice(['https://www.zalando.fr/accueil-homme/',
+                                               'https://www.zalando.fr/tiger-of-sweden-joran-sandales-dark-brown'
+                                               '-ti512g002-o11.html',
+                                               'https://www.zalando.fr/accueil-luxe-homme/',
+                                               'https://www.zalando.fr/mode-homme/',
+                                               'https://www.zalando.fr/pulls-gilets-homme/',
+                                               'https://www.zalando.fr/accueil-femme/',
+                                               'https://www.zalando.fr/mode-femme/',
+                                               'https://www.zalando.fr/baskets-femme/',
+                                               'https://www.zalando.fr/promo-femme/',
+                                               'https://www.zalando.fr/soutien-gorge-femme/',
+                                               'https://www.zalando.fr/chaussures-femme/'])
                     session.headers.update(headers)
                     session.get(site, verify=False)
                     if session.cookies != '<RequestsCookieJar[]>':
+                        session.get(diversion, verify=False)
                         break
 
                 # Lancement du chronomètre
@@ -250,17 +264,18 @@ class RechercheCommande(Thread):
 
                 # Connexion à la page de connexion
                 url_connexion_1 = "%s/login/?view=login" % site
+                session.headers['Referer'] = diversion
                 login = session.get(url_connexion_1, verify=False)
 
                 # Requetes anti-bot
-                url_bot_2 = "%s/resources/35692132da2028b315fc23b805e921" % site
+                url_bot_2 = "%s/resources/da6ea05bf5rn2028b315fc23b805e921" % site
                 data1_2 = {
-                    "sensor_data": "7a74G7m23Vrp0o5c9178011.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392127,8356226,1440,900,1440,900,1440,513,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.903443507451,796854178112.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,0;-1,2,-94,-102,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,0;-1,2,-94,-108,-1,2,-94,-110,0,1,375,887,490;1,1,633,804,295;2,1,682,803,292;3,1,825,803,292;4,1,826,700,270;5,1,831,696,270;6,1,891,691,270;7,1,906,678,278;8,1,912,676,279;9,1,917,676,280;10,1,927,674,280;11,1,954,674,281;12,1,969,672,281;13,1,999,671,281;14,3,1046,671,281,1466;15,1,1090,671,281;16,4,1093,671,281,1466;17,2,1119,671,281,1466;18,1,1410,671,281;19,1,14210,654,237;20,1,14230,654,237;21,1,14231,655,236;22,1,14234,657,236;23,1,14235,657,236;24,1,14242,659,236;25,1,14242,659,236;26,1,14249,662,236;27,1,14250,662,236;28,1,14257,664,236;29,1,14258,664,236;30,1,14267,671,236;31,1,14267,671,236;32,1,14276,677,236;33,1,14282,683,236;34,1,14283,683,236;35,1,14289,688,236;36,1,14290,688,236;37,1,14299,694,236;38,1,14300,694,236;39,1,14305,699,238;40,1,14306,699,238;41,1,14314,707,240;42,1,14315,707,240;43,1,14321,712,243;44,1,14321,712,243;45,1,14329,718,247;46,1,14329,718,247;47,1,14337,725,253;48,1,14338,725,253;49,1,14344,731,259;50,1,14345,731,259;51,1,14353,737,267;52,1,14354,737,267;53,1,14361,742,275;54,1,14362,742,275;55,1,14369,746,284;56,1,14370,746,284;57,1,14376,748,292;58,1,14376,748,292;59,1,14384,748,297;60,1,14385,748,297;61,1,14392,749,304;62,1,14393,749,304;63,1,14401,749,311;64,1,14401,749,311;65,1,14408,749,315;66,1,14408,749,315;67,1,14416,749,319;68,1,14416,749,319;69,1,14423,749,322;70,1,14424,749,322;71,1,14431,747,323;72,1,14432,747,323;73,1,14439,745,324;74,1,14440,745,324;75,1,14447,743,325;76,1,14447,743,325;77,1,14455,738,325;78,1,14455,738,325;79,1,14463,734,325;80,1,14464,734,325;81,1,14470,730,323;82,1,14471,730,323;83,1,14478,724,317;84,1,14479,724,317;85,1,14486,718,311;86,1,14486,718,311;87,1,14494,709,303;88,1,14495,709,303;89,1,14502,702,295;90,1,14503,702,295;91,1,14511,692,284;92,1,14512,692,284;93,1,14518,689,280;94,1,14519,689,280;95,1,14525,683,271;96,1,14526,683,271;97,1,14534,678,265;98,1,14534,678,265;99,1,14543,675,260;100,1,14544,675,260;101,1,14550,673,256;102,1,14551,673,256;186,3,15449,606,280,1466;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,1003;0,1740;2,1939;1,13685;3,14207;-1,2,-94,-112,%s/login/?view=login-1,2,-94,-115,1,1349798,32,0,0,0,1349766,15449,0,1593708356225,40,17049,0,187,2841,3,0,15451,1241425,0,F47B7ACD62E06613840912E4B0FF4D34~-1~YAAQDex7XHjKERBzAQAA4adrEAQVKC4G5DWTwiDbd99QE0TG/CZ/X7/0id5k5Wx002o9cnpldjg2VaUQLUT7xhQ16xAXRWtpmFjanwsvOKrPuOhteppYDYFUsR7dmXHIQ068VDYGjPmJ3s1QezU6/OK7qU/7z0Xzvw9HMdvSPwXK3yDBL3Xn5VCqcupRCesCB0vUZ37uYYJJv8rx1GdciMHQXlb1zg7waQUUQjLQM7oZUeI7QqqXoiPdQMPP/FSWoCe1fGoDA7+05Ur96s4rsR99wfKdfjv3wrPr71c+IetpJ2aONaAL0HHVhSeEeTzNST4NF0JAIB+KtncIoMXcQToOfVY7~-1~-1~-1,32020,851,1050434953,26018161,PiZtE,53346,121-1,2,-94,-106,1,3-1,2,-94,-119,200,0,0,0,0,0,0,0,200,0,0,600,200,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,25068636-1,2,-94,-118,188046-1,2,-94,-121,;4;10;0"
-                                   % (session.headers["User-Agent"], site)
+                    "sensor_data": "7a74G7m23Vrp0o5c9185151.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392662,917608,1440,900,1440,900,1440,162,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.14331266771,797940458816,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1057,1884,0;0,-1,0,0,948,1768,0;0,1,0,0,947,1435,0;1,-1,0,0,2054,1798,0;-1,2,-94,-102,0,-1,0,0,1057,1884,0;0,-1,0,0,948,1768,0;0,1,0,0,947,1435,0;1,-1,0,0,2054,1798,0;-1,2,-94,-108,-1,2,-94,-110,0,1,58,651,409;1,1,121,651,313;2,1,223,661,295;3,1,237,668,301;4,1,594,668,603;5,1,1659,669,458;6,1,1782,691,517;7,1,1784,691,520;8,1,1871,690,520;9,1,1939,690,524;10,1,1953,690,534;11,1,2064,691,536;12,1,2176,692,539;13,1,2178,698,537;14,1,2272,699,536;15,1,2276,712,527;16,1,2321,714,525;17,1,2323,716,524;18,1,2325,716,523;19,1,2333,716,523;20,1,2341,716,523;21,1,2351,717,523;22,1,4014,717,382;23,1,4819,714,209;24,1,4826,714,208;25,1,4836,714,207;26,1,4844,713,206;27,1,4850,713,205;28,1,4858,712,203;29,1,4866,712,202;30,1,4876,712,201;31,1,4881,711,201;32,1,4888,711,200;33,1,4897,711,199;34,1,4905,711,199;35,1,4912,711,198;36,1,4929,711,198;37,1,4936,711,197;38,3,4997,711,197,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,%s/login/?view=register-1,2,-94,-115,1,161867,32,0,0,0,161835,4997,0,1595880917632,21,17072,0,39,2845,1,0,4999,119315,0,6F312FA3B5AB9D9EC54A4B3D2E4ECC96~-1~YAAQZrZ7XDz2lYpzAQAAMk3qkQSKXwZV0ifSRrZrMXgYoPFZIYDwaXVobptSnWOw0C6YDDGhsyfva+Rf1DlfFG3qTMU75ruJ7u24CFSBz87RSp1KmwoncyEe+d7loe4g4dCs5IVOUfea9+4LeeJ61rF/cGKig+CiKIDQSC0HU1RwM7DbHAuFFmm+cdFG+FrBKU+MpTOUHu5Su22cs+tE7VxfzkvbrN5EV63h4WyVDePy54hPsyBQ0k6hg3RWUg1vBPE+YUjht962wW+1LpUbilJmXa46Uabr/q98ntF76uRGYXEc9HK+o79EWkwRkU9HXSBJ10HBxRWBgJPkcEwABg3p4l0=~-1~-1~-1,31873,71,-540562879,26018161,PiZtE,78781,84-1,2,-94,-106,1,2-1,2,-94,-119,0,0,0,0,0,0,0,0,0,200,200,2400,3600,200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,24775377-1,2,-94,-118,125321-1,2,-94,-121,;2;28;0" % (
+                        session.headers["User-Agent"], site)
                 }
                 data2_2 = {
-                    "sensor_data": "7a74G7m23Vrp0o5c9178011.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392127,8356226,1440,900,1440,900,1440,513,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.883221105441,796854178112.5,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,0;-1,2,-94,-102,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,1;-1,2,-94,-108,0,1,15627,91,0,2,1466;1,1,15699,86,0,2,1466;2,3,15701,118,0,2,1466;3,2,15848,-2,0,0,1466;-1,2,-94,-110,0,1,375,887,490;1,1,633,804,295;2,1,682,803,292;3,1,825,803,292;4,1,826,700,270;5,1,831,696,270;6,1,891,691,270;7,1,906,678,278;8,1,912,676,279;9,1,917,676,280;10,1,927,674,280;11,1,954,674,281;12,1,969,672,281;13,1,999,671,281;14,3,1046,671,281,1466;15,1,1090,671,281;16,4,1093,671,281,1466;17,2,1119,671,281,1466;18,1,1410,671,281;19,1,14210,654,237;20,1,14230,654,237;21,1,14231,655,236;22,1,14234,657,236;23,1,14235,657,236;24,1,14242,659,236;25,1,14242,659,236;26,1,14249,662,236;27,1,14250,662,236;28,1,14257,664,236;29,1,14258,664,236;30,1,14267,671,236;31,1,14267,671,236;32,1,14276,677,236;33,1,14282,683,236;34,1,14283,683,236;35,1,14289,688,236;36,1,14290,688,236;37,1,14299,694,236;38,1,14300,694,236;39,1,14305,699,238;40,1,14306,699,238;41,1,14314,707,240;42,1,14315,707,240;43,1,14321,712,243;44,1,14321,712,243;45,1,14329,718,247;46,1,14329,718,247;47,1,14337,725,253;48,1,14338,725,253;49,1,14344,731,259;50,1,14345,731,259;51,1,14353,737,267;52,1,14354,737,267;53,1,14361,742,275;54,1,14362,742,275;55,1,14369,746,284;56,1,14370,746,284;57,1,14376,748,292;58,1,14376,748,292;59,1,14384,748,297;60,1,14385,748,297;61,1,14392,749,304;62,1,14393,749,304;63,1,14401,749,311;64,1,14401,749,311;65,1,14408,749,315;66,1,14408,749,315;67,1,14416,749,319;68,1,14416,749,319;69,1,14423,749,322;70,1,14424,749,322;71,1,14431,747,323;72,1,14432,747,323;73,1,14439,745,324;74,1,14440,745,324;75,1,14447,743,325;76,1,14447,743,325;77,1,14455,738,325;78,1,14455,738,325;79,1,14463,734,325;80,1,14464,734,325;81,1,14470,730,323;82,1,14471,730,323;83,1,14478,724,317;84,1,14479,724,317;85,1,14486,718,311;86,1,14486,718,311;87,1,14494,709,303;88,1,14495,709,303;89,1,14502,702,295;90,1,14503,702,295;91,1,14511,692,284;92,1,14512,692,284;93,1,14518,689,280;94,1,14519,689,280;95,1,14525,683,271;96,1,14526,683,271;97,1,14534,678,265;98,1,14534,678,265;99,1,14543,675,260;100,1,14544,675,260;101,1,14550,673,256;102,1,14551,673,256;186,3,15449,606,280,1466;188,4,15550,606,280,1466;189,2,15556,606,280,1466;313,3,16356,666,346,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,1003;0,1740;2,1939;1,13685;3,14207;-1,2,-94,-112,%s/login/?view=login-1,2,-94,-115,69052,1400743,32,0,0,0,1469762,16356,0,1593708356225,40,17049,4,314,2841,5,0,16358,1351762,0,F47B7ACD62E06613840912E4B0FF4D34~-1~YAAQDex7XLvLERBzAQAAFeBrEATcL5sl0zgV7hXa6IvZO2QT3hLEasdPcX9ezDCTjChowIfAFvx+Q+T7cQAWoFaW8RNof/+Z2OvHog5F8Td4/XBLFqEK9M3PsonioZ47Sx2j75amRQH4X/7OhwhX40SICYOPfBxaCcv4fZNwPI7TplOsJMIljBeOdTTKwCF2Cffu4oo1vqAqpFGWNzbSdqTZ18b+ZK+uYAbdraJtzi336EFKc9KGa2kTrIrp+y5pM2ZCk8FvVv288O43kXM35qnl+Egs1SA3YM4mU/I0rPeJMjgeOp95XiDDQUbeRDMFiCykPrq5JXhcqTMNxIHi0sXXBg3t~-1~-1~-1,31936,851,1050434953,26018161,PiZtE,23794,107-1,2,-94,-106,1,4-1,2,-94,-119,200,0,0,0,0,0,0,0,200,0,0,600,200,600,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,25068636-1,2,-94,-118,196289-1,2,-94,-121,;2;10;0"
-                                   % (session.headers["User-Agent"], site)
+                    "sensor_data": "7a74G7m23Vrp0o5c9185151.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392662,917608,1440,900,1440,900,1440,162,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.914444185457,797940458816,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1057,1884,0;0,-1,0,0,948,1768,0;0,1,0,0,947,1435,0;1,-1,0,0,2054,1798,0;-1,2,-94,-102,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,1;-1,2,-94,-108,0,1,10099,undefined,0,0,1103,0;1,2,10114,undefined,0,0,1103,0;2,1,10141,undefined,0,0,1103,0;3,2,10148,undefined,0,0,1103,0;-1,2,-94,-110,0,1,58,651,409;1,1,121,651,313;2,1,223,661,295;3,1,237,668,301;4,1,594,668,603;5,1,1659,669,458;6,1,1782,691,517;7,1,1784,691,520;8,1,1871,690,520;9,1,1939,690,524;10,1,1953,690,534;11,1,2064,691,536;12,1,2176,692,539;13,1,2178,698,537;14,1,2272,699,536;15,1,2276,712,527;16,1,2321,714,525;17,1,2323,716,524;18,1,2325,716,523;19,1,2333,716,523;20,1,2341,716,523;21,1,2351,717,523;22,1,4014,717,382;23,1,4819,714,209;24,1,4826,714,208;25,1,4836,714,207;26,1,4844,713,206;27,1,4850,713,205;28,1,4858,712,203;29,1,4866,712,202;30,1,4876,712,201;31,1,4881,711,201;32,1,4888,711,200;33,1,4897,711,199;34,1,4905,711,199;35,1,4912,711,198;36,1,4929,711,198;37,1,4936,711,197;38,3,4997,711,197,-1;39,4,5095,711,197,-1;40,2,5096,711,197,-1;41,1,5726,711,197;42,1,5757,705,197;43,1,5770,699,197;44,1,5780,692,197;45,1,5795,688,197;46,1,5807,683,197;47,1,5816,682,197;48,1,5819,681,197;49,1,5820,680,197;50,1,5834,680,197;51,1,5835,680,197;52,1,5852,679,197;53,1,5852,679,197;54,1,5909,679,197;55,1,5910,679,197;56,1,5986,679,197;57,1,5987,679,197;58,1,5994,680,197;59,1,5995,680,197;60,1,6001,681,197;61,1,6002,681,197;62,1,6009,681,198;63,1,6010,681,198;64,1,6017,682,198;65,1,6018,682,198;66,1,6026,682,198;67,1,6027,682,198;68,1,6032,682,198;69,1,6033,682,198;70,1,6040,682,198;71,1,6041,682,198;72,1,6862,682,198;73,1,6863,682,198;74,1,6934,682,198;75,1,6935,682,198;76,1,8275,678,198;77,1,8276,678,198;78,1,8281,675,200;79,1,8282,675,200;80,1,8288,672,203;81,1,8288,672,203;82,1,8296,670,205;83,1,8297,670,205;84,1,8304,669,206;85,1,8305,669,206;86,1,8313,668,207;87,1,8314,668,207;88,1,8319,668,209;89,1,8320,668,209;90,1,8329,668,211;91,1,8329,668,211;92,1,8336,668,212;93,1,8336,668,212;94,1,8344,668,214;95,1,8345,668,214;96,1,8351,668,214;97,1,8352,668,214;98,1,8359,668,217;99,1,8360,668,217;100,1,8367,668,219;101,1,8368,668,219;102,1,8376,668,220;164,3,14194,827,346,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,5006;2,9185;3,10124;2,13457;-1,2,-94,-112,%s/login/?view=register-1,2,-94,-115,NaN,684358,32,0,0,0,NaN,14195,0,1595880917632,21,17072,4,165,2845,3,0,14196,620006,0,6F312FA3B5AB9D9EC54A4B3D2E4ECC96~-1~YAAQZrZ7XHb2lYpzAQAAOl7qkQShxEyHSep/+DM86+3IdN8jjQ7Ui9RjcbFNbLChjd8dMP7MADucw1k/7hfa/OwVnZDZIIMC9Vf+lwc+w0GHhsJZoGe3o27GHUlX9uk21utxE4JT9ZYh/PdJ9SZRxbMXxqK6eYxbTZZ9f6u+OUC0Dk84Q5J8Ln06PR2OINSMEJsGSZzqfZZ8yW9VtZiX68Pz53ypTCm5GoQxBiD3ae3Cfroo2ZRA8Y/Kmoi8flHWz/OPDEIdNRcy6VQNiUjfooxKlfIIzWiHyiDRD2nQNpJ0CfPssdxiYyCek8TUy0SU4wDCRjV6ZJJ8nJmhznnAqZCwpLo=~-1~-1~-1,32392,71,-540562879,26018161,PiZtE,76180,72-1,2,-94,-106,1,3-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,800,800,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,24775377-1,2,-94,-118,193990-1,2,-94,-121,;1;28;0" % (
+                        session.headers["User-Agent"], site)
                 }
                 session.headers.update({
                     "Accept": "*/*",
@@ -399,8 +414,9 @@ class RechercheCommande(Thread):
                                     'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
                                     'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
                                     'country_code': Pays,
-                                    'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " + self.List_Quick_Task[5].strip(
-                                        '\n').lstrip('"').rstrip('"'),
+                                    'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " +
+                                              self.List_Quick_Task[5].strip(
+                                                  '\n').lstrip('"').rstrip('"'),
                                     'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"')
                                 }
                             }
@@ -412,8 +428,9 @@ class RechercheCommande(Thread):
                                 'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
                                 'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
                                 'country_code': Pays,
-                                'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " + self.List_Quick_Task[5].strip(
-                                    '\n').lstrip('"').rstrip('"'),
+                                'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " +
+                                          self.List_Quick_Task[5].strip(
+                                              '\n').lstrip('"').rstrip('"'),
                                 'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"')
                             },
                             'addressDestination': {
@@ -425,8 +442,9 @@ class RechercheCommande(Thread):
                                         'country_code': Pays,
                                         'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
                                         'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
-                                        'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " + self.List_Quick_Task[
-                                            5].strip('\n').lstrip('"').rstrip('"'),
+                                        'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " +
+                                                  self.List_Quick_Task[
+                                                      5].strip('\n').lstrip('"').rstrip('"'),
                                         'additional': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"')
                                     }
                                 },
@@ -518,7 +536,8 @@ class RechercheCommande(Thread):
                                     'first_name': profil[0].strip('\n').lstrip('"').rstrip('"'),
                                     'last_name': profil[1].strip('\n').lstrip('"').rstrip('"'),
                                     'country_code': Pays,
-                                    'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                    'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip(
+                                        '\n').lstrip('"').rstrip('"'),
                                     'zip': profil[6].strip('\n').lstrip('"').rstrip('"')
                                 }
                             }
@@ -530,7 +549,8 @@ class RechercheCommande(Thread):
                                 'first_name': profil[0].strip('\n').lstrip('"').rstrip('"'),
                                 'last_name': profil[1].strip('\n').lstrip('"').rstrip('"'),
                                 'country_code': Pays,
-                                'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip(
+                                    '\n').lstrip('"').rstrip('"'),
                                 'zip': profil[6].strip('\n').lstrip('"').rstrip('"')
                             },
                             'addressDestination': {
@@ -542,7 +562,8 @@ class RechercheCommande(Thread):
                                         'country_code': Pays,
                                         'city': profil[7].strip('\n').lstrip('"').rstrip('"'),
                                         'zip': profil[6].strip('\n').lstrip('"').rstrip('"'),
-                                        'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip('\n').lstrip('"').rstrip('"'),
+                                        'street': profil[3].strip('\n').lstrip('"').rstrip('"') + " " + profil[4].strip(
+                                            '\n').lstrip('"').rstrip('"'),
                                         "additional": profil[5].strip('\n').lstrip('"').rstrip('"')
                                     }
                                 },
@@ -792,10 +813,7 @@ class RechercheCommande(Thread):
                 url=url_discord,
                 username="Scred AIO",
                 avatar_url='https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg',
-                verify=False,
-                proxies={
-                    'http': 'http://%s' % random.choice(self.liste_proxys)
-                }
+                verify=False
             )
             if self.Mode == 'Quick' or self.Paiement == 'CB_Auto':
                 # Titre
@@ -1117,14 +1135,15 @@ def VerificationProxys():
                 )
                 # Réglage du proxy
                 if len(x) == 4:
-                    session.proxies = {"http": "http://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
+                    session.proxies = {"https": "https://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
                     session.get(url_home, verify=False)
                     # Test du proxy
-                    print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]), Style.RESET_ALL)
+                    print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
+                          Style.RESET_ALL)
                 else:
-                    session.proxies = {"http": "http://%s" % (x[0] + ":" + x[1])}
+                    session.proxies = {"https": "https://%s" % (x[0] + ":" + x[1])}
                     # Connexion à la page d'accueil de Zalando
                     url_home = "https://www.zalando.fr"
                     session.get(url_home, verify=False)
@@ -1135,7 +1154,8 @@ def VerificationProxys():
         # Gestion des exceptions
         except:
             if len(x) == 4:
-                print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]), Style.RESET_ALL)
+                print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
+                      Style.RESET_ALL)
             else:
                 print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1]), Style.RESET_ALL)
 
@@ -1290,6 +1310,7 @@ def fonction_Zalando():
         if liste_proxys.count(['\n']) != 0:
             for x in range(0, liste_proxys.count(['\n'])):
                 liste_proxys.remove(['\n'])
+        random.shuffle(liste_proxys)
         # Accounts Generator
         Liste_comptegenerator = listecomptegenerator()
         if Liste_comptegenerator.count(['\n']) != 0:
@@ -1339,202 +1360,220 @@ def fonction_Zalando():
             time.sleep(5)
             main()
 
-        print("")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 1. Quick Tasks")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 2. Optimised Tasks")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 3. Generated Accounts")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 4. Proxy Check")
-        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 5. Main Menu")
         while True:
-            choix = int(input("\nChoice :"))
-            if choix == 1:
-                if len(Liste_tache) == 0:
-                    print(Fore.RED + 'The file Task.csv is empty !')
-                    time.sleep(5)
-                    main()
-                if len(List_Quick_Task) == 0:
-                    print(Fore.RED + 'The file Quick_Task.csv is empty !')
-                    time.sleep(5)
-                    main()
-                Paiement = 'CB_Auto'
-                Mode = 'Quick'
-                if List_Quick_Task[0] == 1:
-                    Liste_compte = Liste_compte1
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+            try:
+                print("")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 1. Quick Tasks")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 2. Optimised Tasks")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 3. Generated Accounts")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 4. Proxy Check")
+                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 5. Main Menu")
+                choix = int(input("\nChoice :"))
+                if choix == 1:
+                    if len(Liste_tache) == 0:
+                        print(Fore.RED + 'The file Task.csv is empty !')
                         time.sleep(5)
                         main()
-                    if len(Liste_compte) == 0:
-                        print(Fore.RED + 'The file Accounts_List1.csv is empty !')
+                    if len(List_Quick_Task) == 0:
+                        print(Fore.RED + 'The file Quick_Task.csv is empty !')
                         time.sleep(5)
                         main()
-                if List_Quick_Task[0] == 2:
-                    Liste_compte = Liste_compte2
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                        time.sleep(5)
-                        main()
-                    if len(Liste_compte) == 0:
-                        print(Fore.RED + 'The file Accounts_List2.csv is empty !')
-                        time.sleep(5)
-                        main()
-                if List_Quick_Task[0] == 3:
-                    Liste_compte = Liste_compte3
-                List_profile = List_Quick_Task
-                thread_list = []
-                # Start Thread
-                for x in range(0, len(Liste_tache)):
-                    url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
-                    taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
-                    quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
-                    Task = x
-                    thread = RechercheCommande(liste_proxys,
-                                               List_profile,
-                                               Liste_compte,
-                                               url_produit,
-                                               taille_produit,
-                                               Paiement,
-                                               Mode,
-                                               Task,
-                                               List_Quick_Task,
-                                               quantite)
-                    thread.start()
-                    thread_list.append(thread)
-
-                time.sleep(2)
-                DiscordStatutStart()
-                for t in thread_list:
-                    t.join()
-                main()
-
-            if choix == 2:
-                if len(Liste_tache) == 0:
-                    print(Fore.RED + 'The file Task.csv is empty !')
-                    time.sleep(5)
-                    main()
-                Mode = 'Normal'
-
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 1. Credit Card Autocheckout")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 2. Credit Card Manual Checkout")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 3. Paypal Manual Checkout")
-                choix_2 = int(input("\nChoice :"))
-
-                if choix_2 == 1:
                     Paiement = 'CB_Auto'
-                if choix_2 == 2:
-                    Paiement = 'CB'
-                if choix_2 == 3:
-                    Paiement = 'Paypal'
+                    Mode = 'Quick'
+                    if List_Quick_Task[0] == 1:
+                        Liste_compte = Liste_compte1
+                        if len(Liste_compte) < len(Liste_tache):
+                            print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                            time.sleep(5)
+                            main()
+                        if len(Liste_compte) == 0:
+                            print(Fore.RED + 'The file Accounts_List1.csv is empty !')
+                            time.sleep(5)
+                            main()
+                    if List_Quick_Task[0] == 2:
+                        Liste_compte = Liste_compte2
+                        if len(Liste_compte) < len(Liste_tache):
+                            print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                            time.sleep(5)
+                            main()
+                        if len(Liste_compte) == 0:
+                            print(Fore.RED + 'The file Accounts_List2.csv is empty !')
+                            time.sleep(5)
+                            main()
+                    if List_Quick_Task[0] == 3:
+                        Liste_compte = Liste_compte3
+                    List_profile = List_Quick_Task
+                    thread_list = []
+                    # Start Thread
+                    for x in range(0, len(Liste_tache)):
+                        url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
+                        taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
+                        quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
+                        Task = x
+                        thread = RechercheCommande(liste_proxys,
+                                                   List_profile,
+                                                   Liste_compte,
+                                                   url_produit,
+                                                   taille_produit,
+                                                   Paiement,
+                                                   Mode,
+                                                   Task,
+                                                   List_Quick_Task,
+                                                   quantite)
+                        thread.start()
+                        thread_list.append(thread)
 
-                for u in range(0, len(List_profile1)):
-                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                          Style.RESET_ALL + "> %s. Profile%s" % (u + 1, u + 1))
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> %s. Select Multiple Profiles" % (len(List_profile1) + 1))
-                choix_3 = int(input("\nChoice :"))
-
-                if choix_3 > len(List_profile1):
-                    print(Fore.RED + 'The Profile%s is empty !' % choix_3)
-                    time.sleep(5)
-                    main()
-
-                for u in range(0, len(List_profile1)):
-                    if choix_3 == u:
-                        List_profile = List_profile1[u]
-
-                if choix_3 == len(List_profile1) + 1:
-                    List_profilebis = []
-                    for u in range(0, len(List_profile1)):
-                        List_profilebis.append(List_profile1[u])
-                    random.shuffle(List_profilebis)
-                    List_profile = random.choice(List_profilebis)
-
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 1. List 1")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 2. List 2")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 3. Select Multiple Lists")
-                choix_4 = int(input("\nChoice :"))
-                if choix_4 == 1:
-                    Liste_compte = Liste_compte1
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                        time.sleep(5)
-                        main()
-                    if len(Liste_compte) == 0:
-                        print(Fore.RED + 'The file Accounts_List1.csv is empty !')
-                        time.sleep(5)
-                        main()
-                if choix_4 == 2:
-                    Liste_compte = Liste_compte2
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                        time.sleep(5)
-                        main()
-                    if len(Liste_compte) == 0:
-                        print(Fore.RED + 'The file Accounts_List2.csv is empty !')
-                        main()
-                        time.sleep(5)
-                if choix_4 == 3:
-                    Liste_compte = Liste_compte3
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                        time.sleep(5)
-                        main()
-
-                thread_list = []
-                # Start Thread
-                for x in range(0, len(Liste_tache)):
-                    url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
-                    taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
-                    quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
-                    Task = x
-                    thread = RechercheCommande(liste_proxys,
-                                               List_profile,
-                                               Liste_compte,
-                                               url_produit,
-                                               taille_produit,
-                                               Paiement,
-                                               Mode,
-                                               Task,
-                                               List_Quick_Task,
-                                               quantite)
-                    thread.start()
-                    thread_list.append(thread)
-
-                time.sleep(2)
-                DiscordStatutStart()
-                for t in thread_list:
-                    t.join()
-                main()
-
-            if choix == 3:
-                if len(Liste_comptegenerator) == 0:
-                    print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
-                    time.sleep(5)
-                    main()
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 1. List 1")
-                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                      Style.RESET_ALL + "> 2. List 2")
-                choix_2 = int(input("\nChoice :"))
-                while True:
+                    time.sleep(2)
                     DiscordStatutStart()
-                    if choix_2 == 1:
-                        liste = 'Accounts/Accounts_List1.csv'
-                        CreationComptes(Liste_comptegenerator, liste_proxys, liste)
-                    if choix_2 == 2:
-                        liste = 'Accounts/Accounts_List2.csv'
-                        CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+                    for t in thread_list:
+                        t.join()
+                    fonction_Zalando()
 
-            if choix == 4:
-                VerificationProxys()
+                if choix == 2:
+                    if len(Liste_tache) == 0:
+                        print(Fore.RED + 'The file Task.csv is empty !')
+                        time.sleep(5)
+                        main()
+                    Mode = 'Normal'
 
-            if choix == 5:
-                break
+                    while True:
+                        try:
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                  Style.RESET_ALL + "> 1. Credit Card Autocheckout")
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                  Style.RESET_ALL + "> 2. Credit Card Manual Checkout")
+                            print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                  Style.RESET_ALL + "> 3. Paypal Manual Checkout")
+                            choix_2 = int(input("\nChoice :"))
+                            if choix_2 == 1:
+                                Paiement = 'CB_Auto'
+                            if choix_2 == 2:
+                                Paiement = 'CB'
+                            if choix_2 == 3:
+                                Paiement = 'Paypal'
+                        except:
+                            pass
+
+                        while True:
+                            try:
+                                for u in range(0, len(List_profile1)):
+                                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                          Style.RESET_ALL + "> %s. Profile%s" % (u + 1, u + 1))
+                                print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                      Style.RESET_ALL + "> %s. Select Multiple Profiles" % (len(List_profile1) + 1))
+                                choix_3 = int(input("\nChoice :"))
+                                if choix_3 > len(List_profile1):
+                                    print(Fore.RED + 'The Profile%s is empty !' % choix_3)
+                                    time.sleep(5)
+                                    main()
+
+                                for u in range(0, len(List_profile1)):
+                                    if choix_3 == u:
+                                        List_profile = List_profile1[u]
+
+                                if choix_3 == len(List_profile1) + 1:
+                                    List_profilebis = []
+                                    for u in range(0, len(List_profile1)):
+                                        List_profilebis.append(List_profile1[u])
+                                    random.shuffle(List_profilebis)
+                                    List_profile = random.choice(List_profilebis)
+                            except:
+                                pass
+
+                            while True:
+                                try:
+                                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                          Style.RESET_ALL + "> 1. List 1")
+                                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                          Style.RESET_ALL + "> 2. List 2")
+                                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                                          Style.RESET_ALL + "> 3. Select Multiple Lists")
+                                    choix_4 = int(input("\nChoice :"))
+                                    if choix_4 == 1:
+                                        Liste_compte = Liste_compte1
+                                        if len(Liste_compte) < len(Liste_tache):
+                                            print(
+                                                Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                                            time.sleep(5)
+                                            main()
+                                        if len(Liste_compte) == 0:
+                                            print(Fore.RED + 'The file Accounts_List1.csv is empty !')
+                                            time.sleep(5)
+                                            main()
+                                    if choix_4 == 2:
+                                        Liste_compte = Liste_compte2
+                                        if len(Liste_compte) < len(Liste_tache):
+                                            print(
+                                                Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                                            time.sleep(5)
+                                            main()
+                                        if len(Liste_compte) == 0:
+                                            print(Fore.RED + 'The file Accounts_List2.csv is empty !')
+                                            main()
+                                            time.sleep(5)
+                                    if choix_4 == 3:
+                                        Liste_compte = Liste_compte3
+                                        if len(Liste_compte) < len(Liste_tache):
+                                            print(
+                                                Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                                            time.sleep(5)
+                                            main()
+
+                                    thread_list = []
+                                    # Start Thread
+                                    for x in range(0, len(Liste_tache)):
+                                        url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
+                                        taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
+                                        quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
+                                        Task = x
+                                        thread = RechercheCommande(liste_proxys,
+                                                                   List_profile,
+                                                                   Liste_compte,
+                                                                   url_produit,
+                                                                   taille_produit,
+                                                                   Paiement,
+                                                                   Mode,
+                                                                   Task,
+                                                                   List_Quick_Task,
+                                                                   quantite)
+                                        thread.start()
+                                        thread_list.append(thread)
+
+                                    time.sleep(2)
+                                    DiscordStatutStart()
+                                    for t in thread_list:
+                                        t.join()
+                                    fonction_Zalando()
+                                except:
+                                    pass
+
+                if choix == 3:
+                    if len(Liste_comptegenerator) == 0:
+                        print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
+                        time.sleep(5)
+                        main()
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                          Style.RESET_ALL + "> 1. List 1")
+                    print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                          Style.RESET_ALL + "> 2. List 2")
+                    choix_2 = int(input("\nChoice :"))
+                    while True:
+                        DiscordStatutStart()
+                        if choix_2 == 1:
+                            liste = 'Accounts/Accounts_List1.csv'
+                            CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+                        if choix_2 == 2:
+                            liste = 'Accounts/Accounts_List2.csv'
+                            CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+
+                if choix == 4:
+                    VerificationProxys()
+
+                if choix == 5:
+                    break
+
+            except:
+                pass
 
 
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
@@ -1544,11 +1583,15 @@ def main():
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
         print(Fore.GREEN + "Welcome ! Initializing Scred AIO - User data loaded !\n")
-        print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
-        choix_depart = input("\nChoice :")
         while True:
-            if choix_depart == "1":
-                fonction_Zalando()
+            try:
+                print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
+                choix_depart = int(input("\nChoice :"))
+                if choix_depart == 1:
+                    fonction_Zalando()
+            except:
+                pass
+
 
 # --------------------------------------------------------------------------------------------------------------------#
 
