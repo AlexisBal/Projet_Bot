@@ -1,36 +1,45 @@
 import tkinter as tk
 import requests
 from tkinter import messagebox
+from bs4 import BeautifulSoup
+import webbrowser
 
 version=1.0
 Nom_application='ScredAIO'
 
 def mise_a_jour():
-    def check_updates():
-            try:
-                response = requests.get(
-                    'https://raw.githubusercontent.com/AlexisBal/Projet_Bot/master/Bot_Zalando_3.0/Data/Version.txt?token=AO2H2FX6SIFTLKLFHGFACQK7DQIAC')
-                data = response.text
+    
+    try:
+        response = requests.get(
+            'https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
+        data = response.text
 
-                if float(data) > float(__version__):
-                    messagebox.showinfo('Software Update', 'Update Available!')
-                    message = messagebox.askyesno('Update !', f'{Nom_application} {version} needs to update to version {data}')
-                    if message is True:
-
+        if float(data) > float(version):
+            messagebox.showinfo('Software Update', 'Update Available!')
+            message = messagebox.askyesno('Update !', f'{Nom_application} {version} needs to update to version {data}')
+            if message is True:
                        
-                        webbrowser.open_new_tab('')
-                        parent.destroy()
+                webbrowser.open_new_tab('https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
+                parent.destroy()
 
 
 
-                    else:
-                        pass
-                else:
-                    messagebox.showinfo('Software Update', 'No Updates are Available.')
-            except Exception as e:
-                messagebox.showinfo('Software Update', 'Unable to Check for Update, Error:' + str(e))  
+            else:
+                pass
+        else:
+            messagebox.showinfo('Software Update', 'No Updates are Available.')
+    except Exception as e:
+        messagebox.showinfo('Software Update', 'Unable to Check for Update, Error:' + str(e))  
 
 
 
 
 mise_a_jour()
+
+
+#response = requests.get('https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
+#print(response.text)
+
+#edition = response.find(class ="blob-code blob-code-inner js-file-line")
+
+#print(edition)
