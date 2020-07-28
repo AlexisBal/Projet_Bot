@@ -226,11 +226,6 @@ class RechercheCommande(Thread):
                 while True:
                     # Réglage du proxy
                     proxy = random.choice(self.liste_proxys)
-                    if len(proxy) == 4:
-                        session.proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
-                    else:
-                        session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
-                    # Connexion à la page d'accueil de Zalando
                     headers = {
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                         'User-Agent': generate_user_agent(),
@@ -250,8 +245,29 @@ class RechercheCommande(Thread):
                                                'https://www.zalando.fr/promo-femme/',
                                                'https://www.zalando.fr/soutien-gorge-femme/',
                                                'https://www.zalando.fr/chaussures-femme/'])
-                    session.headers.update(headers)
-                    session.get(site, verify=False)
+                    if len(proxy) == 4:
+                        try:
+                            session.proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                            # Connexion à la page d'accueil de Zalando
+                            session.headers.update(headers)
+                            session.get(site, verify=False, timeout=0.5)
+                        except:
+                            session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                            # Connexion à la page d'accueil de Zalando
+                            session.headers.update(headers)
+                            session.get(site, verify=False)
+                    else:
+                        try:
+                            session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
+                            # Connexion à la page d'accueil de Zalando
+                            session.headers.update(headers)
+                            session.get(site, verify=False, timeout=0.5)
+                        except:
+                            session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
+                            # Connexion à la page d'accueil de Zalando
+                            session.headers.update(headers)
+                            session.get(site, verify=False)
+
                     if session.cookies != '<RequestsCookieJar[]>':
                         session.get(diversion, verify=False)
                         break
@@ -1128,27 +1144,44 @@ def VerificationProxys():
             # Ouverture de la session
             with requests.Session() as session:
                 # Réglage des paramètres de la session
-                retries_2 = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+                retries_2 = Retry(total=2, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
                 session.mount("https://", TimeoutHTTPAdapter(max_retries=retries_2))
                 session.headers.update(
-                    {"User-Agent": generate_user_agent(os=("mac", "linux"))}
+                    {"User-Agent": generate_user_agent()}
                 )
                 # Réglage du proxy
                 if len(x) == 4:
-                    session.proxies = {"https": "https://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
-                    # Connexion à la page d'accueil de Zalando
-                    url_home = "https://www.zalando.fr"
-                    session.get(url_home, verify=False)
-                    # Test du proxy
-                    print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
-                          Style.RESET_ALL)
+                    try:
+                        session.proxies = {"https": "https://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        url_home = "https://www.zalando.fr"
+                        session.get(url_home, verify=False, timeout=0.5)
+                        # Test du proxy
+                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
+                              Style.RESET_ALL)
+                    except:
+                        session.proxies = {"http": "http://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        url_home = "https://www.zalando.fr"
+                        session.get(url_home, verify=False)
+                        # Test du proxy
+                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
+                              Style.RESET_ALL)
                 else:
-                    session.proxies = {"https": "https://%s" % (x[0] + ":" + x[1])}
-                    # Connexion à la page d'accueil de Zalando
-                    url_home = "https://www.zalando.fr"
-                    session.get(url_home, verify=False)
-                    # Test du proxy
-                    print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
+                    try:
+                        session.proxies = {"https": "https://%s" % (x[0] + ":" + x[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        url_home = "https://www.zalando.fr"
+                        session.get(url_home, verify=False, timeout=0.5)
+                        # Test du proxy
+                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
+                    except:
+                        session.proxies = {"http": "http://%s" % (x[0] + ":" + x[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        url_home = "https://www.zalando.fr"
+                        session.get(url_home, verify=False)
+                        # Test du proxy
+                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
 
             session.close()
         # Gestion des exceptions
