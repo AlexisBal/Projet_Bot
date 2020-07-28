@@ -1423,7 +1423,6 @@ def fonction_Zalando():
                     thread_list.append(thread)
 
                 time.sleep(2)
-                DiscordStatutStart()
                 for t in thread_list:
                     t.join()
                 main()
@@ -1539,7 +1538,6 @@ def fonction_Zalando():
                                     thread_list.append(thread)
 
                                 time.sleep(2)
-                                DiscordStatutStart()
                                 for t in thread_list:
                                     t.join()
                                 main()
@@ -1580,10 +1578,8 @@ def fonction_Zalando():
 # ----------------------------Initialisation du programme-------------------------------------------------------------#
 def main():
     while True:
-        DiscordStatutStart()
         titre()
         start = timeit.default_timer()  # J'ai besoin de cette ligne pour calculer la latence.
-        print(Fore.GREEN + "Welcome ! Initializing Scred AIO - User data loaded !\n")
         while True:
             try:
                 print(horloge(), "[Scred AIO]", latence(start), "> 1. Zalando")
@@ -1597,4 +1593,7 @@ def main():
 # --------------------------------------------------------------------------------------------------------------------#
 
 init()
+print(Fore.YELLOW + "Data loading ...")
+DiscordStatutStart()
+print(Fore.GREEN + "Welcome ! Initializing Scred AIO - User data loaded !\n")
 main()
