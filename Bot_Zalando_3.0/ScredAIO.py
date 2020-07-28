@@ -1224,11 +1224,6 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
             while True:
                 # Réglage du proxy
                 proxy = random.choice(liste_proxys)
-                if len(proxy) == 4:
-                    session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
-                else:
-                    session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
-                # Connexion à la page d'accueil de Zalando
                 url_home = "https://www.zalando.fr"
                 session.headers[
                     "Accept"
@@ -1236,7 +1231,25 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
                 session.headers['User-Agent'] = generate_user_agent()
                 session.headers["Accept-Language"] = "fr-fr"
                 session.headers["Accept-Encoding"] = "gzip, deflate, br"
-                home = session.get(url_home, verify=False)
+                if len(proxy) == 4:
+                    try:
+                        session.proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        home = session.get(url_home, verify=False, timeout=0.5)
+                    except:
+                        session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        home = session.get(url_home, verify=False)
+                else:
+                    try:
+                        session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        home = session.get(url_home, verify=False)
+                    except:
+                        session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
+                        # Connexion à la page d'accueil de Zalando
+                        home = session.get(url_home, verify=False)
+
                 if session.cookies != '<RequestsCookieJar[]>':
                     break
 
