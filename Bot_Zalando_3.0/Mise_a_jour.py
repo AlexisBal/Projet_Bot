@@ -20,6 +20,7 @@ def mise_a_jour():
             if message is True:
                        
                 webbrowser.open_new_tab('https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
+                
                 parent.destroy()
 
 
@@ -34,7 +35,10 @@ def mise_a_jour():
 
 
 
-mise_a_jour()
+#mise_a_jour()
+
+#with requests.Session() as session:
+
 
 
 #response = requests.get('https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
