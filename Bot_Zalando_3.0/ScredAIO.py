@@ -250,6 +250,7 @@ class RechercheCommande(Thread):
                                                'https://www.zalando.fr/promo-femme/',
                                                'https://www.zalando.fr/soutien-gorge-femme/',
                                                'https://www.zalando.fr/chaussures-femme/'])
+                    diversion_2 = 'https://www.zalando.fr/chaussures-homme/'
                     if len(proxy) == 4:
                         try:
                             session.proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
@@ -261,6 +262,7 @@ class RechercheCommande(Thread):
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
                             session.get(site, verify=False)
+
                     else:
                         try:
                             session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
@@ -274,7 +276,13 @@ class RechercheCommande(Thread):
                             session.get(site, verify=False)
 
                     if session.cookies != '<RequestsCookieJar[]>':
+                        session.headers['Referer'] = 'https://www.zalando.fr/'
                         session.get(diversion, verify=False)
+                        session.headers['Referer'] = diversion
+                        session.get(diversion_2, verify=False)
+                        # Connexion à la page du produit
+                        session.headers['Referer'] = diversion_2
+                        login = session.get(self.url_produit, verify=False)
                         break
 
                 # Lancement du chronomètre
@@ -283,55 +291,89 @@ class RechercheCommande(Thread):
                 # Récupération des cookies de la session
                 cookies_2 = session.cookies.get_dict()
 
-                # Connexion à la page de connexion
-                url_connexion_1 = "%s/login/?view=login" % site
-                session.headers['Referer'] = diversion
-                login = session.get(url_connexion_1, verify=False)
-
-                # Requetes anti-bot
+                # Connexion au compte
                 url_bot_2 = "%s/resources/da6ea05bf5rn2028b315fc23b805e921" % site
+                urlconex = 'https://www.zalando.fr/api/t/i'
+                url_connexion_2 = "%s/api/reef/login/schema" % site
+                url_connexion_3 = "%s/api/reef/login" % site
                 data1_2 = {
-                    "sensor_data": "7a74G7m23Vrp0o5c9185151.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392662,917608,1440,900,1440,900,1440,162,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.14331266771,797940458816,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1057,1884,0;0,-1,0,0,948,1768,0;0,1,0,0,947,1435,0;1,-1,0,0,2054,1798,0;-1,2,-94,-102,0,-1,0,0,1057,1884,0;0,-1,0,0,948,1768,0;0,1,0,0,947,1435,0;1,-1,0,0,2054,1798,0;-1,2,-94,-108,-1,2,-94,-110,0,1,58,651,409;1,1,121,651,313;2,1,223,661,295;3,1,237,668,301;4,1,594,668,603;5,1,1659,669,458;6,1,1782,691,517;7,1,1784,691,520;8,1,1871,690,520;9,1,1939,690,524;10,1,1953,690,534;11,1,2064,691,536;12,1,2176,692,539;13,1,2178,698,537;14,1,2272,699,536;15,1,2276,712,527;16,1,2321,714,525;17,1,2323,716,524;18,1,2325,716,523;19,1,2333,716,523;20,1,2341,716,523;21,1,2351,717,523;22,1,4014,717,382;23,1,4819,714,209;24,1,4826,714,208;25,1,4836,714,207;26,1,4844,713,206;27,1,4850,713,205;28,1,4858,712,203;29,1,4866,712,202;30,1,4876,712,201;31,1,4881,711,201;32,1,4888,711,200;33,1,4897,711,199;34,1,4905,711,199;35,1,4912,711,198;36,1,4929,711,198;37,1,4936,711,197;38,3,4997,711,197,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,%s/login/?view=register-1,2,-94,-115,1,161867,32,0,0,0,161835,4997,0,1595880917632,21,17072,0,39,2845,1,0,4999,119315,0,6F312FA3B5AB9D9EC54A4B3D2E4ECC96~-1~YAAQZrZ7XDz2lYpzAQAAMk3qkQSKXwZV0ifSRrZrMXgYoPFZIYDwaXVobptSnWOw0C6YDDGhsyfva+Rf1DlfFG3qTMU75ruJ7u24CFSBz87RSp1KmwoncyEe+d7loe4g4dCs5IVOUfea9+4LeeJ61rF/cGKig+CiKIDQSC0HU1RwM7DbHAuFFmm+cdFG+FrBKU+MpTOUHu5Su22cs+tE7VxfzkvbrN5EV63h4WyVDePy54hPsyBQ0k6hg3RWUg1vBPE+YUjht962wW+1LpUbilJmXa46Uabr/q98ntF76uRGYXEc9HK+o79EWkwRkU9HXSBJ10HBxRWBgJPkcEwABg3p4l0=~-1~-1~-1,31873,71,-540562879,26018161,PiZtE,78781,84-1,2,-94,-106,1,2-1,2,-94,-119,0,0,0,0,0,0,0,0,0,200,200,2400,3600,200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,24775377-1,2,-94,-118,125321-1,2,-94,-121,;2;28;0" % (
-                        session.headers["User-Agent"], site)
+                    "sensor_data": "7a74G7m23Vrp0o5c9185761.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392716,928274,1440,877,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.04270993621,798050464137,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1082,-1,0;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1082,-1,0;-1,2,-94,-108,-1,2,-94,-110,0,1,5,780,307;1,1,594,852,322;2,1,835,1027,242;3,1,848,1043,385;4,1,849,1041,391;5,1,935,1040,393;6,1,946,1033,401;7,1,1004,1033,401;8,1,1012,1029,404;9,1,1021,1028,405;10,1,1110,1026,406;11,1,1114,1014,419;12,1,1116,1013,420;13,1,1150,1012,422;14,1,1195,1008,426;15,1,1269,1003,432;16,1,1271,991,434;17,1,1326,989,434;18,1,1385,967,410;19,1,1396,959,314;20,1,1707,966,305;21,1,1724,1079,442;22,1,1726,1072,444;23,1,1730,1069,445;24,1,2080,1066,446;25,1,2087,1024,481;26,1,2146,1024,481;27,1,2160,1024,481;28,1,2502,1024,482;29,1,2589,1024,483;30,1,2596,1024,483;31,1,3252,1024,483;32,1,3265,1084,56;33,1,3285,1085,59;34,1,3291,1085,62;35,1,3427,1085,63;36,1,3430,1086,65;37,1,3502,1086,65;38,1,3504,1086,65;39,1,3795,1086,65;40,1,3881,1082,113;41,1,3956,1082,116;42,1,4035,1081,116;43,1,4110,1081,117;44,1,4429,1081,120;45,1,4506,1080,120;46,1,5013,1080,120;47,1,5015,1080,120;48,1,11328,1080,120;49,1,11332,1080,120;50,1,16706,1080,121;51,1,16709,1080,121;52,1,16712,1080,124;53,1,16718,1080,126;54,1,16720,1080,126;55,1,16726,1080,129;56,1,16727,1080,129;57,1,16734,1080,132;58,1,16735,1080,132;59,1,16747,1080,137;60,1,16749,1080,137;61,1,16751,1081,144;62,1,16759,1082,151;63,1,16761,1082,151;64,1,16766,1083,158;65,1,16767,1083,158;66,1,16779,1083,161;67,1,16780,1083,161;68,1,16787,1084,168;69,1,16795,1085,174;70,1,16799,1086,179;71,1,16803,1086,179;72,1,16807,1087,184;73,1,16813,1087,184;74,1,16815,1088,188;75,1,16822,1090,192;76,1,16827,1090,192;77,1,16831,1091,197;78,1,16831,1091,197;79,1,16839,1093,205;80,1,16844,1093,205;81,1,16847,1094,210;82,1,16848,1094,210;83,1,16855,1095,215;84,1,16861,1095,215;85,1,16863,1097,221;86,1,16863,1097,221;87,1,16872,1098,228;88,1,16873,1098,228;89,1,16879,1099,234;90,1,16880,1099,234;91,1,16887,1100,237;92,1,16888,1100,237;93,1,16896,1102,244;94,1,16897,1102,244;95,1,16905,1103,250;96,1,16906,1103,250;97,1,16911,1103,254;98,1,16912,1103,254;99,1,16920,1104,259;333,3,21741,985,479,-1;334,4,21992,985,479,-1;335,2,21992,985,479,-1;486,3,36533,1001,313,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,%s-1,2,-94,-115,1,1217637,32,0,0,0,1217605,36533,0,1596100928274,21,17074,0,487,2845,3,0,36534,1074764,0,8666435BCB20333DA4708699A3C8C57F~-1~YAAQHVNzaDPjQ4lzAQAAQrgHnwRg5DADyLhio7a9BiGqUvXeCxBA3NWskTMZ1jvRMLOHri5/vyI9dnA3MZYxEAXVz6iAv6SncI51P+6UWGSZauTb/r8umDjnkG6NRe6f/6EZxAhyiaK/wmfkbpz6Dw2YU6HVsEudpL/765TzzP5oYSWXiB537rU8rYvFzTT5NHTH/ktQtQztKLKRSqSrMkGAzBG7TWJOlrNYRVPHAyRGgqqfh61QUD9n6X7FOkdUvDd7MK/NdLDu/UmvgFcuQ2eJzLwflmQP+vu4UcWvyGMJ+qxNfX2VyZ33aFeahrOEry6mtNUeFGhFlc1SEiCoc08sti8=~-1~-1~-1,32707,992,-1522636444,26018161,PiZtE,38400,80-1,2,-94,-106,1,3-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,200,400,200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,125316684-1,2,-94,-118,190375-1,2,-94,-121,;2;4;0" % (session.headers["User-Agent"], self.url_produit)
                 }
                 data2_2 = {
-                    "sensor_data": "7a74G7m23Vrp0o5c9185151.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392662,917608,1440,900,1440,900,1440,162,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.914444185457,797940458816,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,1057,1884,0;0,-1,0,0,948,1768,0;0,1,0,0,947,1435,0;1,-1,0,0,2054,1798,0;-1,2,-94,-102,0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,1;-1,2,-94,-108,0,1,10099,undefined,0,0,1103,0;1,2,10114,undefined,0,0,1103,0;2,1,10141,undefined,0,0,1103,0;3,2,10148,undefined,0,0,1103,0;-1,2,-94,-110,0,1,58,651,409;1,1,121,651,313;2,1,223,661,295;3,1,237,668,301;4,1,594,668,603;5,1,1659,669,458;6,1,1782,691,517;7,1,1784,691,520;8,1,1871,690,520;9,1,1939,690,524;10,1,1953,690,534;11,1,2064,691,536;12,1,2176,692,539;13,1,2178,698,537;14,1,2272,699,536;15,1,2276,712,527;16,1,2321,714,525;17,1,2323,716,524;18,1,2325,716,523;19,1,2333,716,523;20,1,2341,716,523;21,1,2351,717,523;22,1,4014,717,382;23,1,4819,714,209;24,1,4826,714,208;25,1,4836,714,207;26,1,4844,713,206;27,1,4850,713,205;28,1,4858,712,203;29,1,4866,712,202;30,1,4876,712,201;31,1,4881,711,201;32,1,4888,711,200;33,1,4897,711,199;34,1,4905,711,199;35,1,4912,711,198;36,1,4929,711,198;37,1,4936,711,197;38,3,4997,711,197,-1;39,4,5095,711,197,-1;40,2,5096,711,197,-1;41,1,5726,711,197;42,1,5757,705,197;43,1,5770,699,197;44,1,5780,692,197;45,1,5795,688,197;46,1,5807,683,197;47,1,5816,682,197;48,1,5819,681,197;49,1,5820,680,197;50,1,5834,680,197;51,1,5835,680,197;52,1,5852,679,197;53,1,5852,679,197;54,1,5909,679,197;55,1,5910,679,197;56,1,5986,679,197;57,1,5987,679,197;58,1,5994,680,197;59,1,5995,680,197;60,1,6001,681,197;61,1,6002,681,197;62,1,6009,681,198;63,1,6010,681,198;64,1,6017,682,198;65,1,6018,682,198;66,1,6026,682,198;67,1,6027,682,198;68,1,6032,682,198;69,1,6033,682,198;70,1,6040,682,198;71,1,6041,682,198;72,1,6862,682,198;73,1,6863,682,198;74,1,6934,682,198;75,1,6935,682,198;76,1,8275,678,198;77,1,8276,678,198;78,1,8281,675,200;79,1,8282,675,200;80,1,8288,672,203;81,1,8288,672,203;82,1,8296,670,205;83,1,8297,670,205;84,1,8304,669,206;85,1,8305,669,206;86,1,8313,668,207;87,1,8314,668,207;88,1,8319,668,209;89,1,8320,668,209;90,1,8329,668,211;91,1,8329,668,211;92,1,8336,668,212;93,1,8336,668,212;94,1,8344,668,214;95,1,8345,668,214;96,1,8351,668,214;97,1,8352,668,214;98,1,8359,668,217;99,1,8360,668,217;100,1,8367,668,219;101,1,8368,668,219;102,1,8376,668,220;164,3,14194,827,346,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,5006;2,9185;3,10124;2,13457;-1,2,-94,-112,%s/login/?view=register-1,2,-94,-115,NaN,684358,32,0,0,0,NaN,14195,0,1595880917632,21,17072,4,165,2845,3,0,14196,620006,0,6F312FA3B5AB9D9EC54A4B3D2E4ECC96~-1~YAAQZrZ7XHb2lYpzAQAAOl7qkQShxEyHSep/+DM86+3IdN8jjQ7Ui9RjcbFNbLChjd8dMP7MADucw1k/7hfa/OwVnZDZIIMC9Vf+lwc+w0GHhsJZoGe3o27GHUlX9uk21utxE4JT9ZYh/PdJ9SZRxbMXxqK6eYxbTZZ9f6u+OUC0Dk84Q5J8Ln06PR2OINSMEJsGSZzqfZZ8yW9VtZiX68Pz53ypTCm5GoQxBiD3ae3Cfroo2ZRA8Y/Kmoi8flHWz/OPDEIdNRcy6VQNiUjfooxKlfIIzWiHyiDRD2nQNpJ0CfPssdxiYyCek8TUy0SU4wDCRjV6ZJJ8nJmhznnAqZCwpLo=~-1~-1~-1,32392,71,-540562879,26018161,PiZtE,76180,72-1,2,-94,-106,1,3-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,800,800,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,24775377-1,2,-94,-118,193990-1,2,-94,-121,;1;28;0" % (
-                        session.headers["User-Agent"], site)
+                    "sensor_data": "7a74G7m23Vrp0o5c9185761.6-1,2,-94,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392716,928274,1440,877,1440,900,1440,837,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.11380621956,798050464137,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,1082,-1,0;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,1082,-1,0;0,-1,0,0,1103,1103,1;1,-1,0,0,1466,1466,1;-1,2,-94,-108,0,1,45247,undefined,0,0,1103,0;1,2,45250,undefined,0,0,1103,0;2,1,45277,undefined,0,0,1103,0;3,2,45280,undefined,0,0,1103,0;-1,2,-94,-110,0,1,5,780,307;1,1,594,852,322;2,1,835,1027,242;3,1,848,1043,385;4,1,849,1041,391;5,1,935,1040,393;6,1,946,1033,401;7,1,1004,1033,401;8,1,1012,1029,404;9,1,1021,1028,405;10,1,1110,1026,406;11,1,1114,1014,419;12,1,1116,1013,420;13,1,1150,1012,422;14,1,1195,1008,426;15,1,1269,1003,432;16,1,1271,991,434;17,1,1326,989,434;18,1,1385,967,410;19,1,1396,959,314;20,1,1707,966,305;21,1,1724,1079,442;22,1,1726,1072,444;23,1,1730,1069,445;24,1,2080,1066,446;25,1,2087,1024,481;26,1,2146,1024,481;27,1,2160,1024,481;28,1,2502,1024,482;29,1,2589,1024,483;30,1,2596,1024,483;31,1,3252,1024,483;32,1,3265,1084,56;33,1,3285,1085,59;34,1,3291,1085,62;35,1,3427,1085,63;36,1,3430,1086,65;37,1,3502,1086,65;38,1,3504,1086,65;39,1,3795,1086,65;40,1,3881,1082,113;41,1,3956,1082,116;42,1,4035,1081,116;43,1,4110,1081,117;44,1,4429,1081,120;45,1,4506,1080,120;46,1,5013,1080,120;47,1,5015,1080,120;48,1,11328,1080,120;49,1,11332,1080,120;50,1,16706,1080,121;51,1,16709,1080,121;52,1,16712,1080,124;53,1,16718,1080,126;54,1,16720,1080,126;55,1,16726,1080,129;56,1,16727,1080,129;57,1,16734,1080,132;58,1,16735,1080,132;59,1,16747,1080,137;60,1,16749,1080,137;61,1,16751,1081,144;62,1,16759,1082,151;63,1,16761,1082,151;64,1,16766,1083,158;65,1,16767,1083,158;66,1,16779,1083,161;67,1,16780,1083,161;68,1,16787,1084,168;69,1,16795,1085,174;70,1,16799,1086,179;71,1,16803,1086,179;72,1,16807,1087,184;73,1,16813,1087,184;74,1,16815,1088,188;75,1,16822,1090,192;76,1,16827,1090,192;77,1,16831,1091,197;78,1,16831,1091,197;79,1,16839,1093,205;80,1,16844,1093,205;81,1,16847,1094,210;82,1,16848,1094,210;83,1,16855,1095,215;84,1,16861,1095,215;85,1,16863,1097,221;86,1,16863,1097,221;87,1,16872,1098,228;88,1,16873,1098,228;89,1,16879,1099,234;90,1,16880,1099,234;91,1,16887,1100,237;92,1,16888,1100,237;93,1,16896,1102,244;94,1,16897,1102,244;95,1,16905,1103,250;96,1,16906,1103,250;97,1,16911,1103,254;98,1,16912,1103,254;99,1,16920,1104,259;333,3,21741,985,479,-1;334,4,21992,985,479,-1;335,2,21992,985,479,-1;486,3,36533,1001,313,-1;487,4,36539,1001,313,-1;488,2,36539,1001,313,-1;581,3,38397,1100,134,-1;582,4,38418,1100,134,-1;583,2,38422,1100,134,-1;689,3,46032,751,480,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,2,44073;3,45258;-1,2,-94,-112,%s-1,2,-94,-115,NaN,1462973,32,0,0,0,NaN,46032,0,1596100928274,21,17074,4,690,2845,7,0,46034,1490165,0,8666435BCB20333DA4708699A3C8C57F~-1~YAAQHVNzaKXlQ4lzAQAASvkHnwQYDMPH11YUvY5tLbpJ+rdUW5mJgr1iadePzYqvoU5UI95OGrwQ8jpm/7YMTXMe+warhVQztddAokahCSUa/UDakUAsmMWLnRnQpFZeGdYROZMuGXFf0pTz8eUxi9vWRgBMgQi+IOWz+M4BimE/RSZRZwKHdTuH4skBjZdPm7UDSCEdGJvOEcwKECkdsInbfCil7K3TQhI8+jGvCZN7hihG9Nzx6hj43Mzap1PzUOuca50ApNswkV1bI8+aHExUI/XmHs/3BYjS10By9XLd05n9Wngg3VGNnVHtWN+FwALdnG8443vRARMzIvcspvP7du0=~-1~-1~-1,32628,992,-1522636444,26018161,PiZtE,27368,80-1,2,-94,-106,1,5-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,200,400,200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,125316684-1,2,-94,-118,208506-1,2,-94,-121,;2;4;0" % (session.headers["User-Agent"], self.url_produit)
+                }
+                identifiants_2 = {
+                    "username": compte[0].strip('\n').lstrip('"').rstrip('"'),
+                    "password": compte[1].strip('\n').lstrip('"').rstrip('"'),
+                    "wnaMode": "modal"
+                }
+                dataconnex = {
+                    "service_name": "ingestjs",
+                    "events": [{
+                        "component_name": "mosaic",
+                        "component_id": "JF6Eol3m4auAsDpq8SI2T",
+                        "event_name": "click",
+                        "context": {
+                            "type": "click",
+                            "category": "header",
+                            "label": "account"
+                        },
+                        "event_number": 91,
+                        "flow_id": login.headers["X-Zalando-Child-Request-Id"],
+                        "source": "nextgen",
+                        "tab_id": "Lady5JdNHg51eu4LddCZF"
+                    },
+                    {"component_name": "mosaic",
+                     "component_id": "JF6Eol3m4auAsDpq8SI2T",
+                     "event_name": "openModal",
+                     "context": {
+                         "label": "account",
+                         "virtualPagePath": "/login/",
+                         "event": "openModal",
+                         "gtm.uniqueEventId": 8667
+                     },"event_number": 92,
+                     "flow_id": login.headers["X-Zalando-Child-Request-Id"],
+                     "source": "nextgen",
+                     "tab_id": "Lady5JdNHg51eu4LddCZF"
+                     }
+                    ]
                 }
                 session.headers.update({
                     "Accept": "*/*",
                     "Content-Type": "text/plain;charset=UTF-8",
                     "Origin": site,
-                    "Referer": "%s/login/?view=login" % site
+                    "Referer": self.url_produit
                 })
                 session.post(url_bot_2, json=data1_2, verify=False)
                 session.post(url_bot_2, json=data2_2, verify=False)
-                del session.headers["Content-Type"]
+                session.headers.update({
+                    "Content-Type": "application/json",
+                    "Origin": site,
+                    "Referer": self.url_produit
+                })
+                session.post(urlconex, json=dataconnex, verify=False)
                 del session.headers["Origin"]
-                del session.headers["Referer"]
-
-                # Connexion au compte
-                identifiants_2 = {
-                    "username": compte[0].strip('\n').lstrip('"').rstrip('"'),
-                    "password": compte[1].strip('\n').lstrip('"').rstrip('"'),
-                    "wnaMode": "shop",
-                }
-                url_connexion_2 = "%s/api/reef/login/schema" % site
-                url_connexion_3 = "%s/api/reef/login" % site
-                url_compte = "%s/myaccount" % site
                 session.headers.update({
                     "x-xsrf-token": cookies_2["frsx"],
                     "x-zalando-client-id": cookies_2["Zalando-Client-Id"],
-                    "x-zalando-render-page-uri": "/login/?view=login",
-                    "x-zalando-request-uri": "/login/?view=login",
+                    "x-zalando-render-page-uri": self.url_produit.replace(site, ""),
+                    "x-zalando-request-uri": self.url_produit.replace(site, ""),
                     "x-flow-id": login.headers["X-Zalando-Child-Request-Id"],
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    "Referer": "%s/login/?view=login" % site
+                    "Referer": self.url_produit
                 })
                 session.get(url_connexion_2, verify=False)
                 session.headers["Origin"] = site
                 connex = session.post(url_connexion_3, json=identifiants_2, verify=False)
+                del session.headers["x-xsrf-token"]
+                del session.headers["x-zalando-client-id"]
+                del session.headers["x-zalando-render-page-uri"]
+                del session.headers["x-zalando-request-uri"]
+                del session.headers["x-flow-id"]
+                del session.headers["Content-Type"]
+                del session.headers["Origin"]
+
                 if connex.status_code == 201:
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + Fore.GREEN + "Account successfully logged")
@@ -343,19 +385,11 @@ class RechercheCommande(Thread):
                     time.sleep(5)
                     main()
 
-                del session.headers["x-xsrf-token"]
-                del session.headers["x-zalando-client-id"]
-                del session.headers["x-zalando-render-page-uri"]
-                del session.headers["x-zalando-request-uri"]
-                del session.headers["x-flow-id"]
-                del session.headers["Content-Type"]
-                del session.headers["Origin"]
-                session.headers[
-                    "Accept"
-                ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                session.get(url_compte, verify=False)
-
                 # Connexion à la page du produit
+                session.headers.update({
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Referer": self.url_produit
+                })
                 page_produit = session.get(self.url_produit, verify=False)
                 impression = page_produit.headers['x-page-impression-id']
 
