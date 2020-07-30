@@ -226,12 +226,17 @@ class RechercheCommande(Thread):
                 while True:
                     # Réglage du proxy
                     proxy = random.choice(self.liste_proxys)
+                    diversion_1 = random.choice(['https://www.bing.com/',
+                                                 'https://www.google.com/',
+                                                 'https://duckduckgo.com',
+                                                 'https://fr.yahoo.com/'
+                                                 ])
                     headers = {
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                         'User-Agent': generate_user_agent(),
                         "Accept-Language": "fr-fr",
                         "Accept-Encoding": "gzip, deflate, br",
-                        "Referer": "https://www.google.com"
+                        "Referer": diversion_1
                     }
                     diversion = random.choice(['https://www.zalando.fr/accueil-homme/',
                                                'https://www.zalando.fr/tiger-of-sweden-joran-sandales-dark-brown'
