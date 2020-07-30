@@ -689,12 +689,15 @@ class RechercheCommande(Thread):
                         del session.headers["x-zalando-checkout-app"]
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
+                        del session.headers["Content-Type"]
+                        cookies_3 = session.cookies.get_dict()
 
                     # Paiement Partie 1
                     url_select = 'https://checkout.payment.zalando.com/selection?show=true'
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     session.headers['Host'] = 'checkout.payment.zalando.com'
                     session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                    session.headers['Cookie'] = cookies_3
                     session.get(url_pay_3, verify=False, allow_redirects=False)
 
                     # Paiement par carte bancaire
