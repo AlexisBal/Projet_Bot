@@ -2,16 +2,20 @@ import tkinter as tk
 import requests
 from tkinter import messagebox, ttk
 import webbrowser
+from os import getcwd
+import urllib.request as ur
 
-version=1.0
-Nom_application='Bot'
 
-def mise_a_jour():
-    
+
+
+def mise_a_jour(version):
+    version=1.0
+    Nom_application='ScredAIO'
     try:
         response = requests.get(
-            'https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
+            'https://raw.githubusercontent.com/JamesBond65/Hujub/master/Random.1/version.txt')
         data = response.text
+        print(data)
         
 
         if float(data) > float(version):
@@ -19,12 +23,19 @@ def mise_a_jour():
             message = messagebox.askyesno('Update !', f'{Nom_application} {version} needs to update to version {data}')
             if message is True:
                        
-                response = requests.get('https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Principale.py')
-                code = response.text
-                print(code)
 
-                with open("Bot_Zalando_3.0/ScredAIO1.py", "w") as f:
-                    f.write(code)
+                url = 'https://raw.github.com/JamesBond65/Hujub/master/Random.1/dist/update.exe'
+                directory = getcwd()
+                print(directory)
+                filename = directory + '\Bot_Zalando_3.0\ScredAIO.exe'
+                print(filename)
+                r = requests.get(url, allow_redirects=True)
+
+                f = open(filename,'wb')
+                f.write(r.content)
+                version=data
+                
+                
                 
                 pass
 
@@ -36,20 +47,9 @@ def mise_a_jour():
             
     except Exception as e:
         messagebox.showinfo('Software Update', 'Unable to Check for Update, Error:' + str(e))
+        
 
 
 
 
 mise_a_jour()
-
-
-
-
-#mise_a_jour()
-
-#response = requests.get('https://raw.githubusercontent.com/JamesBond65/Hujub/master/Rnadom%201/Random/Version.txt')
-#print(response.text)
-
-#edition = response.find(class ="blob-code blob-code-inner js-file-line")
-
-#print(edition)
