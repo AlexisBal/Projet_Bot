@@ -23,7 +23,7 @@ from pypresence import Presence
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 5
+        self.timeout = 8
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -802,7 +802,7 @@ class RechercheCommande(Thread):
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
 
-                        session.get(url_pay_3, verify=False)
+                        session.get(url_pay_3, verify=False, allow_redirects=False)
                         session.get(url_select, verify=False, allow_redirects=False)
 
                         session.headers.update({
@@ -1487,6 +1487,19 @@ def fonction_Zalando():
             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]", Style.RESET_ALL + "> 5. Main Menu")
             choix = int(input("\nChoice :"))
             if choix == 1:
+                # Réglages Thread
+                Paiement = 'CB_Auto'
+                Mode = 'Quick'
+                if List_Quick_Task[0] == 1:
+                    Liste_compte = Liste_compte1
+                    message = 'Accounts_List1.csv'
+                if List_Quick_Task[0] == 2:
+                    Liste_compte = Liste_compte2
+                    message = 'Accounts_List2.csv'
+                if List_Quick_Task[0] == 3:
+                    Liste_compte = Liste_compte3
+                List_profile = List_Quick_Task
+                thread_list = []
                 # Check Database
                 if Liste_compte1 == [] and Liste_compte2 == []:
                     print(Fore.RED + "You have not specified any accounts !")
@@ -1496,37 +1509,19 @@ def fonction_Zalando():
                 if len(Liste_tache) == 0:
                     print(Fore.RED + 'The file Task.csv is empty !')
                     time.sleep(5)
-                    main()
+                    fonction_Zalando()
                 if len(List_Quick_Task) == 0:
                     print(Fore.RED + 'The file Quick_Task.csv is empty !')
                     time.sleep(5)
-                    main()
-                Paiement = 'CB_Auto'
-                Mode = 'Quick'
-                if List_Quick_Task[0] == 1:
-                    Liste_compte = Liste_compte1
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                        time.sleep(5)
-                        main()
-                    if len(Liste_compte) == 0:
-                        print(Fore.RED + 'The file Accounts_List1.csv is empty !')
-                        time.sleep(5)
-                        main()
-                if List_Quick_Task[0] == 2:
-                    Liste_compte = Liste_compte2
-                    if len(Liste_compte) < len(Liste_tache):
-                        print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                        time.sleep(5)
-                        main()
-                    if len(Liste_compte) == 0:
-                        print(Fore.RED + 'The file Accounts_List2.csv is empty !')
-                        time.sleep(5)
-                        main()
-                if List_Quick_Task[0] == 3:
-                    Liste_compte = Liste_compte3
-                List_profile = List_Quick_Task
-                thread_list = []
+                    fonction_Zalando()
+                if len(Liste_compte) < len(Liste_tache):
+                    print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                    time.sleep(5)
+                    fonction_Zalando()
+                if len(Liste_compte) == 0:
+                    print(Fore.RED + 'The file %s is empty !' % message)
+                    time.sleep(5)
+                    fonction_Zalando()
                 # Start Thread
                 for x in range(0, len(Liste_tache)):
                     url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
@@ -1545,7 +1540,7 @@ def fonction_Zalando():
                                                quantite)
                     thread.start()
                     thread_list.append(thread)
-
+                # Join Start
                 time.sleep(2)
                 for t in thread_list:
                     t.join()
@@ -1561,7 +1556,7 @@ def fonction_Zalando():
                 if len(Liste_tache) == 0:
                     print(Fore.RED + 'The file Task.csv is empty !')
                     time.sleep(5)
-                    main()
+                    fonction_Zalando()
                 Mode = 'Normal'
 
                 while True:
@@ -1678,7 +1673,7 @@ def fonction_Zalando():
                 if len(Liste_comptegenerator) == 0:
                     print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
                     time.sleep(5)
-                    main()
+                    fonction_Zalando()
                 while True:
                     try:
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
