@@ -1470,12 +1470,9 @@ def fonction_Zalando():
     if Liste_compte1 == [] and Liste_compte2 == []:
         print(Fore.RED + "You have not specified any accounts !")
         print(Fore.RED + "You have to use the Account Generator.")
-
     if not List_profile1:
         print(Fore.RED + "You have not specified any profiles !")
         print(Fore.RED + "You have to complete the Profiles files.")
-        time.sleep(5)
-        main()
 
     while True:
         try:
@@ -1490,6 +1487,10 @@ def fonction_Zalando():
                 # Réglages Thread
                 Paiement = 'CB_Auto'
                 Mode = 'Quick'
+                if len(List_Quick_Task) == 0:
+                    print(Fore.RED + 'The file Quick_Task.csv is empty !')
+                    time.sleep(3)
+                    fonction_Zalando()
                 if List_Quick_Task[0] == 1:
                     Liste_compte = Liste_compte1
                     message = 'Accounts_List1.csv'
@@ -1504,23 +1505,23 @@ def fonction_Zalando():
                 if Liste_compte1 == [] and Liste_compte2 == []:
                     print(Fore.RED + "You have not specified any accounts !")
                     print(Fore.RED + "You have to use the Account Generator.")
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_tache) == 0:
                     print(Fore.RED + 'The file Task.csv is empty !')
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 if len(List_Quick_Task) == 0:
                     print(Fore.RED + 'The file Quick_Task.csv is empty !')
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_compte) < len(Liste_tache):
                     print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_compte) == 0:
                     print(Fore.RED + 'The file %s is empty !' % message)
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 # Start Thread
                 for x in range(0, len(Liste_tache)):
@@ -1551,11 +1552,16 @@ def fonction_Zalando():
                 if Liste_compte1 == [] and Liste_compte2 == []:
                     print(Fore.RED + "You have not specified any accounts !")
                     print(Fore.RED + "You have to use the Account Generator.")
-                    time.sleep(5)
+                    time.sleep(3)
+                    fonction_Zalando()
+                if not List_profile1:
+                    print(Fore.RED + "You have not specified any profiles !")
+                    print(Fore.RED + "You have to complete the Profiles files.")
+                    time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_tache) == 0:
                     print(Fore.RED + 'The file Task.csv is empty !')
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 # Choix du mode de paiement
                 while True:
@@ -1691,7 +1697,7 @@ def fonction_Zalando():
                 VerificationProxys()
 
             if choix == 5:
-                break
+                main()
 
         except:
             pass
