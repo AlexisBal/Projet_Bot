@@ -31,7 +31,7 @@ def mise_a_jour():
                 print(filename)
                 
                 headers = {
-                    'Authorization': 'token 166c3f0372a93dd3c1f9e6358e5b39bfb8b57d76',
+                    'Authorization': 'token 8328bc8c4501732d3d47053e00299eb52abfec2f',
                     'Accept': 'application/vnd.github.v3.raw',
                         }
 
