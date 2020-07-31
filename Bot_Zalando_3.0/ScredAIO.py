@@ -1588,22 +1588,16 @@ def fonction_Zalando():
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> %s. Select Multiple Profiles" % (len(List_profile1) + 1))
                         choix_3 = int(input("\nChoice :"))
-                        # Check DB
-                        if choix_3 > len(List_profile1):
-                            print(Fore.RED + 'The Profile%s is empty !' % choix_3)
-                            time.sleep(5)
-                            fonction_Zalando()
                         # Choix
-                        for u in range(0, len(List_profile1) - 1):
-                            if choix_3 == u:
-                                List_profile = List_profile1[u]
-                                break
-                        if choix_3 == len(List_profile1):
+                        if choix_3 == len(List_profile1) + 1:
                             List_profilebis = []
                             for u in range(0, len(List_profile1)):
                                 List_profilebis.append(List_profile1[u])
                             random.shuffle(List_profilebis)
                             List_profile = random.choice(List_profilebis)
+                            break
+                        if choix_3 < (len(List_profile1) + 1):
+                            List_profile = List_profile1[choix_3 - 1]
                             break
                     except:
                         pass
