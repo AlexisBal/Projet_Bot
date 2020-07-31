@@ -690,18 +690,19 @@ class RechercheCommande(Thread):
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
                         del session.headers["Content-Type"]
-                        cookies_3 = session.cookies.get_dict()
 
                     # Paiement Partie 1
                     url_select = 'https://checkout.payment.zalando.com/selection?show=true'
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
                     session.headers['Host'] = 'checkout.payment.zalando.com'
                     session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-                    session.headers['Cookie'] = cookies_3
-                    session.get(url_pay_3, verify=False, allow_redirects=False)
 
                     # Paiement par carte bancaire
                     if self.Paiement != 'Paypal':
+
+                        session.get(url_pay_3, verify=False)
+                        session.headers['Referer'] = 'https://www.zalando.fr/checkout/confirm'
+                        session.get(url_pay_3 + "?show=true", verify=False)
                         selecrequete = session.get(url_select, verify=False, allow_redirects=False)
                         soup_3 = BeautifulSoup(selecrequete.text, "html.parser")
                         objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
@@ -797,6 +798,10 @@ class RechercheCommande(Thread):
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
+
+                        session.get(url_pay_3, verify=False)
+                        session.get(url_select, verify=False, allow_redirects=False)
+
                         session.headers.update({
                             "Referer": 'https://checkout.payment.zalando.com/selection',
                             "Origin": "https://checkout.payment.zalando.com",
@@ -1015,7 +1020,7 @@ class RechercheCommande(Thread):
                 f.close()
 
         except:
-            pass
+            raise
 
 
 def titre():
@@ -1553,11 +1558,11 @@ def fonction_Zalando():
                                 time.sleep(5)
                                 main()
 
-                            for u in range(0, len(List_profile1)):
+                            for u in range(0, len(List_profile1) - 1):
                                 if choix_3 == u:
                                     List_profile = List_profile1[u]
 
-                            if choix_3 == len(List_profile1) + 1:
+                            if choix_3 == len(List_profile1):
                                 List_profilebis = []
                                 for u in range(0, len(List_profile1)):
                                     List_profilebis.append(List_profile1[u])
