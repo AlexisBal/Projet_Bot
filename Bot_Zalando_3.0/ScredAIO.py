@@ -697,12 +697,9 @@ class RechercheCommande(Thread):
                     # Paiement Partie 1
                     url_select = 'https://checkout.payment.zalando.com/selection?show=true'
                     url_pay_2 = "https://card-entry-service.zalando-payments.com/contexts/checkout/cards"
-                    session.headers['Host'] = 'checkout.payment.zalando.com'
-                    session.headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 
                     # Paiement par carte bancaire
                     if self.Paiement != 'Paypal':
-
                         session.get(url_pay_3, verify=False)
                         session.headers['Referer'] = 'https://www.zalando.fr/checkout/confirm'
                         session.get(url_pay_3 + "?show=true", verify=False)
@@ -801,7 +798,11 @@ class RechercheCommande(Thread):
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
-
+                        session.headers.update({
+                            'Host': 'checkout.payment.zalando.com',
+                            'Referer': 'https://www.zalando.fr/checkout/address',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                        })
                         session.get(url_pay_3, verify=False, allow_redirects=False)
                         session.get(url_select, verify=False, allow_redirects=False)
 
