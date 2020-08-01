@@ -575,7 +575,7 @@ class RechercheCommande(Thread):
 
                     else:
                         # Addresse de livraison
-                        botvalidurl = '%s/resources/7be100d4c6rn2028b315fc23b805e921' % site
+                        botvalidurl = '%s/resources/da6ea05bf5rn2028b315fc23b805e921' % site
                         url_adresse = '%s/api/checkout/validate-address' % site
                         url_panier_4 = '%s/api/checkout/create-or-update-address' % site
                         bot = {
@@ -753,7 +753,7 @@ class RechercheCommande(Thread):
                         etagini = reponsefinale2_3['model']['eTag']
 
                         # Paiement FIN
-                        url_pay_bot = '%s/resources/35692132da2028b315fc23b805e921' % site
+                        url_pay_bot = '%s/resources/da6ea05bf5rn2028b315fc23b805e921' % site
                         url_pay_fin = '%s/api/checkout/buy-now' % site
                         data_bot_pay = {
                             'sensor_data': 'a74G7m23Vrp0o5c9179431.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392164,7588656,1920,1080,1920,1080,1920,1017,1920,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.967902033483,796928794328,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,-1,3960,0;-1,2,-94,-102,0,-1,0,0,-1,3960,0;-1,2,-94,-108,-1,2,-94,-110,0,1,260,839,528;1,1,261,839,528;2,1,274,839,528;3,1,281,839,528;4,1,283,838,529;5,1,289,837,529;6,1,290,837,529;7,1,303,834,530;8,1,304,834,530;9,1,312,828,531;10,1,312,828,531;11,1,324,818,533;12,1,325,818,533;13,1,335,810,534;14,1,338,810,534;15,1,346,799,534;16,1,348,799,534;17,1,359,790,534;18,1,360,790,534;19,1,368,781,535;20,1,380,774,535;21,1,397,766,535;22,1,398,766,535;23,1,402,758,535;24,1,403,758,535;25,1,435,755,535;26,1,437,747,536;27,1,448,744,536;28,1,449,744,536;29,1,462,743,536;30,1,462,743,536;31,1,471,741,536;32,1,472,741,536;33,1,482,740,536;34,1,483,740,536;35,1,494,740,536;36,1,495,740,536;37,1,572,740,536;38,1,572,740,536;39,1,584,742,535;40,1,584,742,535;41,1,593,744,535;42,1,594,744,535;43,1,606,746,535;44,1,606,746,535;45,1,616,750,534;46,1,618,750,534;47,1,627,757,534;48,1,628,757,534;49,1,642,764,535;50,1,643,764,535;51,1,651,771,535;52,1,652,771,535;53,1,663,783,536;54,1,664,783,536;55,1,675,800,537;56,1,676,800,537;57,1,684,816,538;58,1,685,816,538;59,1,695,850,540;60,1,704,850,540;61,1,849,895,546;62,1,871,1120,587;63,1,874,1126,589;64,1,878,1128,590;65,1,887,1129,591;66,1,888,1129,591;67,1,1121,1133,593;68,1,1130,1139,593;69,1,1141,1140,593;70,1,1170,1140,593;71,1,1171,1140,593;72,1,1416,1139,593;73,1,1423,1138,592;74,1,1438,1137,592;75,1,1443,1136,592;76,1,1449,1136,591;77,1,1451,1136,591;78,1,1485,1136,591;79,1,1485,1137,590;80,1,1494,1137,588;81,1,1495,1137,588;82,1,1504,1138,585;83,1,1505,1138,585;84,1,1516,1140,583;85,1,1517,1140,583;86,1,1532,1141,581;87,1,1538,1141,581;88,1,1541,1142,579;89,1,1549,1144,577;90,1,1550,1144,577;91,1,1562,1145,576;92,1,1562,1145,576;93,1,1572,1146,575;94,1,1573,1146,575;95,1,1583,1147,574;96,1,1587,1147,574;97,1,1596,1148,574;98,1,1598,1148,574;99,1,1618,1148,573;256,3,5106,1244,954,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,-1,2,-94,-112,%s/checkout/confirm-1,2,-94,-115,1,242493,32,0,0,0,242461,5106,0,1593857588656,12,17050,0,257,2841,1,0,5108,87744,0,76260A165DC066A281E308D22442E210~-1~YAAQNOx7XOg6hBVzAQAARcBQGQSyvSFbFGXl59iNajFhHhapCF6BkxAA0sqDaoD9MZ0sqZZZGU0QvNo4YzuehT+HCCZ+QcgR83ZMGQxqQpnXCIGFbPQ9lpbkkovEK8nocdwGx5GAqGaxWsVOHLXej4YT0gcTiqqlZg+6Z/Y6dVuzxBr7tkSnSODv52r6Sd9cr/U3w/VJTDmT2MpPwSWFHNx/PjOERknhjj1NY6yNNn9Df8Ih+lL8L7jIhNaMnur9afb0scBr7NhG0AVH/0qWz+O5+Zmxwi0s1ASNjAeh2jJHlr25uReBJ2l20pa5pUEB4UaqHwmCv4s4kYmORGswxW3u65E=~-1~-1~-1,32325,146,-242715172,26018161,PiZtE,81065,44-1,2,-94,-106,1,2-1,2,-94,-119,200,0,0,0,0,0,200,0,0,200,200,2200,1000,200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,1844041464-1,2,-94,-118,175375-1,2,-94,-121,;3;6;0' %
@@ -803,9 +803,8 @@ class RechercheCommande(Thread):
                             'Referer': 'https://www.zalando.fr/checkout/address',
                             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                         })
-                        session.get(url_pay_3, verify=False, allow_redirects=False)
-                        session.get(url_select, verify=False, allow_redirects=False)
-
+                        session.get(url_pay_3, verify=False)
+                        session.get(url_select, verify=False)
                         session.headers.update({
                             "Referer": 'https://checkout.payment.zalando.com/selection',
                             "Origin": "https://checkout.payment.zalando.com",
@@ -904,6 +903,7 @@ class RechercheCommande(Thread):
                                       value='|| %s ||' % creditcard,
                                       inline=False)
                 webhook.add_embed(embed)
+                webhook.execute()
 
             if self.Paiement == 'Paypal':
                 # Titre
@@ -924,6 +924,7 @@ class RechercheCommande(Thread):
                                       value='|| %s ||' % url_paypal,
                                       inline=False)
                 webhook.add_embed(embed)
+                webhook.execute()
 
             if self.Paiement == 'CB':
                 # Titre
@@ -948,7 +949,7 @@ class RechercheCommande(Thread):
                                       value='|| %s/welcomenoaccount/true ||' % site,
                                       inline=False)
                 webhook.add_embed(embed)
-            reponse = webhook.execute()
+                webhook.execute()
 
             # Insertion des tâches effectuées dans le fichier Task_History.csv
             if self.Paiement == 'Paypal':
