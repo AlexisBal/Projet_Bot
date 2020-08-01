@@ -4,6 +4,8 @@ from tkinter import messagebox, ttk
 import webbrowser
 from os import getcwd
 import urllib.request as ur
+from os import remove
+from sys import argv
 
 
 
@@ -14,8 +16,7 @@ def mise_a_jour():
     try:
         response = requests.get(
             'https://raw.githubusercontent.com/JamesBond65/Hujub/master/Random.1/version.txt')
-        data = response.text
-        print(data)
+        data = float(response.text)
         
 
         if float(data) > float(version):
@@ -26,9 +27,9 @@ def mise_a_jour():
                 
                 
                 directory = getcwd()
-                print(directory)
-                filename = directory + '\Bot_Zalando_3.0\ScredAIO.exe'
-                print(filename)
+                #print(directory)
+                filename = directory + '\Version_+_Executable\ScredAIO.exe'
+                #print(filename)
                 
                 headers = {
                     'Authorization': 'token 8328bc8c4501732d3d47053e00299eb52abfec2f',
@@ -43,6 +44,17 @@ def mise_a_jour():
                 f = open(filename,'wb')
                 f.write(r.content)
                 version=data
+
+                f = open(filename,'wb')
+                f.write(r.content)
+                version=data
+
+                directory = getcwd()
+                filename = directory + r'\Random.1\dist\update.exe'
+                os.startfile(filename)
+                
+                
+                #remove(argv[0])
                 
                 
                 
@@ -56,6 +68,8 @@ def mise_a_jour():
             
     except Exception as e:
         messagebox.showinfo('Software Update', 'Unable to Check for Update, Error:' + str(e))
+
+
         
 
 
