@@ -7,16 +7,20 @@ import urllib.request as ur
 from os import remove
 from sys import argv
 import os
+import time
 
 
-
+nombre = int(input("entrer un nombre et je le multiplie par 2 :"))
+nombre=nombre*2
+print(nombre)
+time.sleep(5)
 
 def mise_a_jour():
 
     if os.path.basename(__file__) == "ScredAIO-1.exe":
         
-        directory = os.path.dirname(os.path.realpath(__file__)))
-        old_file_name = directory + '\ScredAIo-1.exe'
+        directory = os.path.dirname(os.path.realpath(__file__))
+        old_file_name = directory + '\ScredAIO-1.exe'
         new_file_name = directory +'\ScredAIO.exe'
         os.rename( old_file_name , new_file_name)
 
@@ -24,8 +28,15 @@ def mise_a_jour():
     Nom_application='ScredAIO'
 
     try:
+        headers = {
+                    'Authorization': 'token 57a9f2d3432b41fa87ff48ecdce02af2cb228cc8',
+                    'Accept': 'application/vnd.github.v3.raw',
+                        }
+
         response = requests.get(
-            'https://raw.githubusercontent.com/JamesBond65/Hujub/master/Random.1/version.txt')
+            'https://raw.githubusercontent.com/AlexisBal/Projet_Bot/master/Version_%2B_Executable/Version.txt', 
+            headers=headers, allow_redirects=True)
+        
         data = float(response.text)
         
 
@@ -35,13 +46,13 @@ def mise_a_jour():
             if message is True:
                        
                 
-                directory = os.path.dirname(os.path.realpath(__file__)))
+                directory = os.path.dirname(os.path.realpath(__file__))
                 
                 filename = directory + '\ScredAIO-1.exe'
                 #print(filename)
                 
                 headers = {
-                    'Authorization': 'token 8328bc8c4501732d3d47053e00299eb52abfec2f',
+                    'Authorization': 'token 57a9f2d3432b41fa87ff48ecdce02af2cb228cc8',
                     'Accept': 'application/vnd.github.v3.raw',
                         }
 
@@ -73,10 +84,6 @@ def mise_a_jour():
             
     except Exception as e:
         messagebox.showinfo('Software Update', 'Unable to Check for Update, Error:' + str(e))
-
-
-        
-
 
 
 
