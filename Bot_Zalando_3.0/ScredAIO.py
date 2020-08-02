@@ -23,7 +23,7 @@ from pypresence import Presence
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 5
+        self.timeout = 8
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -762,17 +762,21 @@ class RechercheCommande(Thread):
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
                         ua = session.headers['User-Agent']
-                        session.headers.clear()
+                        headers = {
+                            'Referer': 'https://www.zalando.fr/checkout/address',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'User-Agent': ua
+                        }
+                        session.get(url_pay_3, headers=headers, verify=False)
                         session.headers.update({
                             'Host': 'checkout.payment.zalando.com',
                             'Accept-Encoding': 'gzip, deflate, br',
                             'Connection': 'keep-alive',
                             'Accept-Language': 'fr-fr',
                             'Referer': 'https://www.zalando.fr/checkout/address',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                            'User-Agent': ua
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                         })
-                        session.get(url_pay_3, verify=False)
+                        session.get(url_select, verify=False)
                         session.headers.update({
                             "Referer": 'https://checkout.payment.zalando.com/selection',
                             "Origin": "https://checkout.payment.zalando.com",
