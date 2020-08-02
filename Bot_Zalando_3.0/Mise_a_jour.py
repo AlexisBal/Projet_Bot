@@ -6,13 +6,23 @@ from os import getcwd
 import urllib.request as ur
 from os import remove
 from sys import argv
+import os
 
 
 
 
 def mise_a_jour():
+
+    if os.path.basename(__file__) == "ScredAIO-1.exe":
+        
+        directory = os.path.dirname(os.path.realpath(__file__)))
+        old_file_name = directory + '\ScredAIo-1.exe'
+        new_file_name = directory +'\ScredAIO.exe'
+        os.rename( old_file_name , new_file_name)
+
     version=1.0
     Nom_application='ScredAIO'
+
     try:
         response = requests.get(
             'https://raw.githubusercontent.com/JamesBond65/Hujub/master/Random.1/version.txt')
@@ -25,10 +35,9 @@ def mise_a_jour():
             if message is True:
                        
                 
+                directory = os.path.dirname(os.path.realpath(__file__)))
                 
-                directory = getcwd()
-                #print(directory)
-                filename = directory + '\Version_+_Executable\ScredAIO.exe'
+                filename = directory + '\ScredAIO-1.exe'
                 #print(filename)
                 
                 headers = {
@@ -45,12 +54,8 @@ def mise_a_jour():
                 f.write(r.content)
                 version=data
 
-                f = open(filename,'wb')
-                f.write(r.content)
-                version=data
-
-                directory = getcwd()
-                filename = directory + r'\Random.1\dist\update.exe'
+                
+                filename = directory + r'\ScredAIO-1.exe'
                 os.startfile(filename)
                 
                 
