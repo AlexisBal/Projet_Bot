@@ -762,12 +762,13 @@ class RechercheCommande(Thread):
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
                         ua = session.headers['User-Agent']
-                        headers = {
+                        session.headers.clear()
+                        session.headers.update({
                             'Referer': 'https://www.zalando.fr/checkout/address',
                             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                             'User-Agent': ua
-                        }
-                        session.get(url_pay_3, headers=headers, verify=False)
+                        })
+                        session.get(url_pay_3, verify=False)
                         session.headers.update({
                             'Host': 'checkout.payment.zalando.com',
                             'Accept-Encoding': 'gzip, deflate, br',
