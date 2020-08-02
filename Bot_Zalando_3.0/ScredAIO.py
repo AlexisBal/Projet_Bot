@@ -764,20 +764,16 @@ class RechercheCommande(Thread):
                         ua = session.headers['User-Agent']
                         session.headers.clear()
                         session.headers.update({
-                            'Referer': 'https://www.zalando.fr/checkout/address',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                            'User-Agent': ua
-                        })
-                        session.get(url_pay_3, verify=False)
-                        session.headers.update({
-                            'Host': 'checkout.payment.zalando.com',
+                            'Host': 'www.zalando.fr',
                             'Accept-Encoding': 'gzip, deflate, br',
                             'Connection': 'keep-alive',
                             'Accept-Language': 'fr-fr',
                             'Referer': 'https://www.zalando.fr/checkout/address',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'User-Agent': ua
                         })
-                        session.get(url_select, verify=False)
+                        urltestpay = 'https://www.zalando.fr/checkout/payment-complete'
+                        session.get(urltestpay, verify=False)
                         session.headers.update({
                             "Referer": 'https://checkout.payment.zalando.com/selection',
                             "Origin": "https://checkout.payment.zalando.com",
