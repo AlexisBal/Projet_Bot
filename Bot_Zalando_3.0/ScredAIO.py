@@ -1110,6 +1110,18 @@ def compte2():
     return Liste_compte2
 
 
+# Création de la liste de compte "Liste_compte3"
+def compte3():
+    with open('Zalando/Accounts/Accounts_List_CB.csv', 'r') as f:
+        Liste_compte3 = []
+        for ligne in f:
+            compte_list3 = ligne.split(",")
+            Liste_compte3.append(compte_list3)
+        compte_list3.pop(0)
+    f.close()
+    return compte_list3
+
+
 # Création de la liste de compte "Liste_comptegenerator"
 def listecomptegenerator():
     with open('Zalando/Accounts/AccountGenerator.csv', 'r') as f:
@@ -1156,6 +1168,18 @@ def tache():
         Liste_tache.pop(0)
     f.close()
     return Liste_tache
+
+
+# Création de la liste "Liste_Success"
+def Success():
+    with open('Zalando/Success recap/Success_Recap.csv', 'r') as f:
+        Liste_Success = []
+        for ligne in f:
+            liste_list = ligne.split(",")
+            Liste_Success.append(liste_list)
+        Liste_Success.pop(0)
+    f.close()
+    return Liste_Success
 
 
 def VerificationProxys():
