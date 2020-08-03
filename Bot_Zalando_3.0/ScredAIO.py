@@ -849,14 +849,13 @@ class RechercheCommande(Thread):
 
             # Notification Discord WebHook
             # Réglages Discord Webhook
+            timestamp = str(datetime.now())
             if self.Mode == 'Quick':
                 url_discord = self.List_Quick_Task[16].strip('\n').lstrip('"').rstrip('"')
                 creditcard = self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"')
             else:
                 url_discord = profil[14].strip('\n').lstrip('"').rstrip('"')
                 creditcard = profil[10].strip('\n').lstrip('"').rstrip('"')
-            jour = time.time()
-            timestamp = str(datetime.datetime.utcfromtimestamp(jour))
             # Réglages Discord Webhook Auto Checkout
             if self.Mode == 'Quick' or self.Paiement == 'CB_Auto':
                 databot = {
