@@ -46,7 +46,8 @@ urllib3.disable_warnings()
 # Tasks
 class RechercheCommande(Thread):
     def __init__(self, liste_proxys, List_profile, Liste_compte, url_produit,
-                 taille_produit, Paiement, Mode, Task, List_Quick_Task, quantite):
+                 taille_produit, Paiement, Mode, Task, List_Quick_Task,
+                 quantite, Liste_Success):
         Thread.__init__(self)
         self.liste_proxys = liste_proxys
         self.Liste_profile = List_profile
@@ -58,6 +59,7 @@ class RechercheCommande(Thread):
         self.Task = Task
         self.List_Quick_Task = List_Quick_Task
         self.quantite = quantite
+        self.Liste_Success = Liste_Success
 
     def run(self):
         try:
@@ -1537,7 +1539,8 @@ def fonction_Zalando():
                                                Mode,
                                                Task,
                                                List_Quick_Task,
-                                               quantite)
+                                               quantite,
+                                               Liste_Success)
                     thread.start()
                     thread_list.append(thread)
                 # Join Thread
@@ -1641,7 +1644,8 @@ def fonction_Zalando():
                                                Mode,
                                                Task,
                                                List_Quick_Task,
-                                               quantite)
+                                               quantite,
+                                               Liste_Success)
                     thread.start()
                     thread_list.append(thread)
                 # Join Thread
