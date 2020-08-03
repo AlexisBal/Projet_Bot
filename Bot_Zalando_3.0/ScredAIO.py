@@ -81,19 +81,19 @@ class RechercheCommande(Thread):
 
             # Identifiants
             if self.Mode == 'Quick':
-                phone = self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"')
+                phone = self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"')
                 if phone[0] != '0':
                     phone = '0' + phone
-                numero = self.List_Quick_Task[11].strip('\n').lstrip('"').rstrip('"')
+                numero = self.List_Quick_Task[10].strip('\n').lstrip('"').rstrip('"')
                 numerobis = numero[0] + numero[1] + numero[2] + numero[3] + " " + numero[4] + numero[5] + \
                             numero[6] + numero[7] + " " + numero[8] + numero[9] + numero[10] + numero[
                                 11] + " " + numero[12] + numero[13] + numero[14] + numero[15] + " "
                 data_cb = {
-                    "card_holder": self.List_Quick_Task[10].strip('\n').lstrip('"').rstrip('"'),
+                    "card_holder": self.List_Quick_Task[9].strip('\n').lstrip('"').rstrip('"'),
                     "pan": numerobis,
-                    "cvv": self.List_Quick_Task[14].strip('\n').lstrip('"').rstrip('"'),
-                    "expiry_month": self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"'),
-                    "expiry_year": self.List_Quick_Task[13].strip('\n').lstrip('"').rstrip('"'),
+                    "cvv": self.List_Quick_Task[13].strip('\n').lstrip('"').rstrip('"'),
+                    "expiry_month": self.List_Quick_Task[11].strip('\n').lstrip('"').rstrip('"'),
+                    "expiry_year": self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"'),
                     "options": {
                         "selected": [],
                         "not_selected": ["store_for_reuse"],
@@ -123,7 +123,7 @@ class RechercheCommande(Thread):
             if self.Mode == 'Normal':
                 Pays = profil[8].upper().lstrip('"').rstrip('"')
             else:
-                Pays = self.List_Quick_Task[9].upper().lstrip('"').rstrip('"')
+                Pays = self.List_Quick_Task[8].upper().lstrip('"').rstrip('"')
             if Pays == 'FR':
                 site = 'https://www.zalando.fr'
             if Pays == 'CH':
@@ -440,52 +440,51 @@ class RechercheCommande(Thread):
                         checkout_2_2 = {
                             'address': {
                                 'address': {
-                                    'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
+                                    'city': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
                                     'salutation': 'Mr',
-                                    'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
-                                    'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
+                                    'first_name': self.List_Quick_Task[0].strip('\n').lstrip('"').rstrip('"'),
+                                    'last_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
                                     'country_code': Pays,
-                                    'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " +
-                                              self.List_Quick_Task[5].strip(
+                                    'street': self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"') + " " +
+                                              self.List_Quick_Task[4].strip(
                                                   '\n').lstrip('"').rstrip('"'),
-                                    'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"')
+                                    'zip': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"')
                                 }
                             }
                         }
                         data_panier4 = {
                             'address': {
-                                'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
+                                'city': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
                                 'salutation': 'Mr',
-                                'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
-                                'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
+                                'first_name': self.List_Quick_Task[0].strip('\n').lstrip('"').rstrip('"'),
+                                'last_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
                                 'country_code': Pays,
-                                'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " +
-                                          self.List_Quick_Task[5].strip(
+                                'street': self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"') + " " +
+                                          self.List_Quick_Task[4].strip(
                                               '\n').lstrip('"').rstrip('"'),
-                                'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"')
+                                'zip': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"')
                             },
                             'addressDestination': {
                                 'destination': {
                                     'address': {
                                         'salutation': 'Mr',
-                                        'first_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
-                                        'last_name': self.List_Quick_Task[2].strip('\n').lstrip('"').rstrip('"'),
+                                        'first_name': self.List_Quick_Task[0].strip('\n').lstrip('"').rstrip('"'),
+                                        'last_name': self.List_Quick_Task[1].strip('\n').lstrip('"').rstrip('"'),
                                         'country_code': Pays,
-                                        'city': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
-                                        'zip': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
-                                        'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"') + " " +
-                                                  self.List_Quick_Task[
-                                                      5].strip('\n').lstrip('"').rstrip('"'),
-                                        'additional': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"')
+                                        'city': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
+                                        'zip': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"'),
+                                        'street': self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"') + " " +
+                                                  self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"'),
+                                        'additional': self.List_Quick_Task[5].strip('\n').lstrip('"').rstrip('"')
                                     }
                                 },
                                 'normalized_address': {
                                     'country_code': Pays,
-                                    'city': self.List_Quick_Task[9].strip('\n').lstrip('"').rstrip('"'),
-                                    'zip': self.List_Quick_Task[8].strip('\n').lstrip('"').rstrip('"'),
-                                    'street': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"'),
-                                    "additional": self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
-                                    'house_number': self.List_Quick_Task[5].strip('\n').lstrip('"').rstrip('"')
+                                    'city': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
+                                    'zip': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"'),
+                                    'street': self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"'),
+                                    "additional": self.List_Quick_Task[5].strip('\n').lstrip('"').rstrip('"'),
+                                    'house_number': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"')
                                 },
                                 'status': 'https://docs.riskmgmt.zalan.do/address/correct',
                                 'blacklisted': 'false'
