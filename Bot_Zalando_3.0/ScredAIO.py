@@ -1088,7 +1088,7 @@ def proxy():
 
 # Création de la liste de compte "Liste_compte1"
 def compte1():
-    with open('Zalando/Accounts/Accounts_List1.csv', 'r') as f:
+    with open('Zalando/Accounts/Accounts_List_Paypal.csv', 'r') as f:
         Liste_compte1 = []
         for ligne in f:
             compte_list1 = ligne.split(",")
@@ -1100,7 +1100,7 @@ def compte1():
 
 # Création de la liste de compte "Liste_compte2"
 def compte2():
-    with open('Zalando/Accounts/Accounts_List2.csv', 'r') as f:
+    with open('Zalando/Accounts/Accounts_List_AutoCheckout.csv', 'r') as f:
         Liste_compte2 = []
         for ligne in f:
             compte_list2 = ligne.split(",")
@@ -1464,10 +1464,10 @@ def fonction_Zalando():
                     fonction_Zalando()
                 if List_Quick_Task[0] == 1:
                     Liste_compte = Liste_compte1
-                    message = 'Accounts_List1.csv'
+                    message = 'Accounts_List_Paypal.csv'
                 if List_Quick_Task[0] == 2:
                     Liste_compte = Liste_compte2
-                    message = 'Accounts_List2.csv'
+                    message = 'Accounts_List_AutoCheckout.csv'
                 if List_Quick_Task[0] == 3:
                     Liste_compte = Liste_compte3
                 List_profile = List_Quick_Task
@@ -1592,10 +1592,10 @@ def fonction_Zalando():
                         # Réglage du Thread
                         if choix_4 == 1:
                             Liste_compte = Liste_compte1
-                            message = 'Accounts_List1.csv'
+                            message = 'Accounts_List_Paypal.csv'
                         if choix_4 == 2:
                             Liste_compte = Liste_compte2
-                            message = 'Accounts_List2.csv'
+                            message = 'Accounts_List_AutoCheckout.csv'
                         thread_list = []
                         Mode = 'Normal'
                         # Check DB
@@ -1654,11 +1654,11 @@ def fonction_Zalando():
                               Style.RESET_ALL + "> 2. List 2")
                         choix_2 = int(input("\nChoice :"))
                         if choix_2 == 1:
-                            liste = 'Accounts/Accounts_List1.csv'
+                            liste = 'Accounts/Accounts_List_Paypal.csv'
                             CreationComptes(Liste_comptegenerator, liste_proxys, liste)
                             fonction_Zalando()
                         if choix_2 == 2:
-                            liste = 'Accounts/Accounts_List2.csv'
+                            liste = 'Accounts/Accounts_List_AutoCheckout.csv'
                             CreationComptes(Liste_comptegenerator, liste_proxys, liste)
                             fonction_Zalando()
                     except:
