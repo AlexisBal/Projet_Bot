@@ -1117,9 +1117,9 @@ def compte3():
         for ligne in f:
             compte_list3 = ligne.split(",")
             Liste_compte3.append(compte_list3)
-        compte_list3.pop(0)
+        Liste_compte3.pop(0)
     f.close()
-    return compte_list3
+    return Liste_compte3
 
 
 # Création de la liste de compte "Liste_comptegenerator"
@@ -1440,11 +1440,10 @@ def fonction_Zalando():
         for x in range(0, Liste_compte2.count(['\n'])):
             Liste_compte2.remove(['\n'])
     random.shuffle(Liste_compte2)
-    Liste_compte3 = []
-    for x in Liste_compte1:
-        Liste_compte3.append(x)
-    for y in Liste_compte2:
-        Liste_compte3.append(y)
+    Liste_compte3 = compte3()
+    if Liste_compte3.count(['\n']) != 0:
+        for x in range(0, Liste_compte3.count(['\n'])):
+            Liste_compte3.remove(['\n'])
     random.shuffle(Liste_compte3)
     # Profiles
     List_profile1 = profile()
