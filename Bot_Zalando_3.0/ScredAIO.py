@@ -69,12 +69,12 @@ class RechercheCommande(Thread):
             compte = Liste_Compte[Task]
 
             # Historique Compte
-            y = None
+            origin = None
             for x in self.Liste_Success:
                 if x.count(compte[0]) != 0:
-                    y = True
+                    origin = True
                 if x.count(compte[0] + '\n') != 0:
-                    y = True
+                    origin = True
 
             # Choix au hasard d'un profil
             profil = self.Liste_profile
@@ -770,27 +770,19 @@ class RechercheCommande(Thread):
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
-                        ua = session.headers['User-Agent']
-                        session.headers.clear()
-                        session.headers.update({
-                            'Host': 'www.zalando.fr',
-                            'Accept-Encoding': 'gzip, deflate, br',
-                            'Connection': 'keep-alive',
-                            'Accept-Language': 'fr-fr',
-                            'Referer': 'https://www.zalando.fr/checkout/address',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                            'User-Agent': ua
-                        })
-                        urltestpay = 'https://www.zalando.fr/checkout/payment-complete'
-                        session.get(urltestpay, verify=False)
-                        session.headers.update({
-                            "Referer": 'https://checkout.payment.zalando.com/selection',
-                            "Origin": "https://checkout.payment.zalando.com",
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                            "Host": "checkout.payment.zalando.com"
-                        })
-                        session.post(url_pay_3, data=data_pay_3, verify=False)
+                        if origin:
+                            urlpaycomplete = 'https://www.zalando.fr/checkout/payment-complete'
+                            session.headers.update({
+                                'Referer': 'https://www.zalando.fr/checkout/address',
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            })
+                            session.get(urlpaycomplete, verify=False)
+                        else:
+                            session.headers.update({
+                                'Referer': 'https://www.zalando.fr/checkout/address',
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            })
+                            session.get(url_pay_3, verify=False)
                         url_pay_4 = "%s/checkout/payment-complete" % site
                         del session.headers["Content-Type"]
                         del session.headers["Origin"]
