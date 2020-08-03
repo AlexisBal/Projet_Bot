@@ -770,13 +770,20 @@ class RechercheCommande(Thread):
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
+                        if origin:
+                            session.headers.update({
+                                'Referer': 'https://checkout.payment.zalando.com/selection',
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                                'Host': 'www.zalando.fr'
+                            })
+                            session.get(url_pay_3 + '?show=true', verify=False)
                         if origin is None:
                             session.headers.update({
                                 'Referer': 'https://www.zalando.fr/checkout/address',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                                 'Host': 'checkout.payment.zalando.com'
                             })
-                            session.get(url_pay_3, verify=False)
+                            session.get(url_pay_3 + '?show=true', verify=False)
                             session.headers.update({
                                 'Referer': 'https://checkout.payment.zalando.com/selection',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -842,88 +849,157 @@ class RechercheCommande(Thread):
             session.close()
 
             # Notification Discord WebHook
+            # Réglages Discord Webhook
             if self.Mode == 'Quick':
                 url_discord = self.List_Quick_Task[16].strip('\n').lstrip('"').rstrip('"')
                 creditcard = self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"')
             else:
                 url_discord = profil[14].strip('\n').lstrip('"').rstrip('"')
                 creditcard = profil[10].strip('\n').lstrip('"').rstrip('"')
-            # Identifiants Discord Webhook
-            webhook = DiscordWebhook(
-                url=url_discord,
-                username="Scred AIO",
-                avatar_url='https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg',
-                verify=False
-            )
+            timestamp = time.time()
+            timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
+            # Réglages Discord Webhook Auto Checkout
             if self.Mode == 'Quick' or self.Paiement == 'CB_Auto':
-                # Titre
-                embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
-                # Pied de page
-                embed.set_footer(text='SCRED AIO')
-                embed.set_timestamp()
-                # Photo du produit
-                embed.set_thumbnail(
-                    url=link_photo)
-                embed.add_embed_field(name='Website', value=site.strip('https://'), inline=False)
-                embed.add_embed_field(name='Product', value=name_product, inline=False)
-                embed.add_embed_field(name='Size', value=self.taille_produit)
-                embed.add_embed_field(name='Quantity', value=self.quantite)
-                embed.add_embed_field(name='Mode', value='Auto Checkout', inline=False)
-                embed.add_embed_field(name='Checkout Speed', value=chronometre_2, inline=False)
-                embed.add_embed_field(name='Account',
-                                      value='|| %s ||' % compte[0].strip('\n').lstrip('"').rstrip('"'),
-                                      inline=False)
-                embed.add_embed_field(name='Credit Card',
-                                      value='|| %s ||' % creditcard,
-                                      inline=False)
-                webhook.add_embed(embed)
-                webhook.execute()
-
+                databot = {
+                    "username": "Scred AIO",
+                    "avatar_url": "https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg",
+                    "embeds": [{
+                        "title": "Successfully checked out !",
+                        "description": None,
+                        "url": None,
+                        "timestamp": timestamp,
+                        "color": 1160473,
+                        "footer": {
+                            "text": "SCRED AIO",
+                            "icon_url": None,
+                            "proxy_icon_url": None
+                        },
+                        "image": None,
+                        "thumbnail": {
+                            "url": link_photo,
+                            "proxy_url": None,
+                            "height": None,
+                            "width": None
+                        },
+                        "video": None,
+                        "provider": None,
+                        "author": None,
+                        "fields": [{
+                            "name": "Website",
+                            "value": site.strip('https://'),
+                            "inline": False
+                        },
+                            {"name": "Product", "value": name_product, "inline": False},
+                            {"name": "Size", "value": self.taille_produit, "inline": True},
+                            {"name": "Quantity", "value": self.quantite, "inline": True},
+                            {"name": "Mode", "value": "Auto Checkout", "inline": False},
+                            {"name": "Checkout Speed", "value": chronometre_2, "inline": False},
+                            {"name": "Account",
+                             "value": '|| %s ||' % compte[0].strip('\n').lstrip('"').rstrip('"'),
+                             "inline": False
+                             },
+                            {"name": "Credit Card",
+                             "value": "|| %s ||" % creditcard,
+                             "inline": False
+                             }
+                        ]}
+                    ]}
+            # Réglages Discord Webhook Paypal
             if self.Paiement == 'Paypal':
-                # Titre
-                embed = DiscordEmbed(title='Successfully checked out !', color=1160473)
-                # Pied de page
-                embed.set_footer(text='SCRED AIO')
-                embed.set_timestamp()
-                # Photo du produit
-                embed.set_thumbnail(
-                    url=link_photo)
-                embed.add_embed_field(name='Website', value=site.strip('https://'), inline=False)
-                embed.add_embed_field(name='Product', value=name_product, inline=False)
-                embed.add_embed_field(name='Size', value=self.taille_produit)
-                embed.add_embed_field(name='Quantity', value=self.quantite)
-                embed.add_embed_field(name='Mode', value='Manual')
-                embed.add_embed_field(name='Checkout Speed', value=chronometre_3)
-                embed.add_embed_field(name='Checkout Link',
-                                      value='|| %s ||' % url_paypal,
-                                      inline=False)
-                webhook.add_embed(embed)
-                webhook.execute()
-
+                databot = {
+                    "username": "Scred AIO",
+                    "avatar_url": "https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg",
+                    "embeds": [{
+                        "title": "Successfully checked out !",
+                        "description": None,
+                        "url": None,
+                        "timestamp": timestamp,
+                        "color": 1160473,
+                        "footer": {
+                            "text": "SCRED AIO",
+                            "icon_url": None,
+                            "proxy_icon_url": None
+                        },
+                        "image": None,
+                        "thumbnail": {
+                            "url": link_photo,
+                            "proxy_url": None,
+                            "height": None,
+                            "width": None
+                        },
+                        "video": None,
+                        "provider": None,
+                        "author": None,
+                        "fields": [{
+                            "name": "Website",
+                            "value": site.strip('https://'),
+                            "inline": False
+                        },
+                            {"name": "Product", "value": name_product, "inline": False},
+                            {"name": "Size", "value": self.taille_produit, "inline": True},
+                            {"name": "Quantity", "value": self.quantite, "inline": True},
+                            {"name": "Mode", "value": "Manual", "inline": True},
+                            {"name": "Checkout Speed", "value": chronometre_3, "inline": False},
+                            {"name": "Checkout Link",
+                             "value": '|| %s ||' % url_paypal,
+                             "inline": False
+                             }
+                        ]}
+                    ]}
+            # Réglages Discord Webhook CB
             if self.Paiement == 'CB':
-                # Titre
-                embed = DiscordEmbed(title='Successfully added to cart !', color=1160473)
-                # Pied de page
-                embed.set_footer(text='SCRED AIO')
-                embed.set_timestamp()
-                # Photo du produit
-                embed.set_thumbnail(
-                    url=link_photo)
-                embed.add_embed_field(name='Website', value=site.strip('https://'), inline=False)
-                embed.add_embed_field(name='Product', value=name_product, inline=False)
-                embed.add_embed_field(name='Size', value=self.taille_produit)
-                embed.add_embed_field(name='Quantity', value=self.quantite)
-                embed.add_embed_field(name='Mode', value='Manual')
-                embed.add_embed_field(name='Checkout Speed', value=chronometre_1, inline=False)
-                embed.add_embed_field(name='Username',
-                                      value='|| %s ||' % compte[0].strip('\n').lstrip('"').rstrip('"'))
-                embed.add_embed_field(name='Password',
-                                      value='|| %s ||' % compte[1].strip('\n').lstrip('"').rstrip('"'))
-                embed.add_embed_field(name='Login Link',
-                                      value='|| %s/welcomenoaccount/true ||' % site,
-                                      inline=False)
-                webhook.add_embed(embed)
-                webhook.execute()
+                databot = {
+                    "username": "Scred AIO",
+                    "avatar_url": "https://pbs.twimg.com/profile_images/1283768710138863617/D2yC8Qpg_400x400.jpg",
+                    "embeds": [{
+                        "title": "Successfully added to cart !",
+                        "description": None,
+                        "url": None,
+                        "timestamp": timestamp,
+                        "color": 1160473,
+                        "footer": {
+                            "text": "SCRED AIO",
+                            "icon_url": None,
+                            "proxy_icon_url": None
+                        },
+                        "image": None,
+                        "thumbnail": {
+                            "url": link_photo,
+                            "proxy_url": None,
+                            "height": None,
+                            "width": None
+                        },
+                        "video": None,
+                        "provider": None,
+                        "author": None,
+                        "fields": [{
+                            "name": "Website",
+                            "value": site.strip('https://'),
+                            "inline": False
+                        },
+                            {"name": "Product", "value": name_product, "inline": False},
+                            {"name": "Size", "value": self.taille_produit, "inline": True},
+                            {"name": "Quantity", "value": self.quantite, "inline": True},
+                            {"name": "Mode", "value": "Manual", "inline": True},
+                            {"name": "Checkout Speed", "value": chronometre_1, "inline": False},
+                            {"name": "Username", "value": "|| %s ||" % compte[0].strip('\n').lstrip('"').rstrip('"'),
+                             "inline": True},
+                            {"name": "Password", "value": "|| %s ||" % compte[1].strip('\n').lstrip('"').rstrip('"'),
+                             "inline": True},
+                            {"name": "Login Link", "value": "|| %s/welcomenoaccount/true ||" % site,
+                             "inline": False}
+                        ]}
+                    ]}
+            #  Envoie de la notification
+            headersdiscord = {
+                'Host': 'discordapp.com',
+                'User-Agent': 'python-requests/2.22.0',
+                'Accept-Encoding': 'gzip, deflate',
+                'Accept': '*/*',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json'
+            }
+            requests.post(url_discord, headers=headersdiscord, json=databot, verify=False)
             # Insertion du compte et du mode associé dans le fichier Accounts_Mode.csv
             with open("Zalando/Data/Accounts_Mode.csv", "a") as f:
                 f.write(compte[0].strip('\n').lstrip('"').rstrip('"'))
