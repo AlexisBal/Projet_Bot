@@ -920,8 +920,14 @@ class RechercheCommande(Thread):
                                       inline=False)
                 webhook.add_embed(embed)
                 webhook.execute()
-
-            # Insertion des tâches effectuées dans le fichier Task_History.csv
+            # Insertion du compte et du mode associé dans le fichier Accounts_Mode.csv
+            with open("Zalando/Data/Accounts_Mode.csv", "a") as f:
+                f.write(compte[0].strip('\n').lstrip('"').rstrip('"'))
+                f.write(",")
+                f.write(self.Paiement)
+                f.write('\n')
+            f.close()
+            # Insertion des tâches effectuées dans le fichier Success_Recap.csv
             if self.Paiement == 'Paypal':
                 today = date.today()
                 now = datetime.now()
@@ -1173,7 +1179,7 @@ def tache():
 
 # Création de la liste "Liste_Success"
 def Success():
-    with open('Zalando/Success recap/Success_Recap.csv', 'r') as f:
+    with open('Zalando/Data/Accounts_Mode.csv', 'r') as f:
         Liste_Success = []
         for ligne in f:
             liste_list = ligne.split(",")
