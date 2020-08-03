@@ -304,7 +304,6 @@ class RechercheCommande(Thread):
 
                 # Connexion au compte
                 url_bot_2 = "%s/resources/da6ea05bf5rn2028b315fc23b805e921" % site
-                urlconex = 'https://www.zalando.fr/api/t/i'
                 url_connexion_2 = "%s/api/reef/login/schema" % site
                 url_connexion_3 = "%s/api/reef/login" % site
                 data1_2 = {
@@ -482,9 +481,9 @@ class RechercheCommande(Thread):
                                     'country_code': Pays,
                                     'city': self.List_Quick_Task[7].strip('\n').lstrip('"').rstrip('"'),
                                     'zip': self.List_Quick_Task[6].strip('\n').lstrip('"').rstrip('"'),
-                                    'street': self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"'),
+                                    'street': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"'),
                                     "additional": self.List_Quick_Task[5].strip('\n').lstrip('"').rstrip('"'),
-                                    'house_number': self.List_Quick_Task[4].strip('\n').lstrip('"').rstrip('"')
+                                    'house_number': self.List_Quick_Task[3].strip('\n').lstrip('"').rstrip('"')
                                 },
                                 'status': 'https://docs.riskmgmt.zalan.do/address/correct',
                                 'blacklisted': 'false'
@@ -767,26 +766,31 @@ class RechercheCommande(Thread):
 
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
+                        url_pay_4 = "%s/checkout/payment-complete" % site
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
-                        if origin:
-                            urlpaycomplete = 'https://www.zalando.fr/checkout/payment-complete'
+                        if origin is None:
                             session.headers.update({
                                 'Referer': 'https://www.zalando.fr/checkout/address',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                            })
-                            session.get(urlpaycomplete, verify=False)
-                        else:
-                            session.headers.update({
-                                'Referer': 'https://www.zalando.fr/checkout/address',
-                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                                'Host': 'checkout.payment.zalando.com'
                             })
                             session.get(url_pay_3, verify=False)
-                        url_pay_4 = "%s/checkout/payment-complete" % site
-                        del session.headers["Content-Type"]
-                        del session.headers["Origin"]
-                        session.headers["Host"] = site.strip('https://')
+                            session.headers.update({
+                                'Referer': 'https://checkout.payment.zalando.com/selection',
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                                'Origin': 'https://checkout.payment.zalando.com',
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            })
+                            session.post(url_pay_3, data=data_pay_3, verify=False)
+                            del session.headers['Origin']
+                            del session.headers['Content-Type']
+                        session.headers.update({
+                            'Referer': 'https://www.zalando.fr/checkout/address',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'Host': site.strip('https://')
+                        })
                         b = session.get(url_pay_4, verify=False)
                         soupbis_3 = BeautifulSoup(b.content, "html.parser")
                         reponsefinale_3 = soupbis_3.find(attrs={"data-props": re.compile('eTag')})
