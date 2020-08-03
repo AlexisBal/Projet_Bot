@@ -68,6 +68,14 @@ class RechercheCommande(Thread):
             Task = self.Task
             compte = Liste_Compte[Task]
 
+            # Historique Compte
+            y = None
+            for x in self.Liste_Success:
+                if x.count(compte[0]) != 0:
+                    y = True
+                if x.count(compte[0] + '\n') != 0:
+                    y = True
+
             # Choix au hasard d'un profil
             profil = self.Liste_profile
 
