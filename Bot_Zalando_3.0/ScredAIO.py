@@ -160,7 +160,7 @@ class RechercheCommande(Thread):
                 print(Fore.RED + 'Wrong country code !')
                 print(Fore.YELLOW + 'Country code accepted :')
                 print(Fore.YELLOW + 'FR, CH, BE, LU, DE, AT, NL, IT, UK, ES, SE, DK, NO, FI, PL')
-                time.sleep(5)
+                time.sleep(3)
                 main()
 
             # Récupération du Sku
@@ -201,7 +201,7 @@ class RechercheCommande(Thread):
                 except:
                     print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                           Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + 'There is a problem with the Sku !')
-                    time.sleep(5)
+                    time.sleep(3)
                     main()
 
             # Verification du stock
@@ -357,7 +357,7 @@ class RechercheCommande(Thread):
                           Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with this "
                                                                                     "account. Stop the program and "
                                                                                     "try later !")
-                    time.sleep(5)
+                    time.sleep(3)
                     main()
 
                 # Connexion à la page du produit
@@ -761,7 +761,7 @@ class RechercheCommande(Thread):
                         else:
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with the checkout ! Check your details and try later !")
-                            time.sleep(5)
+                            time.sleep(3)
                             main()
 
                     # Paiement par paypal
@@ -835,7 +835,7 @@ class RechercheCommande(Thread):
                             print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                                   Style.RESET_ALL + "> Task %s - " % self.Task + Fore.RED + "There is a problem with "
                                                                                             "the checkout ! Check your details and try later !")
-                            time.sleep(5)
+                            time.sleep(3)
                             main()
                         json_reponse = json.loads(reponse_checkout.text)
                         url_paypal = str(json_reponse["url"])
@@ -1091,7 +1091,7 @@ def proxy():
         if not liste_proxys:
             print(Fore.RED + "You have not specified any proxies !")
             print(Fore.RED + "Enter the address of the proxy servers in the Proxy.txt file.")
-            time.sleep(5)
+            time.sleep(3)
             fonction_Zalando()
 
         return liste_proxys
@@ -1398,7 +1398,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
             else:
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                       Style.RESET_ALL + Fore.RED + "There is a problem with the register ! Try later.")
-                time.sleep(5)
+                time.sleep(3)
                 main()
 
         # Fermeture de la session
@@ -1618,11 +1618,11 @@ def fonction_Zalando():
                 if len(Liste_compte) < len(Liste_tache):
                     print(
                         Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_compte) == 0:
                     print(Fore.RED + 'The file %s is empty !' % message)
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 # Réglages Thread
                 thread_list = []
@@ -1655,7 +1655,7 @@ def fonction_Zalando():
             if choix == 3:
                 if len(Liste_comptegenerator) == 0:
                     print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
-                    time.sleep(5)
+                    time.sleep(3)
                     fonction_Zalando()
                 while True:
                     try:
