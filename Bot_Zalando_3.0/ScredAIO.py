@@ -1455,13 +1455,18 @@ def fonction_Zalando():
     if Liste_tache.count(['\n']) != 0:
         for x in range(0, Liste_tache.count(['\n'])):
             Liste_tache.remove(['\n'])
+    # Success
+    Liste_Success = Success()
+    if Liste_Success.count(['\n']) != 0:
+        for x in range(0, Liste_Success.count(['\n'])):
+            Liste_Success.remove(['\n'])
     # Quick Tasks
     List_Quick_Task = QuickTask()
     if List_Quick_Task.count(['\n']) != 0:
         for x in range(0, List_Quick_Task.count(['\n'])):
             List_Quick_Task.remove(['\n'])
     # Check Database
-    if Liste_compte1 == [] and Liste_compte2 == []:
+    if Liste_compte1 == [] and Liste_compte2 == [] and Liste_compte3 == []:
         print(Fore.RED + "You have not specified any accounts !")
         print(Fore.RED + "You have to use the Account Generator.")
     if not List_profile1:
@@ -1569,12 +1574,19 @@ def fonction_Zalando():
                         choix_2 = int(input("\nChoice :"))
                         if choix_2 == 1:
                             Paiement = 'CB_Auto'
+                            Liste_compte = Liste_compte2
+                            message = 'Accounts_List_AutoCheckout.csv'
                             break
                         if choix_2 == 2:
                             Paiement = 'CB'
+                            Liste_compte = Liste_compte3
+                            message = 'Accounts_List_CB.csv'
                             break
                         if choix_2 == 3:
                             Paiement = 'Paypal'
+                            Liste_compte = Liste_compte1
+                            message = 'Accounts_List_Paypal.csv'
+
                             break
                     except:
                         pass
@@ -1601,68 +1613,42 @@ def fonction_Zalando():
                             break
                     except:
                         pass
-                # Choix liste compte
-                while True:
-                    try:
-                        # Affichage des propositions
-                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 1. List 1")
-                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 2. List 2")
-                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 3. Select Multiple Lists")
-                        choix_4 = int(input("\nChoice :"))
-                        # Réglage du Thread
-                        if choix_4 == 1:
-                            Liste_compte = Liste_compte1
-                            message = 'Accounts_List_Paypal.csv'
-                        if choix_4 == 2:
-                            Liste_compte = Liste_compte2
-                            message = 'Accounts_List_AutoCheckout.csv'
-                        thread_list = []
-                        Mode = 'Normal'
-                        # Check DB
-                        if len(Liste_compte) < len(Liste_tache):
-                            print(
-                                Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                            time.sleep(5)
-                            fonction_Zalando()
-                        if len(Liste_compte) == 0:
-                            print(Fore.RED + 'The file %s is empty !' % message)
-                            time.sleep(5)
-                            fonction_Zalando()
-                        if choix_4 == 3:
-                            Liste_compte = Liste_compte3
-                            if len(Liste_compte) < len(Liste_tache):
-                                print(
-                                    Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                                time.sleep(5)
-                                fonction_Zalando()
-                        # Start Thread
-                        for x in range(0, len(Liste_tache)):
-                            url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
-                            taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
-                            quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
-                            Task = x
-                            thread = RechercheCommande(liste_proxys,
-                                                       List_profile,
-                                                       Liste_compte,
-                                                       url_produit,
-                                                       taille_produit,
-                                                       Paiement,
-                                                       Mode,
-                                                       Task,
-                                                       List_Quick_Task,
-                                                       quantite)
-                            thread.start()
-                            thread_list.append(thread)
-                        # Join Thread
-                        time.sleep(2)
-                        for t in thread_list:
-                            t.join()
-                        main()
-                    except:
-                        pass
+                # Check DB
+                if len(Liste_compte) < len(Liste_tache):
+                    print(
+                        Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
+                    time.sleep(5)
+                    fonction_Zalando()
+                if len(Liste_compte) == 0:
+                    print(Fore.RED + 'The file %s is empty !' % message)
+                    time.sleep(5)
+                    fonction_Zalando()
+                # Réglages Thread
+                thread_list = []
+                Mode = 'Normal'
+                # Start Thread
+                for x in range(0, len(Liste_tache)):
+                    url_produit = Liste_tache[x][0].lstrip('"').rstrip('"')
+                    taille_produit = Liste_tache[x][1].lstrip('"').rstrip('"')
+                    quantite = Liste_tache[x][2].lstrip('"').rstrip('"')
+                    Task = x
+                    thread = RechercheCommande(liste_proxys,
+                                               List_profile,
+                                               Liste_compte,
+                                               url_produit,
+                                               taille_produit,
+                                               Paiement,
+                                               Mode,
+                                               Task,
+                                               List_Quick_Task,
+                                               quantite)
+                    thread.start()
+                    thread_list.append(thread)
+                # Join Thread
+                time.sleep(2)
+                for t in thread_list:
+                    t.join()
+                main()
 
             if choix == 3:
                 if len(Liste_comptegenerator) == 0:
