@@ -1496,22 +1496,11 @@ def fonction_Zalando():
                 # Réglages Thread
                 Paiement = 'CB_Auto'
                 Mode = 'Quick'
-                if len(List_Quick_Task) == 0:
-                    print(Fore.RED + 'The file Quick_Task.csv is empty !')
-                    time.sleep(3)
-                    fonction_Zalando()
-                if List_Quick_Task[0] == 1:
-                    Liste_compte = Liste_compte1
-                    message = 'Accounts_List_Paypal.csv'
-                if List_Quick_Task[0] == 2:
-                    Liste_compte = Liste_compte2
-                    message = 'Accounts_List_AutoCheckout.csv'
-                if List_Quick_Task[0] == 3:
-                    Liste_compte = Liste_compte3
                 List_profile = List_Quick_Task
                 thread_list = []
+                Liste_compte = Liste_compte2
                 # Check Database
-                if Liste_compte1 == [] and Liste_compte2 == []:
+                if not Liste_compte2:
                     print(Fore.RED + "You have not specified any accounts !")
                     print(Fore.RED + "You have to use the Account Generator.")
                     time.sleep(3)
@@ -1529,7 +1518,7 @@ def fonction_Zalando():
                     time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_compte) == 0:
-                    print(Fore.RED + 'The file %s is empty !' % message)
+                    print(Fore.RED + 'The file Accounts_List_AutoCheckout.csv is empty !')
                     time.sleep(3)
                     fonction_Zalando()
                 # Start Thread
