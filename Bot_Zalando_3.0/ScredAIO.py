@@ -1670,9 +1670,11 @@ def fonction_Zalando():
                 while True:
                     try:
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 1. List 1")
+                              Style.RESET_ALL + "> 1. List Paypal")
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 2. List 2")
+                              Style.RESET_ALL + "> 2. List Auto Checkout")
+                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
+                              Style.RESET_ALL + "> 3. List CB")
                         choix_2 = int(input("\nChoice :"))
                         if choix_2 == 1:
                             liste = 'Accounts/Accounts_List_Paypal.csv'
@@ -1680,6 +1682,10 @@ def fonction_Zalando():
                             fonction_Zalando()
                         if choix_2 == 2:
                             liste = 'Accounts/Accounts_List_AutoCheckout.csv'
+                            CreationComptes(Liste_comptegenerator, liste_proxys, liste)
+                            fonction_Zalando()
+                        if choix_2 == 3:
+                            liste = 'Accounts/Accounts_List_CB.csv'
                             CreationComptes(Liste_comptegenerator, liste_proxys, liste)
                             fonction_Zalando()
                     except:
