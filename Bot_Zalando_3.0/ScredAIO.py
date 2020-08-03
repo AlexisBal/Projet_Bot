@@ -16,7 +16,6 @@ from licensing.models import *
 from licensing.methods import Key, Helpers
 from datetime import datetime
 from datetime import date
-from discord_webhook import DiscordWebhook, DiscordEmbed
 from pypresence import Presence
 
 
@@ -772,11 +771,11 @@ class RechercheCommande(Thread):
                         )
                         if origin:
                             session.headers.update({
-                                'Referer': 'https://checkout.payment.zalando.com/selection',
+                                'Referer': 'https://www.zalando.fr/checkout/address',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                                 'Host': 'www.zalando.fr'
                             })
-                            session.get(url_pay_3 + '?show=true', verify=False)
+                            session.get(url_pay_3, verify=False)
                         if origin is None:
                             session.headers.update({
                                 'Referer': 'https://www.zalando.fr/checkout/address',
@@ -856,8 +855,8 @@ class RechercheCommande(Thread):
             else:
                 url_discord = profil[14].strip('\n').lstrip('"').rstrip('"')
                 creditcard = profil[10].strip('\n').lstrip('"').rstrip('"')
-            timestamp = time.time()
-            timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
+            jour = time.time()
+            timestamp = str(datetime.datetime.utcfromtimestamp(jour))
             # Réglages Discord Webhook Auto Checkout
             if self.Mode == 'Quick' or self.Paiement == 'CB_Auto':
                 databot = {
