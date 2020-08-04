@@ -663,10 +663,7 @@ class RechercheCommande(Thread):
                             session.post(url_adresse, json=checkout_2_2, verify=False, timeout=0.2)
                         except:
                             pass
-                        try:
-                            session.post(url_panier_4, json=data_panier4, verify=False, timeout=0.2)
-                        except:
-                            pass
+                        session.post(url_panier_4, json=data_panier4, verify=False)
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
                         del session.headers["x-zalando-checkout-app"]
@@ -1782,7 +1779,7 @@ def main():
                 if choix_depart == 1:
                     fonction_Zalando()
             except:
-                raise
+                pass
 
 
 # --------------------------------------------------------------------------------------------------------------------#
