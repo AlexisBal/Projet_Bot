@@ -22,7 +22,7 @@ from pypresence import Presence
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
-        self.timeout = 8
+        self.timeout = 5
         if "timeout" in kwargs:
             self.timeout = kwargs["timeout"]
             del kwargs["timeout"]
@@ -36,7 +36,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 
 # Réglage des "Retries"
-retries = Retry(total=3, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
+retries = Retry(total=1, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
 
 # Désactivation des messages d'avertissement
 urllib3.disable_warnings()
@@ -266,7 +266,7 @@ class RechercheCommande(Thread):
                                 "https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
-                            session.get(site, verify=False, timeout=0.5)
+                            session.get(site, verify=False)
                         except:
                             session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                             # Connexion à la page d'accueil de Zalando
@@ -278,7 +278,7 @@ class RechercheCommande(Thread):
                             session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
-                            session.get(site, verify=False, timeout=0.5)
+                            session.get(site, verify=False)
                         except:
                             session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
                             # Connexion à la page d'accueil de Zalando
@@ -287,9 +287,15 @@ class RechercheCommande(Thread):
 
                     if session.cookies != '<RequestsCookieJar[]>':
                         session.headers['Referer'] = 'https://www.zalando.fr/'
-                        session.get(diversion, verify=False)
+                        try:
+                            session.get(diversion, verify=False, timeout=0.1)
+                        except:
+                            pass
                         session.headers['Referer'] = diversion
-                        session.get(diversion_2, verify=False)
+                        try:
+                            session.get(diversion_2, verify=False, timeout=0.1)
+                        except:
+                            pass
                         # Connexion à la page du produit
                         session.headers['Referer'] = diversion_2
                         login = session.get(self.url_produit, verify=False)
@@ -302,7 +308,7 @@ class RechercheCommande(Thread):
                 cookies_2 = session.cookies.get_dict()
 
                 # Connexion au compte
-                url_bot_2 = "%s/resources/da6ea05bf5rn2028b315fc23b805e921" % site
+                url_bot_2 = "%s/resources/6b1302c451rn2028b315fc23b805e921" % site
                 url_connexion_2 = "%s/api/reef/login/schema" % site
                 url_connexion_3 = "%s/api/reef/login" % site
                 data1_2 = {
@@ -324,8 +330,14 @@ class RechercheCommande(Thread):
                     "Origin": site,
                     "Referer": self.url_produit
                 })
-                session.post(url_bot_2, json=data1_2, verify=False)
-                session.post(url_bot_2, json=data2_2, verify=False)
+                try:
+                    session.post(url_bot_2, json=data1_2, verify=False, timeout=0.1)
+                except:
+                    pass
+                try:
+                    session.post(url_bot_2, json=data2_2, verify=False, timeout=0.1)
+                except:
+                    pass
                 del session.headers["Origin"]
                 session.headers.update({
                     "x-xsrf-token": cookies_2["frsx"],
@@ -337,9 +349,12 @@ class RechercheCommande(Thread):
                     "Accept": "application/json",
                     "Referer": self.url_produit
                 })
-                session.get(url_connexion_2, verify=False)
+                try:
+                    session.get(url_connexion_2, verify=False, timeout=0.2)
+                except:
+                    pass
                 session.headers["Origin"] = site
-                connex = session.post(url_connexion_3, json=identifiants_2, verify=False)
+                connex = session.post(url_connexion_3, json=identifiants_2, verify=False, timeout=4)
                 del session.headers["x-xsrf-token"]
                 del session.headers["x-zalando-client-id"]
                 del session.headers["x-zalando-render-page-uri"]
@@ -369,7 +384,7 @@ class RechercheCommande(Thread):
 
                 # Mise dans le panier
                 for quantite in range(0, int(self.quantite)):
-                    url_bot_panier = '%s/resources/7be100d4c6rn2028b315fc23b805e921' % site
+                    url_bot_panier = '%s/resources/6b1302c451rn2028b315fc23b805e921' % site
                     url_panier = "%s/api/graphql/" % site
                     bot_panier = {
                         'sensor_data': '7a74G7m23Vrp0o5c9183031.6-1,2,-94,-100,%s,uaend,11011,20030107,fr-fr,Gecko,1,0,0,0,392572,4143776,1440,900,1440,900,1440,353,1440,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8824,0.896028632448,797757071888,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,0,0,0,-1,113,0;0,-1,0,0,926,-1,0;-1,2,-94,-102,0,0,0,0,-1,113,0;0,-1,0,0,926,-1,0;-1,2,-94,-108,-1,2,-94,-110,0,1,47,981,8;1,1,6967,780,829;2,1,6976,1029,672;3,1,6979,1116,630;4,1,6995,1190,595;5,1,7005,1294,547;6,1,7016,1347,522;7,1,7027,1413,486;8,1,7227,1438,509;9,1,7373,1410,539;10,1,7390,1194,672;11,1,7669,1180,672;12,1,7724,1100,654;13,1,7749,1099,652;14,3,7954,1099,652,-1;15,4,8045,1099,652,-1;16,2,8045,1099,652,-1;17,1,8428,1099,862;18,1,9488,1099,862;19,1,9491,1098,863;20,1,9495,1098,865;21,1,9496,1098,865;22,1,9504,1097,865;23,1,9505,1097,865;24,1,9512,1096,866;25,1,9513,1096,866;26,1,9521,1095,867;27,1,9523,1095,867;28,1,9528,1094,868;29,1,9529,1094,868;30,1,9535,1094,869;31,1,9536,1094,869;32,1,9545,1092,870;33,1,9546,1092,870;34,1,9553,1091,871;35,1,9555,1091,871;36,1,9560,1090,873;37,1,9561,1090,873;38,1,9569,1087,875;39,1,9570,1087,875;40,1,9578,1085,877;41,1,9579,1085,877;42,1,9587,1081,880;43,1,9589,1081,880;44,1,9592,1080,880;45,1,9593,1080,880;46,1,9603,1073,885;47,1,9605,1073,885;48,1,9609,1069,888;49,1,9610,1069,888;50,1,9619,1063,892;51,1,9621,1063,892;52,1,9626,1056,896;53,1,9627,1056,896;54,1,9633,1048,901;55,1,9635,1048,901;56,1,9642,1041,904;57,1,9643,1041,904;58,1,9653,1034,909;59,1,9654,1034,909;60,1,9657,1026,913;61,1,9658,1026,913;62,1,9667,1023,914;63,1,9668,1023,914;64,1,9675,1016,917;65,1,9676,1016,917;66,1,9683,1012,918;67,1,9685,1012,918;68,1,9689,1006,920;69,1,9690,1006,920;70,1,9698,1002,920;71,1,9699,1002,920;72,1,9707,998,921;73,1,9708,998,921;74,1,9717,993,922;75,1,9719,993,922;76,1,9721,989,922;77,1,9722,989,922;78,1,9734,986,922;79,1,9735,986,922;80,1,9738,982,922;81,1,9739,982,922;82,1,9748,979,922;83,1,9750,979,922;84,1,9754,975,922;85,1,9755,975,922;86,1,9763,972,922;87,1,9764,972,922;88,1,9772,969,922;89,1,9773,969,922;90,1,9781,966,922;91,1,9783,966,922;92,1,9786,964,922;93,1,9787,964,922;94,1,9795,962,922;95,1,9796,962,922;96,1,9802,959,922;97,1,9803,959,922;98,1,9814,958,922;99,1,9816,958,922;100,1,9819,957,922;101,1,9828,955,922;102,1,9829,955,922;115,3,10159,953,923,-1;116,4,10252,953,923,-1;117,2,10252,953,923,-1;257,3,15150,967,660,-1;258,4,15279,967,660,-1;259,2,15279,967,660,-1;299,3,15937,948,935,-1;300,4,16087,948,935,-1;301,2,16088,948,935,-1;398,3,17326,924,653,-1;400,4,17453,924,653,-1;401,2,17454,924,653,-1;529,3,18354,895,813,-1;530,4,18490,895,813,-1;531,2,18490,895,813,-1;589,3,20264,936,732,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,7959;2,11828;3,15163;-1,2,-94,-112,%s/nike-sportswear-alpha-lite-baskets-basses-ni112o0am-c12.html-1,2,-94,-115,1,1434238,32,0,0,0,1434206,20264,0,1595514143776,29,17068,0,590,2844,13,0,20265,1199766,0,5A6236607E448865D7A432CE144FFDF5~-1~YAAQDOx7XNW7gy9zAQAA3AsOfAQdvNnRmPRtGD+Vbnvwj9sl5cWYzej2Z67I1GWl8oNQE+QRbxUAmccc7C4f/ocpHtggywIKYwIjTVW3cKwSMI7nafnSkUHDdovf3E7uuDE0tUx6r+Bedx2mXykaelOO5lU9iFXywnO62WqGyfMISIiJ4twTYgIajxKmwEd/yWHBWDun52B+NjTcH28QJb42WAFXK6uvxgasjoUkRdjY/iNI6/XFXhTydXPJ0hhCPgkciReOUiplcvVmVxJVln2wr7NoeVe11IiRaEKRkn5fp45VBOamY6JHMYvJb4BAe16bMfJqH2elZS9cQps8WVsjVTE=~-1~-1~-1,32986,147,1531999884,26018161,PiZtE,72271,62-1,2,-94,-106,1,8-1,2,-94,-119,0,0,0,0,0,0,0,0,0,0,0,200,200,400,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;false;-1-1,2,-94,-80,5341-1,2,-94,-116,62156235-1,2,-94,-118,209108-1,2,-94,-121,;2;3;0' %
@@ -390,24 +405,30 @@ class RechercheCommande(Thread):
                         'Origin': site,
                         'Referer': self.url_produit
                     })
-                    session.post(url_bot_panier, json=bot_panier, verify=False)
+                    try:
+                        session.post(url_bot_panier, json=bot_panier, verify=False, timeout=0.1)
+                    except:
+                        pass
                     session.headers.update({
                         "x-page-impression-id": impression,
                         "Content-Type": "application/json",
                         'x-xsrf-token': cookies_2["frsx"],
                         'x-zalando-intent-context': 'navigationTargetGroup=MEN'
                     })
-                    repPanier = session.post(url_panier, json=panier, verify=False)
+                    try:
+                        session.post(url_panier, json=panier, verify=False, timeout=0.2)
+                    except:
+                        pass
                     stop_1 = timeit.default_timer()
                     del session.headers['x-zalando-intent-context']
                     del session.headers['x-page-impression-id']
-                    if self.Paiement == 'CB' and repPanier.status_code == 200:
+                    if self.Paiement == 'CB':
                         chronometre_1 = str(round(stop_1 - start_chrono, 5))
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> Task %s - " % self.Task + Fore.GREEN + "Article %s successfully "
                                                                                           "added to cart - size %s" % (
                                   quantite, self.taille_produit))
-                    if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal' and repPanier.status_code == 200:
+                    if self.Paiement == 'CB_Auto' or self.Paiement == 'Paypal':
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> Task %s - " % self.Task + Fore.YELLOW + "Article %s successfully "
                                                                                            "added to cart - size %s" % (
@@ -427,7 +448,10 @@ class RechercheCommande(Thread):
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                         "Referer": "%s/myaccount" % site,
                     })
-                    session.get(url_panier_1, verify=False)
+                    try:
+                        session.get(url_panier_1, verify=False, timeout=0.1)
+                    except:
+                        pass
                     session.headers["Referer"] = "%s/cart/" % site
                     session.get(url_panier_2, verify=False)
 
@@ -501,13 +525,13 @@ class RechercheCommande(Thread):
                             "x-zalando-header-mode": "desktop",
                             "Origin": site
                         })
-                        session.post(url_adresse, json=checkout_2_2, verify=False)
-                        session.post(url_panier_4, json=data_panier4, verify=False)
+                        session.post(url_adresse, json=checkout_2_2, verify=False, timeout=0.2)
+                        session.post(url_panier_4, json=data_panier4, verify=False, timeout=0.2)
 
                         # Numero de telephone
                         url_phone = '%s/api/checkout/save-customer-phone-number' % site
                         data_phone = {"phoneNumber": phone}
-                        session.post(url_phone, json=data_phone, verify=False)
+                        session.post(url_phone, json=data_phone, verify=False, timeout=0.2)
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
                         del session.headers["x-zalando-checkout-app"]
@@ -526,7 +550,7 @@ class RechercheCommande(Thread):
                             "Content-Type": 'text/plain;charset=UTF-8',
                             "Accept": "*/*"
                         })
-                        session.post(url_bot_1_2, json=bot, verify=False)
+                        session.post(url_bot_1_2, json=bot, verify=False, timeout=0.2)
                         session.headers.update({
                             "Referer": '%s/checkout/address' % site,
                             "Origin": site,
@@ -537,7 +561,7 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        session.get(url_checkout_2_2, verify=False)
+                        session.get(url_checkout_2_2, verify=False, timeout=0.2)
                         del session.headers["x-zalando-footer-mode"]
                         del session.headers["x-zalando-checkout-app"]
                         del session.headers["x-xsrf-token"]
@@ -620,8 +644,14 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        session.post(url_adresse, json=checkout_2_2, verify=False)
-                        session.post(url_panier_4, json=data_panier4, verify=False)
+                        try:
+                            session.post(url_adresse, json=checkout_2_2, verify=False, timeout=0.2)
+                        except:
+                            pass
+                        try:
+                            session.post(url_panier_4, json=data_panier4, verify=False, timeout=0.2)
+                        except:
+                            pass
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
                         del session.headers["x-zalando-checkout-app"]
@@ -632,8 +662,14 @@ class RechercheCommande(Thread):
                             "Content-Type": "text/plain;charset=UTF-8",
                             "Accept": "*/*"
                         })
-                        session.post(botvalidurl, json=botvalidbis, verify=False)
-                        session.post(botvalidurl, json=bot, verify=False)
+                        try:
+                            session.post(botvalidurl, json=botvalidbis, verify=False, timeout=0.1)
+                        except:
+                            pass
+                        try:
+                            session.post(botvalidurl, json=bot, verify=False, timeout=0.1)
+                        except:
+                            pass
 
                         # Numero de telephone
                         url_phone = '%s/api/checkout/save-customer-phone-number' % site
@@ -648,7 +684,10 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        session.post(url_phone, json=data_phone, verify=False)
+                        try:
+                            session.post(url_phone, json=data_phone, verify=False, timeout=0.1)
+                        except:
+                            pass
 
                         # Next Step
                         url_checkout_2_2 = '%s/api/checkout/next-step' % site
@@ -741,7 +780,10 @@ class RechercheCommande(Thread):
                             "Host": site.strip('https://'),
                             "Authorization": "Bearer %s" % token
                         })
-                        session.post(url_pay_bot, json=data_bot_pay, verify=False)
+                        try:
+                            session.post(url_pay_bot, json=data_bot_pay, verify=False, timeout=0.2)
+                        except:
+                            pass
                         session.headers.update({
                             "Content-Type": "application/json",
                             "Accept": "application/json",
@@ -750,7 +792,7 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False, timeout=(1, 10))
                         stop_2 = timeit.default_timer()
                         if reponse_checkout.status_code == 200:
                             chronometre_2 = str(round(stop_2 - start_chrono, 5))
@@ -765,39 +807,22 @@ class RechercheCommande(Thread):
 
                     # Paiement par paypal
                     if self.Paiement == 'Paypal':
-                        url_pay_4 = "%s/checkout/payment-complete" % site
                         data_pay_3 = (
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
                         if origin:
-                            session.headers.update({
-                                'Referer': 'https://www.zalando.fr/checkout/address',
-                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                                'Host': 'www.zalando.fr'
-                            })
-                            session.get(url_pay_3, verify=False)
+                            b = session.get(url_pay_3, verify=False, timeout=(1, 10))
                         if origin is None:
-                            session.headers.update({
-                                'Referer': 'https://www.zalando.fr/checkout/address',
-                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                                'Host': 'checkout.payment.zalando.com'
-                            })
-                            session.get(url_pay_3 + '?show=true', verify=False)
+                            session.get(url_pay_3, verify=False, timeout=(1, 10))
                             session.headers.update({
                                 'Referer': 'https://checkout.payment.zalando.com/selection',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                                 'Origin': 'https://checkout.payment.zalando.com',
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             })
-                            session.post(url_pay_3, data=data_pay_3, verify=False)
+                            b = session.post(url_pay_3, data=data_pay_3, verify=False)
                             del session.headers['Origin']
                             del session.headers['Content-Type']
-                        session.headers.update({
-                            'Referer': 'https://www.zalando.fr/checkout/address',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                            'Host': site.strip('https://')
-                        })
-                        b = session.get(url_pay_4, verify=False)
                         soupbis_3 = BeautifulSoup(b.content, "html.parser")
                         reponsefinale_3 = soupbis_3.find(attrs={"data-props": re.compile('eTag')})
                         reponsefinale1_3 = reponsefinale_3['data-props']
@@ -821,7 +846,10 @@ class RechercheCommande(Thread):
                             "Accept": "*/*",
                             "Host": site.strip('https://')
                         })
-                        session.post(url_pay_bot, json=data_bot_pay, verify=False)
+                        try:
+                            session.post(url_pay_bot, json=data_bot_pay, verify=False, timeout=0.1)
+                        except:
+                            pass
                         session.headers.update({
                             "Content-Type": "application/json",
                             "Accept": "application/json",
@@ -830,7 +858,7 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False)
+                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False, timeout=(0.5, 10))
                         stop_3 = timeit.default_timer()
                         if reponse_checkout.status_code == 200:
                             chronometre_3 = str(round(stop_3 - start_chrono, 5))
@@ -849,7 +877,7 @@ class RechercheCommande(Thread):
 
             # Notification Discord WebHook
             # Réglages Discord Webhook
-            timestamp = str(datetime.now())
+            timestamp = str(datetime.utcnow())
             if self.Mode == 'Quick':
                 url_discord = self.List_Quick_Task[16].strip('\n').lstrip('"').rstrip('"')
                 creditcard = self.List_Quick_Task[12].strip('\n').lstrip('"').rstrip('"')
