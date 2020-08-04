@@ -743,6 +743,7 @@ class RechercheCommande(Thread):
                         del session.headers['Authorization']
 
                         # Paiement Partie 2
+                        select = ''
                         data_pay_3 = (
                                 "payz_selected_payment_method=CREDIT_CARD_PAY_LATER&payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&iframe_funding_source_id=%s"
                                 % reponsepaybis["id"]
@@ -754,7 +755,11 @@ class RechercheCommande(Thread):
                             "Referer": 'https://checkout.payment.zalando.com/selection',
                             "Host": 'checkout.payment.zalando.com'
                         })
-                        req = session.post(url_pay_3, data=data_pay_3, verify=False)
+                        session.post(url_pay_3, data=data_pay_3, verify=False, allow_redirects=False)
+                        req = session.post(select, data=data_pay_3, verify=False, allow_redirects=False)
+                        del session.headers['Origin']
+                        del session.headers['Content-Type']
+                        req = session.get(req.headers['location'], data=data_pay_3, verify=False)
 
                         # Paiement Partie 3
                         soupbis_3 = BeautifulSoup(req.content, "html.parser")
