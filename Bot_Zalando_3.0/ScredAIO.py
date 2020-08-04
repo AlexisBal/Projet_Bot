@@ -1213,7 +1213,7 @@ def compte1():
 
 # Création de la liste de compte "Liste_compte2"
 def compte2():
-    with open('Zalando/Accounts/Accounts_List_AutoCheckout.csv', 'r') as f:
+    with open('Zalando/Accounts/Accounts_List_CB.csv', 'r') as f:
         Liste_compte2 = []
         for ligne in f:
             compte_list2 = ligne.split(",")
@@ -1221,18 +1221,6 @@ def compte2():
         Liste_compte2.pop(0)
     f.close()
     return Liste_compte2
-
-
-# Création de la liste de compte "Liste_compte3"
-def compte3():
-    with open('Zalando/Accounts/Accounts_List_CB.csv', 'r') as f:
-        Liste_compte3 = []
-        for ligne in f:
-            compte_list3 = ligne.split(",")
-            Liste_compte3.append(compte_list3)
-        Liste_compte3.pop(0)
-    f.close()
-    return Liste_compte3
 
 
 # Création de la liste de compte "Liste_comptegenerator"
@@ -1553,11 +1541,6 @@ def fonction_Zalando():
         for x in range(0, Liste_compte2.count(['\n'])):
             Liste_compte2.remove(['\n'])
     random.shuffle(Liste_compte2)
-    Liste_compte3 = compte3()
-    if Liste_compte3.count(['\n']) != 0:
-        for x in range(0, Liste_compte3.count(['\n'])):
-            Liste_compte3.remove(['\n'])
-    random.shuffle(Liste_compte3)
     # Profiles
     List_profile1 = profile()
     if List_profile1.count(['\n']) != 0:
@@ -1579,7 +1562,7 @@ def fonction_Zalando():
         for x in range(0, List_Quick_Task.count(['\n'])):
             List_Quick_Task.remove(['\n'])
     # Check Database
-    if Liste_compte1 == [] and Liste_compte2 == [] and Liste_compte3 == []:
+    if Liste_compte1 == [] and Liste_compte2 == []:
         print(Fore.RED + "You have not specified any accounts !")
         print(Fore.RED + "You have to use the Account Generator.")
     if not List_profile1:
@@ -1603,25 +1586,21 @@ def fonction_Zalando():
                 thread_list = []
                 Liste_compte = Liste_compte2
                 # Check Database
-                if not Liste_compte2:
-                    print(Fore.RED + "You have not specified any accounts !")
+                if not Liste_compte:
+                    print(Fore.RED + "'The file Accounts_List_CB.csv is empty !'")
                     print(Fore.RED + "You have to use the Account Generator.")
                     time.sleep(3)
                     fonction_Zalando()
-                if len(Liste_tache) == 0:
+                if not Liste_tache:
                     print(Fore.RED + 'The file Task.csv is empty !')
                     time.sleep(3)
                     fonction_Zalando()
-                if len(List_Quick_Task) == 0:
+                if not List_Quick_Task:
                     print(Fore.RED + 'The file Quick_Task.csv is empty !')
                     time.sleep(3)
                     fonction_Zalando()
                 if len(Liste_compte) < len(Liste_tache):
                     print(Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
-                    time.sleep(3)
-                    fonction_Zalando()
-                if len(Liste_compte) == 0:
-                    print(Fore.RED + 'The file Accounts_List_AutoCheckout.csv is empty !')
                     time.sleep(3)
                     fonction_Zalando()
                 # Start Thread
@@ -1678,11 +1657,11 @@ def fonction_Zalando():
                         if choix_2 == 1:
                             Paiement = 'CB_Auto'
                             Liste_compte = Liste_compte2
-                            message = 'Accounts_List_AutoCheckout.csv'
+                            message = 'Accounts_List_CB.csv'
                             break
                         if choix_2 == 2:
                             Paiement = 'CB'
-                            Liste_compte = Liste_compte3
+                            Liste_compte = Liste_compte2
                             message = 'Accounts_List_CB.csv'
                             break
                         if choix_2 == 3:
@@ -1722,7 +1701,7 @@ def fonction_Zalando():
                         Fore.RED + 'You must have a greater number of accounts than the number of tasks !')
                     time.sleep(3)
                     fonction_Zalando()
-                if len(Liste_compte) == 0:
+                if not Liste_compte:
                     print(Fore.RED + 'The file %s is empty !' % message)
                     time.sleep(3)
                     fonction_Zalando()
@@ -1755,7 +1734,7 @@ def fonction_Zalando():
                 main()
 
             if choix == 3:
-                if len(Liste_comptegenerator) == 0:
+                if not Liste_comptegenerator:
                     print(Fore.RED + 'The file AccountsGenerator.csv is empty !')
                     time.sleep(3)
                     fonction_Zalando()
@@ -1764,19 +1743,13 @@ def fonction_Zalando():
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                               Style.RESET_ALL + "> 1. List Paypal")
                         print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 2. List Auto Checkout")
-                        print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
-                              Style.RESET_ALL + "> 3. List CB")
+                              Style.RESET_ALL + "> 2. List CB")
                         choix_2 = int(input("\nChoice :"))
                         if choix_2 == 1:
                             liste = 'Accounts/Accounts_List_Paypal.csv'
                             CreationComptes(Liste_comptegenerator, liste_proxys, liste)
                             fonction_Zalando()
                         if choix_2 == 2:
-                            liste = 'Accounts/Accounts_List_AutoCheckout.csv'
-                            CreationComptes(Liste_comptegenerator, liste_proxys, liste)
-                            fonction_Zalando()
-                        if choix_2 == 3:
                             liste = 'Accounts/Accounts_List_CB.csv'
                             CreationComptes(Liste_comptegenerator, liste_proxys, liste)
                             fonction_Zalando()
