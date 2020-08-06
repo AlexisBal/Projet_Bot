@@ -1376,43 +1376,35 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
             )
 
             while True:
-                # Réglage du proxy
-                proxy = random.choice(liste_proxys)
-                url_home = "https://www.zalando.fr"
-                session.headers[
-                    "Accept"
-                ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                session.headers['User-Agent'] = generate_user_agent()
-                session.headers["Accept-Language"] = "fr-fr"
-                session.headers["Accept-Encoding"] = "gzip, deflate, br"
-                if len(proxy) == 4:
-                    try:
-                        session.proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                try:
+                    # Réglage du proxy
+                    proxy = random.choice(liste_proxys)
+                    url_home = "https://www.zalando.fr"
+                    session.headers[
+                        "Accept"
+                    ] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                    session.headers['User-Agent'] = generate_user_agent()
+                    session.headers["Accept-Language"] = "fr-fr"
+                    session.headers["Accept-Encoding"] = "gzip, deflate, br"
+                    if len(proxy) == 4:
+                        proxies = {"https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                         # Connexion à la page d'accueil de Zalando
-                        home = session.get(url_home, verify=False, timeout=0.5)
-                    except:
-                        session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                        home = session.get(url_home, proxies=proxies, verify=False)
+                    else:
+                        proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
                         # Connexion à la page d'accueil de Zalando
-                        home = session.get(url_home, verify=False)
-                else:
-                    try:
-                        session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
-                        # Connexion à la page d'accueil de Zalando
-                        home = session.get(url_home, verify=False)
-                    except:
-                        session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
-                        # Connexion à la page d'accueil de Zalando
-                        home = session.get(url_home, verify=False)
-
-                if session.cookies != '<RequestsCookieJar[]>':
-                    break
+                        home = session.get(url_home, proxies=proxies, verify=False)
+                    if session.cookies != '<RequestsCookieJar[]>':
+                        break
+                except:
+                    pass
 
             # Récupération des cookies de la session
             cookies = session.cookies.get_dict()
 
             # Connexion à la page d'inscription
             url_get = "https://www.zalando.fr/login/?view=register"
-            session.get(url_get, verify=False)
+            session.get(url_get, proxies=proxies, verify=False)
 
             # Mise à jour du headers
             session.headers["x-xsrf-token"] = cookies["frsx"]
@@ -1439,10 +1431,10 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
                 "sensor_data": "7a74G7m23Vrp0o5c9179861.6-1,2,-94,-100,%s,uaend,11011,20030107,fr,Gecko,1,0,0,0,392194,6927070,1920,1080,1920,1080,1920,587,1920,,cpen:0,i1:0,dm:0,cwen:0,non:1,opc:0,fc:0,sc:0,wrc:1,isc:0,vib:0,bat:0,x11:0,x12:1,8919,0.457866288228,796988463535,loc:-1,2,-94,-101,do_dis,dm_dis,t_dis-1,2,-94,-105,0,-1,0,0,924,1884,0;0,-1,0,0,930,1768,0;0,1,0,0,1044,1435,0;1,-1,0,0,2163,1798,0;-1,2,-94,-102,0,-1,0,0,975,1884,1;0,-1,0,0,984,1768,1;0,1,0,0,1094,1435,1;1,-1,0,0,2053,1798,1;-1,2,-94,-108,0,1,218339,-2,0,0,1884;1,3,218340,-2,0,0,1884;2,1,218411,-2,0,0,1884;3,3,218411,-2,0,0,1884;4,2,218440,-2,0,0,1884;5,2,218495,-2,0,0,1884;6,1,218507,-2,0,0,1884;7,3,218508,-2,0,0,1884;8,1,218608,-2,0,0,1884;9,3,218608,-2,0,0,1884;10,2,218641,-2,0,0,1884;11,2,218675,-2,0,0,1884;12,1,220597,-2,0,0,1768;13,3,220598,-2,0,0,1768;14,1,220676,-2,0,0,1768;15,3,220677,-2,0,0,1768;16,2,220707,-2,0,0,1768;17,2,220752,-2,0,0,1768;18,1,220773,-2,0,0,1768;19,3,220774,-2,0,0,1768;20,1,220837,-2,0,0,1768;21,3,220838,-2,0,0,1768;22,2,220889,-2,0,0,1768;23,2,220909,-2,0,0,1768;24,1,223485,-2,0,0,1435;25,3,223486,-2,0,0,1435;26,2,223577,-2,0,0,1435;27,1,223581,-2,0,0,1435;28,3,223581,-2,0,0,1435;29,2,223652,-2,0,0,1435;30,1,223670,-2,0,0,1435;31,3,223671,-2,0,0,1435;32,1,223810,-2,0,0,1435;33,3,223811,-2,0,0,1435;34,2,223835,-2,0,0,1435;35,2,223879,-2,0,0,1435;36,1,224067,-2,0,0,1435;37,3,224067,-2,0,0,1435;38,2,224201,-2,0,0,1435;39,1,224703,-2,0,0,1435;40,3,224703,-2,0,0,1435;41,2,224775,-2,0,0,1435;42,1,225010,-2,0,0,1435;43,3,225011,-2,0,0,1435;44,2,225099,-2,0,0,1435;45,1,225182,-2,0,0,1435;46,3,225183,-2,0,0,1435;47,2,225259,-2,0,0,1435;48,1,225313,-2,0,0,1435;49,3,225313,-2,0,0,1435;50,2,225376,-2,0,0,1435;51,1,225490,-2,0,0,1435;52,3,225491,-2,0,0,1435;53,2,225550,-2,0,0,1435;54,1,225590,16,0,8,1435;55,1,225738,-2,0,8,1435;56,3,225739,-2,0,8,1435;57,2,225793,16,0,0,1435;58,2,225794,-2,0,0,1435;59,1,225952,-2,0,0,1435;60,3,225957,-2,0,0,1435;61,1,226032,-2,0,0,1435;62,3,226032,-2,0,0,1435;63,2,226059,-2,0,0,1435;64,2,226115,-2,0,0,1435;65,1,226179,-2,0,0,1435;66,3,226180,-2,0,0,1435;67,2,226273,-2,0,0,1435;68,1,228357,16,0,8,1798;69,1,228603,-2,0,8,1798;70,3,228609,-2,0,8,1798;71,2,228667,-2,0,8,1798;72,2,228742,16,0,0,1798;73,1,228882,-2,0,0,1798;74,3,228882,-2,0,0,1798;75,2,228962,-2,0,0,1798;76,1,229105,-2,0,0,1798;77,3,229106,-2,0,0,1798;78,2,229189,-2,0,0,1798;79,1,229229,-2,0,0,1798;80,3,229230,-2,0,0,1798;81,1,229582,16,0,8,1798;82,2,230306,16,0,0,1798;-1,2,-94,-110,0,1,11,921,87;1,1,2420,526,927;2,1,2424,526,927;3,1,2427,538,912;4,1,2438,546,898;5,1,2444,549,888;6,1,2454,551,875;7,1,2461,551,856;8,1,2470,551,843;9,1,2477,543,827;10,1,2487,530,809;11,1,2493,515,792;12,1,2502,495,770;13,1,2510,484,760;14,1,2520,465,741;15,1,2524,449,725;16,1,2535,444,721;17,1,2544,435,714;18,1,2550,429,708;19,1,2558,425,705;20,1,2566,423,702;21,1,2575,422,701;22,1,2584,421,701;23,1,2590,421,701;24,3,2615,421,701,-1;25,4,2732,421,701,-1;26,2,2732,421,701,-1;27,1,2972,421,702;28,1,2974,421,702;29,1,2979,417,708;30,1,2979,417,708;31,1,2986,413,717;32,1,2987,413,717;33,1,2993,407,726;34,1,2993,407,726;35,1,3001,402,736;36,1,3002,402,736;37,1,3012,397,745;38,1,3013,397,745;39,1,3018,382,770;40,1,3019,382,770;41,1,3026,369,792;42,1,3027,369,792;43,1,3036,354,817;44,1,3036,354,817;45,1,3043,336,844;46,1,3044,336,844;47,1,3050,321,869;48,1,3051,321,869;49,1,3058,305,897;50,1,3059,305,897;51,1,3068,299,906;52,1,3069,299,906;53,1,4633,219,905;54,1,4636,214,870;55,1,4643,205,836;56,1,4650,194,800;57,1,4661,178,764;58,1,4667,158,725;59,1,4676,137,691;60,1,4685,112,660;61,1,4692,82,628;62,1,4699,51,603;63,1,4708,14,579;64,1,16166,5,574;65,1,16172,5,574;66,1,16176,37,568;67,1,16189,83,562;68,1,16202,138,557;69,1,16211,171,555;70,1,16223,206,553;71,1,16237,236,553;72,1,16245,261,554;73,1,16256,278,554;74,1,16270,294,555;75,1,16277,305,557;76,1,16291,312,558;77,1,16303,319,559;78,1,16326,326,560;79,1,16338,327,560;80,1,16346,328,560;81,1,16357,328,560;82,1,16383,328,560;83,1,16396,328,560;84,1,16406,328,560;85,1,16414,328,560;86,1,16425,329,560;87,1,16439,329,560;88,1,16446,331,560;89,1,16459,336,560;90,1,16472,342,560;91,1,16481,348,560;92,1,16493,358,560;93,1,16507,369,561;94,1,16516,380,562;95,1,16526,396,564;96,1,16540,414,567;97,1,16549,427,570;98,1,16560,431,572;99,1,16574,435,574;100,1,16583,437,575;101,1,16593,439,577;102,1,16608,440,578;329,4,56092,1433,431,-1;468,3,207362,522,266,-1,3;565,3,216020,834,402,1884;566,4,216119,834,402,1884;567,2,216125,834,402,1884;600,3,219228,852,500,-1;601,4,219315,852,500,-1;602,2,219315,852,500,-1;643,3,219809,1095,471,1768;645,4,219944,1096,471,1768;646,2,219944,1096,471,1768;772,3,222232,934,618,1435;774,4,222403,934,618,1435;775,2,222404,934,618,1435;955,3,226947,1047,710,1798;956,4,227047,1047,710,1798;957,2,227048,1047,710,1798;1099,3,232121,1052,1107,-1;-1,2,-94,-117,-1,2,-94,-111,-1,2,-94,-109,-1,2,-94,-114,-1,2,-94,-103,3,2626;2,3975;3,55999;2,135087;3,202399;2,204275;2,209387;3,216078;-1,2,-94,-112,https://www.zalando.fr/login/?view=register-1,2,-94,-115,18741232,4796379,32,0,0,0,23537578,232121,0,1593976927070,49,17051,83,1100,2841,14,0,232123,23247643,0,76260A165DC066A281E308D22442E210~-1~YAAQVex7XDVf3+5yAQAAJCpxIASIK/u4VSyLlkilJT4PJrci3bIdwCoE657nvaF54+VGyUjPunq+pvPREKEqEvcmQ4w0iAdhne5yNzDZevX5c7I+Ewdj1xEHzbHX/jBmJBEPabObjz5thzNaH8qpEyteVNtT5ajmOJj6T6NMnkPZBCh1WaDWbk9kCujfHBIEmXWeKigoCwJA3rIzJHA7/mmzwNkdUyIMMHZw3ha0hnJiK3sBqa7EWYVLVgUQyNbVtL4QeC6RstjtUMiihAJeEHqDP47JN4meEsAY6o/VGicxdCWN7Vj+0+Z9jFrvrxCmCiBQWgEZ8bV2ni5pgQy982cOE0g=~-1~-1~-1,32589,588,1200352557,26018161,PiZtE,41164,43-1,2,-94,-106,1,9-1,2,-94,-119,200,0,0,0,0,0,0,0,0,0,0,800,1200,200,-1,2,-94,-122,0,0,0,0,1,0,0-1,2,-94,-123,-1,2,-94,-124,-1,2,-94,-126,-1,2,-94,-127,-1,2,-94,-70,1637755981;218306863;dis;;true;true;true;-120;true;24;24;true;true;-1-1,2,-94,-80,5266-1,2,-94,-116,20781153-1,2,-94,-118,313027-1,2,-94,-121,;3;4;0" %
                                session.headers["User-Agent"]
             }
-            session.get(url_get_2, verify=False)
-            session.get(url_get_3, verify=False)
-            session.post(url_post1, json=sensor_data, verify=False)
-            session.post(url_post1, json=sensor_data_bis, verify=False)
+            session.get(url_get_2, proxies=proxies, verify=False)
+            session.get(url_get_3, proxies=proxies, verify=False)
+            session.post(url_post1, proxies=proxies, json=sensor_data, verify=False)
+            session.post(url_post1, proxies=proxies, json=sensor_data_bis, verify=False)
 
             # Préparation et envoie de la requete POST d'inscription
             url_get2 = "https://www.zalando.fr/api/reef/register/schema"
@@ -1483,9 +1475,9 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
                 },
                 "wnaMode": "shop",
             }
-            session.get(url_get2, verify=False)
+            session.get(url_get2, proxies=proxies, verify=False)
             session.headers["Origin"] = "https://www.zalando.fr"
-            inscription = session.post(url_post2, json=register, verify=False)
+            inscription = session.post(url_post2, proxies=proxies, json=register, verify=False)
 
             # Message de confirmation pour chaque compte créé
             if inscription.status_code == 201:
