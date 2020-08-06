@@ -234,7 +234,6 @@ class RechercheCommande(Thread):
             with requests.Session() as session:
                 # Réglage des paramètres de la session
                 session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
-
                 while True:
                     try:
                         # Réglage du proxy
@@ -272,13 +271,13 @@ class RechercheCommande(Thread):
                                 "https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
-                            session.get(site, proxies=proxies, verify=False)
+                            session.get(site, proxies=proxies, verify=False, timeout=(0.5, 10))
                         else:
                             proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
-                            session.get(site, proxies=proxies, verify=False)
-                        if session.cookies != '<RequestsCookieJar[]>':
+                            session.get(site, proxies=proxies, verify=False, timeout=(0.5, 10))
+                        if session.cookies != '<RequestsCookieJar[]>' and "frsx" in session.cookies.keys():
                             session.headers['Referer'] = 'https://www.zalando.fr/'
                             try:
                                 session.get(diversion_1, proxies=proxies, verify=False, timeout=(0.5, 10))
@@ -293,8 +292,10 @@ class RechercheCommande(Thread):
                             session.headers['Referer'] = diversion_2
                             login = session.get(self.url_produit, proxies=proxies, verify=False, timeout=(1, 10))
                             break
+                        else:
+                            pass
                     except:
-                        pass
+                        raise
 
                 # Lancement du chronomètre
                 start_chrono = timeit.default_timer()
@@ -1720,7 +1721,6 @@ def fonction_Zalando():
             thread.start()
             thread_list.append(thread)
         # Join Thread
-        time.sleep(5)
         for t in thread_list:
             t.join()
         main()
