@@ -1298,47 +1298,46 @@ def VerificationProxys():
         try:
             # Ouverture de la session
             with requests.Session() as session:
+
                 # Réglage des paramètres de la session
-                retries_2 = Retry(total=2, backoff_factor=0, status_forcelist=[429, 500, 502, 503, 504])
+                retries_2 = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
                 session.mount("https://", TimeoutHTTPAdapter(max_retries=retries_2))
                 session.headers.update(
                     {"User-Agent": generate_user_agent()}
                 )
+                # Url Test IP
+                url_test = 'https://httpbin.org/ip'
+                # Récupération de l'ip de l'utilisateur
+                temoin = session.get(url_test, verify=False)
+                ip_user_prepa = temoin.json()
+                ip_user = ip_user_prepa['origin']
                 # Réglage du proxy
                 if len(x) == 4:
-                    try:
-                        session.proxies = {"https": "https://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
-                        # Connexion à la page d'accueil de Zalando
-                        url_home = "https://www.zalando.fr"
-                        session.get(url_home, verify=False, timeout=0.5)
-                        # Test du proxy
-                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
+                    proxi = {"https": "https://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
+                    # Test du proxy
+                    test = session.get(url_test, proxies=proxi, verify=False)
+                    ip_test_prepa = test.json()
+                    ip_test = ip_test_prepa['origin']
+                    # Affichage du résultat
+                    if ip_test != ip_user:
+                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]))
+                    else:
+                        print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
                               Style.RESET_ALL)
-                    except:
-                        session.proxies = {"http": "http://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
-                        # Connexion à la page d'accueil de Zalando
-                        url_home = "https://www.zalando.fr"
-                        session.get(url_home, verify=False)
-                        # Test du proxy
-                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
-                              Style.RESET_ALL)
-                else:
-                    try:
-                        session.proxies = {"https": "https://%s" % (x[0] + ":" + x[1])}
-                        # Connexion à la page d'accueil de Zalando
-                        url_home = "https://www.zalando.fr"
-                        session.get(url_home, verify=False, timeout=0.5)
-                        # Test du proxy
-                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
-                    except:
-                        session.proxies = {"http": "http://%s" % (x[0] + ":" + x[1])}
-                        # Connexion à la page d'accueil de Zalando
-                        url_home = "https://www.zalando.fr"
-                        session.get(url_home, verify=False)
-                        # Test du proxy
-                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
 
+                else:
+                    proxie2 = {"https": "https://%s" % (x[0] + ":" + x[1])}
+                    # Test du proxy
+                    test = session.get(url_test, proxies=proxie2, verify=False)
+                    ip_test_prepa = test.json()
+                    ip_test = ip_test_prepa['origin']
+                    # Affichage du résultat
+                    if ip_test != ip_user:
+                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
+                    else:
+                        print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1]), Style.RESET_ALL)
             session.close()
+
         # Gestion des exceptions
         except:
             if len(x) == 4:
