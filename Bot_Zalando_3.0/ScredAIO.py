@@ -236,76 +236,65 @@ class RechercheCommande(Thread):
                 session.mount("https://", TimeoutHTTPAdapter(max_retries=retries))
 
                 while True:
-                    # Réglage du proxy
-                    proxy = random.choice(self.liste_proxys)
-                    diversionbis = ['https://www.bing.com/',
-                                       'https://www.google.com/',
-                                       'https://duckduckgo.com',
-                                       'https://fr.yahoo.com/']
-                    diversion_1_bis = ['https://www.zalando.fr/accueil-homme/',
-                                       'https://www.zalando.fr/tiger-of-sweden-joran-sandales-dark-brown'
-                                       '-ti512g002-o11.html',
-                                       'https://www.zalando.fr/accueil-luxe-homme/',
-                                       'https://www.zalando.fr/mode-homme/',
-                                       'https://www.zalando.fr/pulls-gilets-homme/',
-                                       'https://www.zalando.fr/accueil-femme/',
-                                       'https://www.zalando.fr/mode-femme/',
-                                       'https://www.zalando.fr/baskets-femme/',
-                                       'https://www.zalando.fr/promo-femme/',
-                                       'https://www.zalando.fr/soutien-gorge-femme/',
-                                       'https://www.zalando.fr/chaussures-femme/']
-                    random.shuffle(diversionbis)
-                    random.shuffle(diversion_1_bis)
-                    diversion = random.choice(diversionbis)
-                    headers = {
-                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                        'User-Agent': generate_user_agent(),
-                        "Accept-Language": "fr-fr",
-                        "Accept-Encoding": "gzip, deflate, br",
-                        "Referer": diversion
-                    }
-                    diversion_1 = random.choice(diversion_1_bis)
-                    diversion_2 = 'https://www.zalando.fr/chaussures-homme/'
-                    if len(proxy) == 4:
-                        try:
-                            session.proxies = {
+                    try:
+                        # Réglage du proxy
+                        proxy = random.choice(self.liste_proxys)
+                        diversionbis = ['https://www.bing.com/',
+                                           'https://www.google.com/',
+                                           'https://duckduckgo.com',
+                                           'https://fr.yahoo.com/']
+                        diversion_1_bis = ['https://www.zalando.fr/accueil-homme/',
+                                           'https://www.zalando.fr/tiger-of-sweden-joran-sandales-dark-brown'
+                                           '-ti512g002-o11.html',
+                                           'https://www.zalando.fr/accueil-luxe-homme/',
+                                           'https://www.zalando.fr/mode-homme/',
+                                           'https://www.zalando.fr/pulls-gilets-homme/',
+                                           'https://www.zalando.fr/accueil-femme/',
+                                           'https://www.zalando.fr/mode-femme/',
+                                           'https://www.zalando.fr/baskets-femme/',
+                                           'https://www.zalando.fr/promo-femme/',
+                                           'https://www.zalando.fr/soutien-gorge-femme/',
+                                           'https://www.zalando.fr/chaussures-femme/']
+                        random.shuffle(diversionbis)
+                        random.shuffle(diversion_1_bis)
+                        diversion = random.choice(diversionbis)
+                        headers = {
+                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                            'User-Agent': generate_user_agent(),
+                            "Accept-Language": "fr-fr",
+                            "Accept-Encoding": "gzip, deflate, br",
+                            "Referer": diversion
+                        }
+                        diversion_1 = random.choice(diversion_1_bis)
+                        diversion_2 = 'https://www.zalando.fr/chaussures-homme/'
+                        if len(proxy) == 4:
+                            proxies = {
                                 "https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
-                            session.get(site, verify=False)
-                        except:
-                            session.proxies = {"http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])}
+                            session.get(site, proxies=proxies, verify=False)
+                        else:
+                            proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
                             # Connexion à la page d'accueil de Zalando
                             session.headers.update(headers)
-                            session.get(site, verify=False)
-
-                    else:
-                        try:
-                            session.proxies = {"https": "https://%s" % (proxy[0] + proxy[1])}
-                            # Connexion à la page d'accueil de Zalando
-                            session.headers.update(headers)
-                            session.get(site, verify=False)
-                        except:
-                            session.proxies = {"http": "http://%s" % (proxy[0] + proxy[1])}
-                            # Connexion à la page d'accueil de Zalando
-                            session.headers.update(headers)
-                            session.get(site, verify=False)
-
-                    if session.cookies != '<RequestsCookieJar[]>':
-                        session.headers['Referer'] = 'https://www.zalando.fr/'
-                        try:
-                            session.get(diversion_1, verify=False, timeout=(0.5, 10))
-                        except:
-                            pass
-                        session.headers['Referer'] = diversion_1
-                        try:
-                            session.get(diversion_2, verify=False, timeout=(0.5, 10))
-                        except:
-                            pass
-                        # Connexion à la page du produit
-                        session.headers['Referer'] = diversion_2
-                        login = session.get(self.url_produit, verify=False, timeout=(1, 10))
-                        break
+                            session.get(site, proxies=proxies, verify=False)
+                        if session.cookies != '<RequestsCookieJar[]>':
+                            session.headers['Referer'] = 'https://www.zalando.fr/'
+                            try:
+                                session.get(diversion_1, proxies=proxies, verify=False, timeout=(0.5, 10))
+                            except:
+                                pass
+                            session.headers['Referer'] = diversion_1
+                            try:
+                                session.get(diversion_2, proxies=proxies, verify=False, timeout=(0.5, 10))
+                            except:
+                                pass
+                            # Connexion à la page du produit
+                            session.headers['Referer'] = diversion_2
+                            login = session.get(self.url_produit, proxies=proxies, verify=False, timeout=(1, 10))
+                            break
+                    except:
+                        pass
 
                 # Lancement du chronomètre
                 start_chrono = timeit.default_timer()
@@ -337,11 +326,11 @@ class RechercheCommande(Thread):
                     "Referer": self.url_produit
                 })
                 try:
-                    session.post(url_bot_2, json=data1_2, verify=False, timeout=0.15)
+                    session.post(url_bot_2, proxies=proxies, json=data1_2, verify=False, timeout=0.15)
                 except:
                     pass
                 try:
-                    session.post(url_bot_2, json=data2_2, verify=False, timeout=0.15)
+                    session.post(url_bot_2, proxies=proxies, json=data2_2, verify=False, timeout=0.15)
                 except:
                     pass
                 del session.headers["Origin"]
@@ -356,11 +345,11 @@ class RechercheCommande(Thread):
                     "Referer": self.url_produit
                 })
                 try:
-                    session.get(url_connexion_2, verify=False, timeout=0.2)
+                    session.get(url_connexion_2, proxies=proxies, verify=False, timeout=0.2)
                 except:
                     pass
                 session.headers["Origin"] = site
-                connex = session.post(url_connexion_3, json=identifiants_2, verify=False, timeout=(2, 10))
+                connex = session.post(url_connexion_3, proxies=proxies, json=identifiants_2, verify=False, timeout=(2, 10))
                 del session.headers["x-xsrf-token"]
                 del session.headers["x-zalando-client-id"]
                 del session.headers["x-zalando-render-page-uri"]
@@ -385,7 +374,7 @@ class RechercheCommande(Thread):
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                     "Referer": self.url_produit
                 })
-                page_produit = session.get(self.url_produit, verify=False)
+                page_produit = session.get(self.url_produit, proxies=proxies, verify=False)
                 impression = page_produit.headers['x-page-impression-id']
 
                 # Mise dans le panier
@@ -412,7 +401,7 @@ class RechercheCommande(Thread):
                         'Referer': self.url_produit
                     })
                     try:
-                        session.post(url_bot_panier, json=bot_panier, verify=False, timeout=0.1)
+                        session.post(url_bot_panier, proxies=proxies, json=bot_panier, verify=False, timeout=0.1)
                     except:
                         pass
                     session.headers.update({
@@ -422,7 +411,7 @@ class RechercheCommande(Thread):
                         'x-zalando-intent-context': 'navigationTargetGroup=MEN'
                     })
                     try:
-                        session.post(url_panier, json=panier, verify=False, timeout=(0.5, 5))
+                        session.post(url_panier, proxies=proxies, json=panier, verify=False, timeout=(0.5, 5))
                     except:
                         pass
                     stop_1 = timeit.default_timer()
@@ -455,11 +444,11 @@ class RechercheCommande(Thread):
                         "Referer": "%s/myaccount" % site,
                     })
                     try:
-                        session.get(url_panier_1, verify=False, timeout=0.1)
+                        session.get(url_panier_1, proxies=proxies, verify=False, timeout=0.1)
                     except:
                         pass
                     session.headers["Referer"] = "%s/cart/" % site
-                    session.get(url_panier_2, verify=False)
+                    session.get(url_panier_2, proxies=proxies, verify=False)
 
                     if self.Mode == 'Quick':
                         # Addresse de livraison
@@ -532,11 +521,11 @@ class RechercheCommande(Thread):
                             "Origin": site
                         })
                         try:
-                            session.post(url_adresse, json=checkout_2_2, verify=False, timeout=0.1)
+                            session.post(url_adresse, proxies=proxies, json=checkout_2_2, verify=False, timeout=0.1)
                         except:
                             pass
                         try:
-                            session.post(url_panier_4, json=data_panier4, verify=False, timeout=0.1)
+                            session.post(url_panier_4, proxies=proxies, json=data_panier4, verify=False, timeout=0.1)
                         except:
                             pass
 
@@ -544,7 +533,7 @@ class RechercheCommande(Thread):
                         url_phone = '%s/api/checkout/save-customer-phone-number' % site
                         data_phone = {"phoneNumber": phone}
                         try:
-                            session.post(url_phone, json=data_phone, verify=False, timeout=0.1)
+                            session.post(url_phone, proxies=proxies, json=data_phone, verify=False, timeout=0.1)
                         except:
                             pass
                         del session.headers["x-xsrf-token"]
@@ -566,7 +555,7 @@ class RechercheCommande(Thread):
                             "Accept": "*/*"
                         })
                         try:
-                            session.post(url_bot_1_2, json=bot, verify=False, timeout=0.1)
+                            session.post(url_bot_1_2, proxies=proxies, json=bot, verify=False, timeout=0.1)
                         except:
                             pass
                         session.headers.update({
@@ -579,7 +568,7 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        session.get(url_checkout_2_2, verify=False)
+                        session.get(url_checkout_2_2, proxies=proxies, verify=False)
                         del session.headers["x-zalando-footer-mode"]
                         del session.headers["x-zalando-checkout-app"]
                         del session.headers["x-xsrf-token"]
@@ -663,10 +652,10 @@ class RechercheCommande(Thread):
                             "x-zalando-header-mode": "desktop"
                         })
                         try:
-                            session.post(url_adresse, json=checkout_2_2, verify=False, timeout=(0.2, 5))
+                            session.post(url_adresse, proxies=proxies, json=checkout_2_2, verify=False, timeout=(0.2, 5))
                         except:
                             pass
-                        session.post(url_panier_4, json=data_panier4, verify=False, timeout=(0.2, 5))
+                        session.post(url_panier_4, proxies=proxies, json=data_panier4, verify=False, timeout=(0.2, 5))
                         del session.headers["x-xsrf-token"]
                         del session.headers["x-zalando-header-mode"]
                         del session.headers["x-zalando-checkout-app"]
@@ -678,11 +667,11 @@ class RechercheCommande(Thread):
                             "Accept": "*/*"
                         })
                         try:
-                            session.post(botvalidurl, json=botvalidbis, verify=False, timeout=(0.3, 5))
+                            session.post(botvalidurl, proxies=proxies, json=botvalidbis, verify=False, timeout=(0.3, 5))
                         except:
                             pass
                         try:
-                            session.post(botvalidurl, json=bot, verify=False, timeout=(0.3, 5))
+                            session.post(botvalidurl, proxies=proxies, json=bot, verify=False, timeout=(0.3, 5))
                         except:
                             pass
 
@@ -700,7 +689,7 @@ class RechercheCommande(Thread):
                             "x-zalando-header-mode": "desktop"
                         })
                         try:
-                            session.post(url_phone, json=data_phone, verify=False, timeout=0.2)
+                            session.post(url_phone, proxies=proxies, json=data_phone, verify=False, timeout=0.2)
                         except:
                             pass
 
@@ -709,7 +698,7 @@ class RechercheCommande(Thread):
                         session.headers["Accept"] = "application/json"
                         session.headers["Content-Type"] = "application/json"
                         del session.headers["Origin"]
-                        url_pay = session.get(url_checkout_2_2, verify=False)
+                        url_pay = session.get(url_checkout_2_2, proxies=proxies, verify=False)
                         url_pay_2 = json.loads(url_pay.text)
                         url_pay_3 = url_pay_2['url']
                         del session.headers["x-zalando-footer-mode"]
@@ -723,7 +712,7 @@ class RechercheCommande(Thread):
 
                     # Paiement par carte bancaire
                     if self.Paiement != 'Paypal':
-                        b = session.get(url_pay_3, verify=False)
+                        b = session.get(url_pay_3, proxies=proxies, verify=False)
                         soup_3 = BeautifulSoup(b.text, "html.parser")
                         objet_token_ini = soup_3.find(string=re.compile("config.accessToken"))
                         token_ini = objet_token_ini.split("'")
@@ -737,7 +726,7 @@ class RechercheCommande(Thread):
                             "Authorization": "Bearer %s" % token
                         })
                         reponsepay = session.post(
-                            url_pay_2, json=data_cb, verify=False
+                            url_pay_2, json=data_cb, proxies=proxies, verify=False
                         )
                         reponsepaybis = json.loads(reponsepay.text)
                         del session.headers['Authorization']
@@ -755,12 +744,12 @@ class RechercheCommande(Thread):
                             "Referer": 'https://checkout.payment.zalando.com/selection',
                             "Host": 'checkout.payment.zalando.com'
                         })
-                        session.post(url_pay_3, data=data_pay_3, verify=False, allow_redirects=False)
-                        req = session.post(select, data=data_pay_3, verify=False, allow_redirects=False)
+                        session.post(url_pay_3, proxies=proxies, data=data_pay_3, verify=False, allow_redirects=False)
+                        req = session.post(select, proxies=proxies, data=data_pay_3, verify=False, allow_redirects=False)
                         del session.headers['Origin']
                         del session.headers['Content-Type']
                         del session.headers['Host']
-                        req = session.get(req.headers['location'], verify=False, timeout=(1, 10))
+                        req = session.get(req.headers['location'], proxies=proxies, verify=False, timeout=(1, 10))
 
                         # Paiement Partie 3
                         soupbis_3 = BeautifulSoup(req.content, "html.parser")
@@ -790,7 +779,7 @@ class RechercheCommande(Thread):
                             "Authorization": "Bearer %s" % token
                         })
                         try:
-                            session.post(url_pay_bot, json=data_bot_pay, verify=False, timeout=0.2)
+                            session.post(url_pay_bot, proxies=proxies, json=data_bot_pay, verify=False, timeout=0.2)
                         except:
                             pass
                         session.headers.update({
@@ -801,7 +790,7 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False, timeout=(1, 10))
+                        reponse_checkout = session.post(url_pay_fin, proxies=proxies, json=data_pay_fin, verify=False, timeout=(1, 10))
                         stop_2 = timeit.default_timer()
                         if reponse_checkout.status_code == 200:
                             chronometre_2 = str(round(stop_2 - start_chrono, 5))
@@ -820,16 +809,16 @@ class RechercheCommande(Thread):
                             "payz_credit_card_pay_later_former_payment_method_id=-1&payz_credit_card_former_payment_method_id=-1&payz_selected_payment_method=PAYPAL&iframe_funding_source_id="
                         )
                         if origin:
-                            b = session.get(url_pay_3, verify=False, timeout=(1, 10))
+                            b = session.get(url_pay_3, proxies=proxies, verify=False, timeout=(1, 10))
                         if origin is None:
-                            session.get(url_pay_3, verify=False, timeout=(1, 10))
+                            session.get(url_pay_3, proxies=proxies, verify=False, timeout=(1, 10))
                             session.headers.update({
                                 'Referer': 'https://checkout.payment.zalando.com/selection',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                                 'Origin': 'https://checkout.payment.zalando.com',
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             })
-                            b = session.post(url_pay_3, data=data_pay_3, verify=False)
+                            b = session.post(url_pay_3, proxies=proxies, data=data_pay_3, verify=False)
                             del session.headers['Origin']
                             del session.headers['Content-Type']
                         soupbis_3 = BeautifulSoup(b.content, "html.parser")
@@ -856,7 +845,7 @@ class RechercheCommande(Thread):
                             "Host": site.strip('https://')
                         })
                         try:
-                            session.post(url_pay_bot, json=data_bot_pay, verify=False, timeout=0.1)
+                            session.post(url_pay_bot, proxies=proxies, json=data_bot_pay, verify=False, timeout=0.1)
                         except:
                             pass
                         session.headers.update({
@@ -867,7 +856,7 @@ class RechercheCommande(Thread):
                             "x-xsrf-token": cookies_2["frsx"],
                             "x-zalando-header-mode": "desktop"
                         })
-                        reponse_checkout = session.post(url_pay_fin, json=data_pay_fin, verify=False, timeout=(0.5, 10))
+                        reponse_checkout = session.post(url_pay_fin, proxies=proxies, json=data_pay_fin, verify=False, timeout=(0.5, 10))
                         stop_3 = timeit.default_timer()
                         if reponse_checkout.status_code == 200:
                             chronometre_3 = str(round(stop_3 - start_chrono, 5))
