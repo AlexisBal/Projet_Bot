@@ -10,14 +10,14 @@ import os
 import time
 
 
-nombre = int(input("entrer un nombre et je le multiplie par 2 :"))
+'''nombre = int(input("entrer un nombre et je le multiplie par 2 :"))
 nombre=nombre*2
 print(nombre)
-time.sleep(5)
+time.sleep(5)'''
 
 def mise_a_jour():
 
-    if os.path.basename(__file__) == "ScredAIO-1.exe":
+    if os.path.basename(__file__) == 'ScredAIO-1.exe':
         
         directory = os.path.dirname(os.path.realpath(__file__))
         old_file_name = directory + '\ScredAIO-1.exe'
@@ -39,13 +39,11 @@ def mise_a_jour():
         
         data = float(response.text)
         
-
         if float(data) > float(version):
             messagebox.showinfo('Software Update', 'Update Available!')
             message = messagebox.askyesno('Update !', f'{Nom_application} {version} needs to update to version {data}')
             if message is True:
                        
-                
                 directory = os.path.dirname(os.path.realpath(__file__))
                 
                 filename = directory + '\ScredAIO-1.exe'
@@ -57,25 +55,18 @@ def mise_a_jour():
                         }
 
                 r = requests.get(
-                    'https://raw.githubusercontent.com/AlexisBal/Projet_Bot/master/Bot_Zalando_3.0/Test_telechargement_du_.exe/update.exe', 
+                    'https://raw.githubusercontent.com/AlexisBal/Projet_Bot/master/Version_%2B_Executable/ScredAIO-1.exe', 
                     headers=headers, allow_redirects=True)
                 
-
                 f = open(filename,'wb')
                 f.write(r.content)
                 version=data
 
-                
-                filename = directory + r'\ScredAIO-1.exe'
+                filename = directory + '\ScredAIO-1.exe'
                 os.startfile(filename)
                 
-                
                 #remove(argv[0])
-                
-                
-                
                 pass
-
 
             else:
                 pass
@@ -84,7 +75,6 @@ def mise_a_jour():
             
     except Exception as e:
         messagebox.showinfo('Software Update', 'Unable to Check for Update, Error:' + str(e))
-
 
 
 mise_a_jour()
