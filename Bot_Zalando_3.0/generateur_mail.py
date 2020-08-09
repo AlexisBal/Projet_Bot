@@ -1,6 +1,8 @@
-from tempMail2 import TempMail
+from guerrillamail import GuerrillaMailSession
 
-tm = TempMail()
-print(tm)
-email = tm.get_email_address()
-print tm.get_mailbox(email)
+
+session = GuerrillaMailSession()
+print (session.get_session_state()['email_address'])
+print( session.get_email_list()[0].guid)
+print(session.get_email(1))
+#print(session.set_email_address(session)
