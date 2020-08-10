@@ -7,6 +7,7 @@ from requests.adapters import HTTPAdapter
 import urllib3
 import json
 
+
 # Réglage des "Timeouts"
 class TimeoutHTTPAdapter(HTTPAdapter):
     def __init__(self, *args, **kwargs):
@@ -43,56 +44,40 @@ def VerificationProxys():
     for x in list_proxy:
         try:
             # Ouverture de la session
-            with requests.Session() as session:
-
-                # Réglage des paramètres de la session
-                retries_2 = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
-                session.mount("https://", TimeoutHTTPAdapter(max_retries=retries_2))
-                session.headers.update(
-                    {"User-Agent": generate_user_agent()}
-                )
-                # Url Test IP
-                url_test = 'https://httpbin.org/ip'
-                # Récupération de l'ip de l'utilisateur
-                temoin = session.get(url_test, verify=False)
-                ip_user_prepa = temoin.json()
-                ip_user = ip_user_prepa['origin']
-                # Réglage du proxy
-                if len(x) == 4:
-                    proxi = {"https": "https://%s:%s@%s:%s/" % (x[2], x[3], x[0], x[1])}
-                    # Test du proxy
-                    test = session.get(url_test, proxies=proxi, verify=False)
-                    ip_test_prepa = test.json()
-                    ip_test = ip_test_prepa['origin']
-                    # Affichage du résultat
-                    if ip_test != ip_user:
-                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]))
-                    else:
-                        print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
-                              Style.RESET_ALL)
-
-                else:
-                    proxie2 = {"https": "https://%s" % (x[0] + ":" + x[1])}
-                    # Test du proxy
-                    test = session.get(url_test, proxies=proxie2, verify=False)
-                    ip_test_prepa = test.json()
-                    ip_test = ip_test_prepa['origin']
-                    # Affichage du résultat
-                    if ip_test != ip_user:
-                        print(Fore.GREEN + 'Proxy %s is OK !' % (x[0] + ":" + x[1]), Style.RESET_ALL)
-                    else:
-                        print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1]), Style.RESET_ALL)
-            session.close()
+            s = requests.Session()
+            s.proxies = {}
+            # Réglage des paramètres de la session
+            retries_2 = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+            s.mount("https://", TimeoutHTTPAdapter(max_retries=retries_2))
+            # Url Test IP
+            url_test = 'https://www.zalando.fr'
+            url_test2 = 'https://www.zalando.fr/login/?view=login'
+            url3 = 'https://httpbin.org/ip'
+            # Réglage du proxy
+            if len(x) == 4:
+                s.proxies['http'] = 'http://%s:%s@%s:%s/' % (x[2], x[3], x[0], x[1])
+                s.proxies['https'] = 'http://%s:%s@%s:%s/' % (x[2], x[3], x[0], x[1])
+                # Test du proxy
+                s.headers = {"User-Agent": generate_user_agent(),
+                             'Connection': 'keep-alive',
+                             'Access-Control-Allow-Credentials:': 'true',
+                             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                             'Accept-Language': 'fr-fr',
+                             'Accept-Encoding': 'gzip, deflate, br'
+                             }
+                s.get(url_test, verify=False, proxies=s.proxies)
+                test = s.get(url_test2, verify=False, proxies=s.proxies)
+                iptest = s.get(url3, verify=False, proxies=s.proxies)
+                # Affichage du résultat
+                print(s.headers)
+                print(s.cookies)
+                print(iptest.json())
+                s.close()
 
         # Gestion des exceptions
         except:
-            if len(x) == 4:
-                print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1] + ":" + x[2] + ":" + x[3]),
-                      Style.RESET_ALL)
-            else:
-                print(Fore.RED + "Proxy %s doesn't work !" % (x[0] + ":" + x[1]), Style.RESET_ALL)
+            raise
 
 
 urllib3.disable_warnings()
 VerificationProxys()
-
