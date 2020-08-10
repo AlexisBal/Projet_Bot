@@ -1545,7 +1545,7 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
             if inscription.status_code == 201:
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
                       Style.RESET_ALL + Fore.GREEN + "Account of %s was successfully created !" %
-                      Liste_comptegenerator[compte][0].strip('\n').lstrip('"').rstrip('"'), )
+                      Liste_comptegenerator[compte][0].strip('\n').lstrip('"').rstrip('"'))
 
             else:
                 print(horloge(), "[Scred AIO]", Fore.RED + "[Zalando]",
