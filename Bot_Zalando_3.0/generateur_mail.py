@@ -17,8 +17,6 @@ def generateur_mail():
     terminaison = randint(0, 6)
 
     email = word + str(nombre) + str(doamine[terminaison])
-    print(email)
-
 
     cookies = {
         '__cfduid':"daefa9e0678aece69232c4a1fed3854d91596924607",
@@ -32,7 +30,10 @@ def generateur_mail():
     }
 
     r = requests.get('https://temp-mail.org/fr/', cookies=cookies)
-    print(r)
 
+    return email
     
-generateur_mail()
+
+
+mail = generateur_mail()
+print(mail)
