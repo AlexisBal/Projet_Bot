@@ -270,13 +270,13 @@ class RechercheCommande(Thread):
                         diversion_2 = 'https://www.zalando.fr/chaussures-homme/'
                         if len(proxy) == 4:
                             proxies = {
-                                "https": "https://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1]),
-                                "http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])
+                                "http": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1]),
+                                "https": "http://%s:%s@%s:%s/" % (proxy[2], proxy[3], proxy[0], proxy[1])
                             }
                         else:
                             proxies = {
-                                "https": "https://%s" % (proxy[0] + proxy[1]),
-                                "http": "http://%s" % (proxy[0] + proxy[1])
+                                "http": "http://%s" % (proxy[0] + proxy[1]),
+                                "https": "http://%s" % (proxy[0] + proxy[1])
                             }
                         # Connexion à la page d'accueil de Zalando
                         session.headers = {

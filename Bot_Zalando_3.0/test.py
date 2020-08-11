@@ -2,81 +2,76 @@ import requests
 from bs4 import BeautifulSoup
 from colorama import Fore, Style, init
 from user_agent import generate_user_agent
-from requests.packages.urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
+import requests.auth
 import urllib3
 import json
 
 
-# Réglage des "Timeouts"
-class TimeoutHTTPAdapter(HTTPAdapter):
-    def __init__(self, *args, **kwargs):
-        self.timeout = 5
-        if "timeout" in kwargs:
-            self.timeout = kwargs["timeout"]
-            del kwargs["timeout"]
-        super().__init__(*args, **kwargs)
+class HTTPProxyDigestAuth(requests.auth.HTTPDigestAuth):
+    def handle_407(self, r):
+        """Takes the given response and tries digest-auth, if needed."""
 
-    def send(self, request, **kwargs):
-        timeout = kwargs.get("timeout")
-        if timeout is None:
-            kwargs["timeout"] = self.timeout
-        return super().send(request, **kwargs)
+        num_407_calls = r.request.hooks['response'].count(self.handle_407)
 
+        s_auth = r.headers.get('Proxy-authenticate', '')
 
-# Récupérations des proxies
-def proxy():
-    with open('Zalando/Tasks/Proxy.txt', 'r') as f:
-        liste_proxys = []
-        for ligne in f:
-            if ligne.strip('\n') != '':
-                liste_proxys.append(ligne.strip('\n').split(":"))
+        if 'digest' in s_auth.lower() and num_407_calls < 2:
 
-        if not liste_proxys:
-            print(Fore.RED + "You have not specified any proxies !")
-            print(Fore.RED + "Enter the address of the proxy servers in the Proxy.txt file.")
+            self.chal = requests.auth.parse_dict_header(s_auth.replace('Digest ', ''))
 
-        return liste_proxys
+            # Consume content and release the original connection
+            # to allow our new request to reuse the same one.
+            r.content
+            r.raw.release_conn()
+
+            r.request.headers['Authorization'] = self.build_digest_header(r.request.method, r.request.url)
+            r.request.send(anyway=True)
+            _r = r.request.response
+            _r.history.append(r)
+
+            return _r
+
+        return r
+
+    def __call__(self, r):
+        if self.last_nonce:
+            r.headers['Proxy-Authorization'] = self.build_digest_header(r.method, r.url)
+        r.register_hook('response', self.handle_407)
+        return r
 
 
 def VerificationProxys():
-    list_proxy = proxy()
-    for x in list_proxy:
-        try:
-            # Ouverture de la session
-            s = requests.Session()
-            s.proxies = {}
-            # Réglage des paramètres de la session
-            retries_2 = Retry(total=5, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
-            s.mount("https://", TimeoutHTTPAdapter(max_retries=retries_2))
-            # Url Test IP
-            url_test = 'https://www.zalando.fr'
-            url_test2 = 'https://www.zalando.fr/login/?view=login'
-            url3 = 'https://httpbin.org/ip'
-            # Réglage du proxy
-            if len(x) == 4:
-                s.proxies['http'] = 'http://%s:%s@%s:%s/' % (x[2], x[3], x[0], x[1])
-                s.proxies['https'] = 'http://%s:%s@%s:%s/' % (x[2], x[3], x[0], x[1])
-                # Test du proxy
-                s.headers = {"User-Agent": generate_user_agent(),
-                             'Connection': 'keep-alive',
-                             'Access-Control-Allow-Credentials:': 'true',
-                             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                             'Accept-Language': 'fr-fr',
-                             'Accept-Encoding': 'gzip, deflate, br'
-                             }
-                s.get(url_test, verify=False, proxies=s.proxies)
-                test = s.get(url_test2, verify=False, proxies=s.proxies)
-                iptest = s.get(url3, verify=False, proxies=s.proxies)
-                # Affichage du résultat
-                print(s.headers)
-                print(s.cookies)
-                print(iptest.json())
-                s.close()
+    try:
+        # Ouverture de la session
+        s = requests.Session()
+        s.trust_env = False
+        s.proxies = {
+            "http": "http://@",
+            "https": "http://lum-customer-hl_eae231f1-zone-zalando_fr-unblocker:0c8voa6qm6rn@zproxy.lum-superproxy.io:22225"
+        }
+        # Url Test IP
+        url_test = 'https://www.zalando.fr'
+        url_test2 = 'https://www.zalando.fr/login/?view=login'
+        url3 = 'https://httpbin.org/ip'
+        # Test du proxy
+        s.headers = {"User-Agent": generate_user_agent(),
+                     'Connection': 'keep-alive',
+                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                     'Accept-Language': 'fr-fr',
+                     'Accept-Encoding': 'gzip, deflate, br'
+                     }
+        s.get(url_test, verify=False)
+        s.get(url_test2, verify=False)
+        iptest = s.get(url3, verify=False)
+        # Affichage du résultat
+        print(s.headers)
+        print(s.cookies)
+        print(iptest.json())
+        s.close()
 
-        # Gestion des exceptions
-        except:
-            raise
+    # Gestion des exceptions
+    except:
+        raise
 
 
 urllib3.disable_warnings()
