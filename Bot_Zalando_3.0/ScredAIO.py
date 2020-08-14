@@ -1126,19 +1126,27 @@ def horloge():
 
 def mise_a_jour():
 
-    if os.path.basename(__file__) == 'ScredAIO-1.exe':
-        
-        directory = os.path.dirname(os.path.realpath(__file__))
-        old_file_name = directory + '\ScredAIO-1.exe'
-        new_file_name = directory +'\ScredAIO.exe'
-        os.rename( old_file_name , new_file_name)
+    directory = os.path.dirname(os.path.realpath(__file__))
+    nom_rename = directory + '\Rename.exe'
 
-    version=float(1.0)
+    def checkFileExistance(filePath):
+        try:
+            with open(filePath, 'r') as f:
+                return True
+        except FileNotFoundError as e:
+            return False
+        except IOError as e:
+            return False
+
+    if checkFileExistance(nom_rename) == True :
+        os.remove(nom_rename)
+
+    version=0.9
     Nom_application='ScredAIO'
 
     try:
         headers = {
-                    'Authorization': 'token 57a9f2d3432b41fa87ff48ecdce02af2cb228cc8',
+                    'Authorization': 'token a2fce3ce396b83dec87df039eb7531f201bac641',
                     'Accept': 'application/vnd.github.v3.raw',
                         }
 
@@ -1159,7 +1167,7 @@ def mise_a_jour():
                 #print(filename)
                 
                 headers = {
-                    'Authorization': 'token 57a9f2d3432b41fa87ff48ecdce02af2cb228cc8',
+                    'Authorization': 'token a2fce3ce396b83dec87df039eb7531f201bac641',
                     'Accept': 'application/vnd.github.v3.raw',
                         }
 
@@ -1169,12 +1177,20 @@ def mise_a_jour():
                 
                 f = open(filename,'wb')
                 f.write(r.content)
+                f.close()
+
+                r = requests.get(
+                    'https://raw.githubusercontent.com/AlexisBal/Projet_Bot/master/Version_%2B_Executable/Rename.exe', 
+                    headers=headers, allow_redirects=True
+                )
+
+                f= open(nom_rename, 'wb')
+                f.write(r.content)
+                f.close()
                 version=data
 
-                filename = directory + '\ScredAIO-1.exe'
-                os.startfile(filename)
+                os.startfile(nom_rename)
                 
-                #remove(argv[0])
                 pass
 
             else:
