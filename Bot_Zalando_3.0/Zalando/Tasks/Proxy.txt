@@ -1,2 +1,7 @@
-lum-customer-hl_eae231f1-zone-zalando_fr-unblocker:0c8voa6qm6rn:zproxy.lum-superproxy.io:22225
-lum-customer-hl_eae231f1-zone-zalando_fr-unblocker:0c8voa6qm6rn:zproxy.lum-superproxy.io:22225
+premium.residential.proxyrack.net:10157:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
+premium.residential.proxyrack.net:10158:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
+premium.residential.proxyrack.net:10159:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
+premium.residential.proxyrack.net:10246:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
+premium.residential.proxyrack.net:10248:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
+premium.residential.proxyrack.net:10249:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
+premium.residential.proxyrack.net:10352:alex19132-country-FR:a6a17f-060e0d-374951-a1257e-2e7e9c
