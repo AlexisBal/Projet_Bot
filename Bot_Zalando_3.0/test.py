@@ -37,10 +37,9 @@ def VerificationProxys():
     }
     proxies = {
         'http': 'http://alex19132-country-FR-city-Paris:a6a17f-060e0d-374951-a1257e-2e7e9c@premium.residential.rotating.proxyrack.net:9000',
-        'https': 'http://alex19132-country-FR-city-Paris:a6a17f-060e0d-374951-a1257e-2e7e9c@premium.residential.rotating.proxyrack.net:9000'
+        'https': 'https://alex19132-country-FR-city-Paris:a6a17f-060e0d-374951-a1257e-2e7e9c@premium.residential.rotating.proxyrack.net:9000'
     }
     with requests.Session() as s:
-        s.trust_env = False
         s.proxies = proxies
         s.headers.update(headers)
         r = s.get(home_page_link, verify=False)
@@ -64,9 +63,13 @@ def VerificationProxys():
         s.headers['Content-Type'] = 'application/json'
         s.get(login_api_schema)
         s.headers['Origin'] = 'https://m.zalando.fr'
-        login_data = {"username": "alexis.balayre@gmail.com", "password": "Dubai007", "wnaMode": "modal"}
+        login_data = {"username": "nameb86952@icanav.net", "password": "Dubai007", "wnaMode": "modal"}
         r = s.post(login_api_post, json=login_data, verify=False)
         print(r)
+        s.headers.clear()
+        s.headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15'
+        }
         print(s.get(url_test_Ip, verify=False).json())
 
 
