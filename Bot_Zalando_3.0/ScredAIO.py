@@ -1203,6 +1203,24 @@ def mise_a_jour():
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------#
 
+#Generateur_mail
+def generateur_mail():
+    def get_random_string(length):
+        letters = string.ascii_lowercase
+        result_str = ''.join(random.choice(letters) for i in range(length))
+        return result_str
+
+    word = get_random_string(6)
+
+    nombre = randint(1111, 9999)
+    doamine = ["@icanav.net", "@in4mail.net", "@intsv.net", "@kleogb.com", "@mail2paste.com", "@mailvk.net",
+               "@ofmailer.net"]
+    terminaison = randint(0, 6)
+
+    email = word + str(nombre) + str(doamine[terminaison])
+
+    return email
+
 # Fonction latence
 def latence(start):
     stop = timeit.default_timer()
@@ -1523,7 +1541,8 @@ def CreationComptes(Liste_comptegenerator, liste_proxys, liste):
                 "newCustomerData": {
                     "firstname": prenom,
                     "lastname": nom,
-                    "email": Liste_comptegenerator[compte][0].strip('\n').lstrip('"').rstrip('"'),
+                    "email": generateur_mail(),
+                    #"email": Liste_comptegenerator[compte][0].strip('\n').lstrip('"').rstrip('"'),
                     "password": Liste_comptegenerator[compte][1].strip('\n').lstrip('"').rstrip('"'),
                     "fashion_preference": [],
                     "subscribe_to_news_letter": False,

@@ -21,5 +21,6 @@ def generateur_mail():
     return email
 
 
-mail = generateur_mail()
-print(mail)
+print(generateur_mail())
+print(type(generateur_mail()))
+
